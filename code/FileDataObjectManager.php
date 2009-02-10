@@ -1,0 +1,400 @@
+<?php
+
+class FileDataObjectManager extends DataObjectManager
+{
+	static $url_handlers = array(
+		'import/$ID' => 'handleImport'
+	);
+	static $thumbnail_dimensions = "32,32";	
+	
+	public $view = "list";
+	protected $allowedFileTypes;
+	protected $permissions = array(
+		"add",
+		"edit",
+		"show",
+		"delete",
+		"upload",
+		"import"
+	);
+	public $popupClass = "FileDataObjectManager_Popup";
+	public $itemClass = "FileDataObjectManager_Item";
+	public $template = "FileDataObjectManager";
+	public $templatePopup = "DataObjectManager_popup";
+	
+	public $pluralTitle;
+	
+	
+	
+	public function __construct($controller, $name, $sourceClass, $fileFieldName, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
+	{
+		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
+		
+		if(isset($_REQUEST['ctf'][$this->Name()])) {		
+				$this->view = $_REQUEST['ctf'][$this->Name()]['view'];
+		}
+		
+		$this->dataObjectFieldName = $name;
+		$this->fileFieldName = $fileFieldName;
+		$this->fileClassName = singleton($this->sourceClass())->has_one($this->fileFieldName);
+		$this->controllerClassName = $controller->class;
+		if($key = array_search($this->controllerClassName, singleton($this->sourceClass())->stat('has_one')))
+			$this->controllerFieldName = $key;
+		else
+			$this->controllerFieldName = $this->controllerClassName;
+		$this->controllerID = $controller->ID;
+
+	}
+
+	protected function getQueryString($params = array())
+	{ 
+		$view = isset($params['view'])? $params['view'] : $this->view;
+		return parent::getQueryString($params)."&ctf[{$this->Name()}][view]={$view}";
+	}
+	
+	public function setPluralTitle($title)
+	{
+		$this->pluralTitle = $title;
+	}
+	
+	public function PluralTitle()
+	{
+		return $this->pluralTitle ? $this->pluralTitle : $this->Title()."s";
+	}
+		
+	public function GridLink()
+	{
+		return $this->RelativeLink(array('view' => 'grid'));
+	}
+	
+	public function ListLink()
+	{
+		return $this->RelativeLink(array('view' => 'list'));
+	}
+
+	public function GridView()
+	{
+		return $this->view == 'grid';
+	}
+	
+	public function ListView()
+	{
+		return $this->view == 'list';
+	}
+	
+	public function ImportDropdown()
+	{
+		return new DropdownField('ImportFolder','',$this->getFolderHierarchy(0),null, null, "-- Select a folder --");
+	}
+	
+	protected function getFolderHierarchy($parentID, $level = 0)
+	{
+		$options = array();		
+		if($children = DataObject::get("Folder", "ParentID = $parentID")) {
+			foreach($children as $child) {
+				$indent="";
+				for($i=0;$i<$level;$i++) $indent .= "&nbsp;&nbsp;";
+				$files = DataObject::get("File", "ClassName != 'Folder' AND ParentID = $child->ID");
+				$count = $files ? $files->Count() : "0";
+				$options[$this->BaseLink()."/import/$child->ID"] = $indent.$child->Title . " <span>($count files)</span>";
+				$options += $this->getFolderHierarchy($child->ID, $level+1);
+			}
+		}
+		return $options;
+	}
+	
+	public function setAllowedFileTypes($types = array())
+	{
+		$this->allowedFileTypes = $types;
+	}
+	
+	public function getAllowedFileTypes()
+	{
+		return $this->allowedFileTypes;
+	}
+	
+	public function upload()
+	{
+		if(!$this->can('upload')) return;
+		
+		return $this->customise(array(
+			'DetailForm' => $this->UploadForm(),
+		))->renderWith($this->templatePopup);
+		
+	}
+	
+	public function UploadLink()
+	{
+		return $this->BaseLink().'/upload';
+	}
+	
+	public function UploadForm()
+	{
+		$className = $this->sourceClass();
+		$childData = new $className();
+		$validator = $this->getValidatorFor($childData);
+
+		SWFUploadConfig::addPostParams(array(
+			'dataObjectClassName' => $this->sourceClass(),
+			'dataObjectFieldName' => $this->dataObjectFieldName,
+			'fileFieldName' => $this->fileFieldName,
+			'fileClassName' => $this->fileClassName,
+			'controllerFieldName' => $this->controllerFieldName,
+			'controllerID' => $this->controllerID
+		));
+		if($this->getAllowedFileTypes()) {
+			SWFUploadConfig::addFileTypes($this->getAllowedFileTypes());
+		}
+				
+		$fields = new FieldSet(
+			new HeaderField($title = "Add ".$this->PluralTitle(), $headingLevel = 2),
+			new HeaderField($title = "Upload from my computer", $headingLevel = 3),
+			new SWFUploadField(
+				"UploadForm",
+				"Upload",
+				"",
+				array(
+					'file_upload_limit' => '20', // how many files can be uploaded
+					'file_queue_limit' => '20', // how many files can be in the queue at once
+					'browse_button_text' => 'Choose files...',
+					'upload_url' => Director::absoluteURL('FileDataObjectManager_Controller/handleswfupload'),
+					'required' => 'true'			
+				)
+			)
+		);
+
+		$form = Object::create(
+			$this->popupClass,
+			$this,
+			'UploadForm',
+			$fields,
+			$validator,
+			false,
+			$childData
+		);
+		$form->setActions(new FieldSet(new FormAction("saveUploadForm","Upload")));
+
+		$header = new HeaderField($title = "Import from an existing folder", $headingLevel = 3);
+		$holder = 	new LiteralField("holder","<div id='import-holder'></div>");
+		if(!isset($_POST['uploaded_files']))
+			return $form->forTemplate() . $header->Field() . $this->ImportDropdown()->FieldHolder() . $holder->Field();
+		else
+			return $form;
+;
+		
+	}
+	
+	public function saveUploadForm()
+	{
+		if(isset($_POST['uploaded_files']) && is_array($_POST['uploaded_files'])) {
+			return $this->customise(array(
+				'DetailForm' => $this->EditUploadedForm()
+			))->renderWith($this->templatePopup);
+		}
+	}
+	
+	public function EditUploadedForm()
+	{
+		$className = $this->sourceClass();
+		$childData = new $className();
+		$validator = $this->getValidatorFor($childData);
+		$fields = $this->getFieldsFor($childData);
+		$fields->removeByName($this->fileFieldName);
+			$total = isset($_POST['totalsize']) ? $_POST['totalsize'] : sizeof($_POST['uploaded_files']);
+			$index = isset($_POST['index']) ? $_POST['index'] + 1 : 1;
+			$fields->push(new HiddenField('totalsize','',$total));
+			$fields->push(new HiddenField('index','',$index));
+			if(isset($_POST['uploaded_files']) && is_array($_POST['uploaded_files'])) {
+				$remaining_files = $_POST['uploaded_files'];
+				$current = $remaining_files[0];
+				$fields->push(new HiddenField('current','',$current));
+				unset($remaining_files[0]);
+				foreach($remaining_files as $id)
+						$fields->push(new LiteralField("u-$id","<input type='hidden' name='uploaded_files[]' value='$id' />"));
+			
+			$first = $fields->First()->Name();
+			$fields->insertBefore(new HeaderField($title = "Editing file $index of $total", $headingLevel = 2), $first);
+			$fields->insertBefore(new HeaderField(
+				$title = basename(DataObject::get_by_id($this->sourceClass(), $current)->obj($this->fileFieldName)->Filename),
+				$headingLevel = 3
+			), $first);
+			}
+			$form = Object::create(
+				$this->popupClass,
+				$this,
+				'EditUploadedForm',
+				$fields,
+				$validator,
+				false,
+				$childData
+			);
+			$form->setActions(new FieldSet(new FormAction("saveEditUploadedForm", $index == $total ? "Finish" : "Next")));
+			return $form;
+	}
+	
+	function saveEditUploadedForm($data, $form)
+	{
+		$obj = DataObject::get_by_id($this->sourceClass(), $data['current']);
+		$form->saveInto($obj);
+		$obj->write();
+		if(isset($data['uploaded_files']) && is_array($data['uploaded_files'])) {
+			return $this->customise(array(
+				'DetailForm' => $this->EditUploadedForm()
+			))->renderWith($this->templatePopup);
+		}
+		else {
+			Requirements::clear();
+			Requirements::customScript("
+					var container = parent.\$container;
+					parent.jQuery('#facebox').fadeOut(function() {
+					parent.jQuery('#facebox .content').removeClass().addClass('content');
+					parent.jQuery('#facebox_overlay').remove();
+					parent.jQuery('#facebox .loading').remove();
+					container.load(container.attr('href'),{}, function(){
+					parent.jQuery(container).DataObjectManager();
+				});
+			});");
+			return $this->customise(array(
+				'DetailForm' => 'Closing...'
+			))->renderWith($this->templatePopup);
+		}
+	}
+	
+	public function handleImport($request)
+	{
+		if(!$this->can('import')) return;
+		$this->importFolderID = $request->param('ID');
+		die($this->ImportForm($this->importFolderID)->forTemplate());
+	}
+	
+	protected function ImportForm($folder_id = null)
+	{
+		$folder_id = isset($_POST['folder_id']) ? $_POST['folder_id'] : $this->importFolderID;;
+		if($files = DataObject::get("File", "ClassName != 'Folder' AND ParentID = $folder_id"))
+			$fields = new FieldSet(
+				new HiddenField('folder_id','',$folder_id),
+				new HiddenField('dataObjectClassName','',$this->sourceClass()),
+				new HiddenField('fileFieldName','', $this->fileFieldName),
+				new HiddenField('controllerFieldName','', $this->controllerFieldName),
+				new HiddenField('controllerID','',$this->controllerID)
+			);
+			
+			$fields->push(new LiteralField("ul","<ul>"));
+			foreach($files as $file) {
+				$icon = $file instanceof Image ? $file->croppedImage(35,35)->URL : $file->Icon();
+				$title = strlen($file->Title) > 30 ? substr($file->Title, 0, 30)."..." : $file->Title;
+				$fields->push(new LiteralField("li-$file->ID",
+					"<li>
+						<span class='import-checkbox'><input type='checkbox' name='imported_files[]' value='$file->ID' /></span>
+						<span class='import-icon'><img src='$icon' alt='' /></span>
+						<span class='import-title'>".$title."</span>
+					</li>"
+				));
+			}
+			$fields->push(new LiteralField("_ul","</ul"));			
+			return new Form(
+				$this,
+				"ImportForm",
+				$fields,
+				new FieldSet(new FormAction('saveImportForm','Import'))
+			);
+	}
+	
+	public function saveImportForm($data, $form)
+	{
+		if(isset($data['imported_files']) && is_array($data['imported_files'])) {
+			$_POST['uploaded_files'] = array();
+			foreach($data['imported_files'] as $file_id) {
+				$do_class = $data['dataObjectClassName'];
+				$idxfield = $data['fileFieldName']."ID";
+				$owner_id = $data['controllerFieldName']."ID";
+				$obj = new $do_class();
+				$obj->$idxfield = $file_id;
+				$obj->$owner_id = $data['controllerID'];
+				$obj->write();
+				$_POST['uploaded_files'][] = $obj->ID;
+			}
+
+			return $this->customise(array(
+				'DetailForm' => $this->EditUploadedForm()
+			))->renderWith($this->templatePopup);		
+
+		}
+	}
+}
+
+class FileDataObjectManager_Controller extends Controller
+{
+	public function handleswfupload()
+	{
+		if(isset($_FILES['swfupload_file']) && !empty($_FILES['swfupload_file'])) {
+			$do_class = $_POST['dataObjectClassName'];
+			$file_class = $_POST['fileClassName'];
+			$obj = new $do_class();
+			$idxfield = $_POST['fileFieldName']."ID";
+			$file = new $file_class();
+			
+			if(class_exists("Upload")) {
+				$u = new Upload();
+				$u->loadIntoFile($_FILES['swfupload_file'], $file);
+			}
+			else
+				$file->loadUploaded($_FILES['swfupload_file']);
+			
+			$file->write();
+			$obj->$idxfield = $file->ID;
+			$ownerID = $_POST['controllerFieldName']."ID";
+			$obj->$ownerID = $_POST['controllerID'];
+
+			$obj->write();
+			echo $obj->ID;
+		}
+		else {
+			echo ' ';
+		}
+	
+	
+	}
+}
+
+class FileDataObjectManager_Item extends DataObjectManager_Item {
+	function __construct(DataObject $item, ComplexTableField $parent, $start) 
+	{
+		parent::__construct($item, $parent, $start);
+	}
+	
+	public function IsFile()
+	{
+		return $this instanceof File;
+	}
+	
+	public function FileIcon()
+	{
+		$file = $this->obj($this->parent->fileFieldName);
+		return ($file instanceof Image) ? $file->CroppedImage($this->parent->stat('thumbnail_dimensions'))->URL : $file->Icon();
+	}
+	
+	public function FileLabel()
+	{
+		$label = ($this->parent->labelField) ? $this->obj($this->parent->labelField) : $this->obj($this->parent->fileFieldName)->Title;
+		return strlen($label) > 30 ? substr($label, 0, 30)."..." : $label;
+	}
+	
+}
+
+
+class FileDataObjectManager_Popup extends DataObjectManager_Popup
+{
+	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
+			parent::__construct($controller, $name, $fields, $validator, $readonly, $dataObject);
+			
+			// Hack!
+			Requirements::block('jsparty/prototype.js');
+			if($name == "UploadForm" && !isset($_POST['uploaded_files'])) SWFUploadConfig::bootstrap();
+			
+			Requirements::javascript('dataobject_manager/javascript/filedataobjectmanager_popup.js');			
+	}
+	
+}
+
+?>
