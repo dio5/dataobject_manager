@@ -49,9 +49,9 @@
 								<a href="$SortLink">$Title &nbsp;
 								<% if IsSorted %>
 									<% if SortDirection = ASC %>
-									<img src="cms/images/bullet_arrow_up.png" alt="<% _t('SORTASC', 'Sort ascending') %>" />
+									<img src="cms/images/bullet_arrow_up.png" alt="" />
 									<% else %>
-									<img src="cms/images/bullet_arrow_down.png" alt="<% _t('SORTDESC', 'Sort descending') %>" />
+									<img src="cms/images/bullet_arrow_down.png" alt="" />
 									<% end_if %>
 								<% end_if %>
 								</a>
@@ -65,6 +65,7 @@
 			<% if Items %>
 			<% control Items %>
 				<li id="record-$Parent.id-$ID">
+					<! -- LIST VIEW -->
 					<% if Top.ListView %>
 						<div class="fields-wrap">
 						<% control Fields %>
@@ -77,6 +78,7 @@
 								<a class="popuplink editlink" href="$EditLink"><img src="dataobject_manager/images/page_white_edit.png" height="12px" alt="edit" /></a>
 								<a class="deletelink" href="$DeleteLink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a>
 						</div>
+					<!-- GRID VIEW -->
 					<% else %>
 							<div class="pad">
 								<% if Top.ShowAll %><span class="handle"><img src="dataobject_manager/images/move_icon.jpg" /></span><% end_if %>
@@ -89,6 +91,7 @@
 									<% end_control %>
 								</span>
 							</div>
+					
 					<% end_if %>
 				</li>
 			<% end_control %>

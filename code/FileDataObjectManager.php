@@ -23,6 +23,7 @@ class FileDataObjectManager extends DataObjectManager
 	public $templatePopup = "DataObjectManager_popup";
 	
 	public $pluralTitle;
+	public $browseButtonText = "Upload files";
 	
 	
 	
@@ -113,6 +114,16 @@ class FileDataObjectManager extends DataObjectManager
 		return $this->allowedFileTypes;
 	}
 	
+	public function setBrowseButtonText($text)
+	{
+		$this->browseButtonText = $text;
+	}
+	
+	public function getBrowseButtonText()
+	{
+		return $this->browseButtonText;
+	}
+	
 	public function upload()
 	{
 		if(!$this->can('upload')) return;
@@ -142,10 +153,10 @@ class FileDataObjectManager extends DataObjectManager
 			'controllerFieldName' => $this->controllerFieldName,
 			'controllerID' => $this->controllerID
 		));
-		if($this->getAllowedFileTypes()) {
+		
+		if($this->getAllowedFileTypes()) 
 			SWFUploadConfig::addFileTypes($this->getAllowedFileTypes());
-		}
-				
+						
 		$fields = new FieldSet(
 			new HeaderField($title = "Add ".$this->PluralTitle(), $headingLevel = 2),
 			new HeaderField($title = "Upload from my computer", $headingLevel = 3),
@@ -156,7 +167,7 @@ class FileDataObjectManager extends DataObjectManager
 				array(
 					'file_upload_limit' => '20', // how many files can be uploaded
 					'file_queue_limit' => '20', // how many files can be in the queue at once
-					'browse_button_text' => 'Choose files...',
+					'browse_button_text' => $this->getBrowseButtonText(),
 					'upload_url' => Director::absoluteURL('FileDataObjectManager_Controller/handleswfupload'),
 					'required' => 'true'			
 				)
@@ -180,7 +191,6 @@ class FileDataObjectManager extends DataObjectManager
 			return $form->forTemplate() . $header->Field() . $this->ImportDropdown()->FieldHolder() . $holder->Field();
 		else
 			return $form;
-;
 		
 	}
 	
@@ -212,13 +222,23 @@ class FileDataObjectManager extends DataObjectManager
 				foreach($remaining_files as $id)
 						$fields->push(new LiteralField("u-$id","<input type='hidden' name='uploaded_files[]' value='$id' />"));
 			
-			$first = $fields->First()->Name();
-			$fields->insertBefore(new HeaderField($title = "Editing file $index of $total", $headingLevel = 2), $first);
-			$fields->insertBefore(new HeaderField(
-				$title = basename(DataObject::get_by_id($this->sourceClass(), $current)->obj($this->fileFieldName)->Filename),
-				$headingLevel = 3
-			), $first);
+				$first = $fields->First()->Name();
+				$fields->insertBefore(new HeaderField($title = "Editing file $index of $total", $headingLevel = 2), $first);
+				$fileObject = DataObject::get_by_id($this->sourceClass(), $current)->obj($this->fileFieldName);
+				if($fileObject instanceof Image) {
+					$URL = $fileObject->SetHeight(150)->URL;
+					$fields->insertBefore(new LiteralField("icon",
+						"<div class='current-image'><img src='$URL' alt='' /><h3>$fileObject->Filename</h3></div>"
+					), $first);
+				}
+				else {
+					$URL = $fileObject->Icon();			
+					$fields->insertBefore(new LiteralField("icon",
+						"<h3><img src='$URL' alt='' /><span>$fileObject->Filename</span></h3>"
+					), $first);			
+				}
 			}
+
 			$form = Object::create(
 				$this->popupClass,
 				$this,
@@ -371,7 +391,7 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
 	public function FileIcon()
 	{
 		$file = $this->obj($this->parent->fileFieldName);
-		return ($file instanceof Image) ? $file->CroppedImage($this->parent->stat('thumbnail_dimensions'))->URL : $file->Icon();
+		return ($file instanceof Image) ? $file->CroppedImage(50,50)->URL : $file->Icon();
 	}
 	
 	public function FileLabel()

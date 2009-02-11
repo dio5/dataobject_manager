@@ -44,9 +44,9 @@
 								<a href="$SortLink">$Title &nbsp;
 								<% if IsSorted %>
 									<% if SortDirection = ASC %>
-									<img src="cms/images/bullet_arrow_up.png" alt="<% _t('SORTASC', 'Sort ascending') %>" />
+									<img src="cms/images/bullet_arrow_up.png" alt="" />
 									<% else %>
-									<img src="cms/images/bullet_arrow_down.png" alt="<% _t('SORTDESC', 'Sort descending') %>" />
+									<img src="cms/images/bullet_arrow_down.png" alt="" />
 									<% end_if %>
 								<% end_if %>
 								</a>

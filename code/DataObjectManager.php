@@ -44,8 +44,6 @@ class DataObjectManager extends ComplexTableField
 		Requirements::block(THIRDPARTY_DIR . "/greybox/greybox.css");
 		Requirements::block(SAPPHIRE_DIR . "/css/ComplexTableField.css");
 		Requirements::css('dataobject_manager/css/dataobject_manager.css');
-		if(false === stristr($_SERVER['HTTP_USER_AGENT'],"safari"))
-			Requirements::css('dataobject_manager/css/searchbox.css');	
 		Requirements::css('dataobject_manager/css/facebox.css');
 		Requirements::javascript('dataobject_manager/javascript/facebox.js');	
 		Requirements::javascript('dataobject_manager/javascript/ui.js');
@@ -141,6 +139,24 @@ class DataObjectManager extends ComplexTableField
 			));
 		}
 		return $headings;
+	}
+	
+	function getCustomFieldsFor($childData) {
+		if(is_a($this->detailFormFields,"Fieldset")) 
+			$fields = $this->detailFormFields;
+		else {
+			if(!is_string($this->detailFormFields)) $this->detailFormFields = "getCMSFields";
+			$functioncall = $this->detailFormFields;
+			if(!$childData->hasMethod($functioncall)) $functioncall = "getCMSFields";
+			
+			$fields = $childData->$functioncall();
+		}
+		
+		foreach($fields as $field) {
+			if($field->class == "CalendarDateField")
+				$fields->replaceField($field->Name(), new DatePickerField($field->Name(), $field->Title()));
+		}
+		return $fields;
 	}
 	
 	public function Link()
@@ -284,6 +300,9 @@ class DataObjectManager_Popup extends Form {
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
 		$this->dataObject = $dataObject;
 		Requirements::clear();
+		Requirements::block('assets/base.js');
+		Requirements::block('sapphire/javascript/lang/en_US.js');
+		Requirements::javascript('jsparty/behaviour.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
 		Requirements::css(CMS_DIR . '/css/typography.css');
 		Requirements::css(CMS_DIR . '/css/cms_right.css');
@@ -314,7 +333,7 @@ class DataObjectManager_Popup extends Form {
 			});
 		");
 		
-		
+		Requirements::javascript('jsparty/behaviour.js');
 		$actions = new FieldSet();	
 		if(!$readonly) {
 			$actions->push(
@@ -324,6 +343,8 @@ class DataObjectManager_Popup extends Form {
 		}
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
+		
+		$this->unsetValidator();
 	}
 
 	function FieldHolder() {
