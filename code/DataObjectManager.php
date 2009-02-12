@@ -45,10 +45,8 @@ class DataObjectManager extends ComplexTableField
 		Requirements::block(SAPPHIRE_DIR . "/css/ComplexTableField.css");
 		Requirements::css('dataobject_manager/css/dataobject_manager.css');
 		Requirements::css('dataobject_manager/css/facebox.css');
-		Requirements::javascript('dataobject_manager/javascript/jquery.js');
 		Requirements::javascript('dataobject_manager/javascript/facebox.js');	
-		Requirements::javascript('dataobject_manager/javascript/jquery-ui.js');
-		Requirements::javascript('dataobject_manager/javascript/sort.js');
+		Requirements::javascript('dataobject_manager/javascript/jquery-ui.1.5.3.js');
 		Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
 		Requirements::javascript('dataobject_manager/javascript/tooltip.js');
 		
@@ -301,9 +299,15 @@ class DataObjectManager_Popup extends Form {
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
 		$this->dataObject = $dataObject;
 		Requirements::clear();
+		Requirements::block('/jsparty/behaviour.js');
+		Requirements::block('sapphire/javascript/Validator.js');
+		Requirements::block('jsparty/prototype.js');
+		Requirements::block('jsparty/behavior.js');
+		Requirements::clear('jsparty/behavior.js');
+
+		Requirements::block('sapphire/javascript/i18n.js');
 		Requirements::block('assets/base.js');
 		Requirements::block('sapphire/javascript/lang/en_US.js');
-		Requirements::javascript('jsparty/behaviour.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
 		Requirements::css(CMS_DIR . '/css/typography.css');
 		Requirements::css(CMS_DIR . '/css/cms_right.css');
@@ -312,7 +316,7 @@ class DataObjectManager_Popup extends Form {
 			$this->dataObject->getRequirementsForPopup();
 		}
 		
-		Requirements::javascript('dataobject_manager/javascript/jquery.js');
+		Requirements::javascript('dataobject_manager/javascript/jquery.1.3.js');
 		
 		// File iframe fields force horizontal scrollbars in the popup. Not cool.
 		// Override the close popup method.
@@ -334,7 +338,6 @@ class DataObjectManager_Popup extends Form {
 			});
 		");
 		
-		Requirements::javascript('jsparty/behaviour.js');
 		$actions = new FieldSet();	
 		if(!$readonly) {
 			$actions->push(
@@ -390,9 +393,9 @@ HTML;
 	function Field() {
 		$id = $this->id();
 		$val = $this->attrValue();
+		Requirements::javascript("jsparty/jquery/jquery.js");
 
-		Requirements::javascript("dataobject_manager/javascript/jquery.js");
-		Requirements::javascript("dataobject_manager/javascript/jquery-ui.js");
+		Requirements::javascript("dataobject_manager/javascript/jquery-ui.1.6.js");
 		Requirements::css("dataobject_manager/css/ui/ui.core.css");
 		Requirements::css("dataobject_manager/css/ui/ui.datepicker.css");
 		Requirements::css("dataobject_manager/css/ui/ui.theme.css");
