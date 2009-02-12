@@ -63,19 +63,6 @@ $j.fn.DataObjectManager.init = function() {
 			return false;
 		});
 		
-		// Import
-		/*
-		$j('#ImportFolder option:contains(0 files)').attr('disabled', true);
-		$j('#ImportFolder').change(function() {
-				$j(document).bind('close.facebox', function(e) {
-					$container.parent().load($container.attr('href'),{}, function(){
-							$j(container_id).DataObjectManager();
-					});
-					e.stopPropagation();
-				});
-				$j.facebox('<iframe src="'+$j(this).attr('value')+'" frameborder="0" width="500" height="' + ($j.fn.DataObjectManager.getPageHeight()*.6) + '"></iframe>');		
-		});
-		*/
 		$j('.dataobjectmanager-filter select').change(function() {
 			$container.parent().load($j(this).attr('value'),{}, function() {
 				$j(container_id).DataObjectManager();
@@ -101,20 +88,21 @@ $j.fn.DataObjectManager.init = function() {
 		$j('#srch_clear').click(function() {
 			$j('#srch_fld').attr('value','').keyup();
 		});
-    $j('a.tooltip').tooltip({
-		  delay: 500,
-		  showURL: false,
-		  track: true,
-		  bodyHandler: function() {
-			  return $j(this).parents('li').find('span.tooltip-info').html();
-		  }
-    });
-    
-    // Columns. God forbid there are more than 10.
-    cols = $j('.list #dataobject-list li.head .fields-wrap .col').length;
-    if(cols > 10) {
-    	$j('.list #dataobject-list li .fields-wrap .col').css({'width' : ((Math.floor(100/cols)) - 0.1) + '%' });
-    }  
+
+	    $j('a.tooltip').tooltip({
+			  delay: 500,
+			  showURL: false,
+			  track: true,
+			  bodyHandler: function() {
+				  return $j(this).parents('li').find('span.tooltip-info').html();
+			  }
+	    });
+	    
+	    // Columns. God forbid there are more than 10.
+	    cols = $j('.list #dataobject-list li.head .fields-wrap .col').length;
+	    if(cols > 10) {
+	    	$j('.list #dataobject-list li .fields-wrap .col').css({'width' : ((Math.floor(100/cols)) - 0.1) + '%' });
+	    }  
 		
 
 };

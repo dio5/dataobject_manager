@@ -9,6 +9,8 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public $view = "list";
 	protected $allowedFileTypes;
+	protected $limitFileTypes;
+
 	protected $permissions = array(
 		"add",
 		"edit",
@@ -22,6 +24,7 @@ class FileDataObjectManager extends DataObjectManager
 	public $template = "FileDataObjectManager";
 	public $templatePopup = "DataObjectManager_popup";
 	
+	public $gridLabelField;
 	public $pluralTitle;
 	public $browseButtonText = "Upload files";
 	
@@ -56,6 +59,11 @@ class FileDataObjectManager extends DataObjectManager
 	public function setPluralTitle($title)
 	{
 		$this->pluralTitle = $title;
+	}
+	
+	public function setGridLabelField($fieldName)
+	{
+		$this->gridLabelField = $fieldName;
 	}
 	
 	public function PluralTitle()
@@ -106,6 +114,11 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public function setAllowedFileTypes($types = array())
 	{
+		foreach($types as $type) {
+			if(is_array($this->limitFileTypes) && !in_array(strtolower(str_replace(".","",$type)), $this->limitFileTypes))
+				// To-do: get user_error working.
+				die("<strong>".$this->class . "::setAllowedFileTypes() -- Only files of type " . implode(", ", $this->limitFileTypes) . " are allowed.</strong>");
+		}
 		$this->allowedFileTypes = $types;
 	}
 	
@@ -144,7 +157,6 @@ class FileDataObjectManager extends DataObjectManager
 		$className = $this->sourceClass();
 		$childData = new $className();
 		$validator = $this->getValidatorFor($childData);
-
 		SWFUploadConfig::addPostParams(array(
 			'dataObjectClassName' => $this->sourceClass(),
 			'dataObjectFieldName' => $this->dataObjectFieldName,
@@ -396,7 +408,7 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
 	
 	public function FileLabel()
 	{
-		$label = ($this->parent->labelField) ? $this->obj($this->parent->labelField) : $this->obj($this->parent->fileFieldName)->Title;
+		$label = ($this->parent->gridLabelField) ? $this->obj($this->parent->gridLabelField) : $this->obj($this->parent->fileFieldName)->Title;
 		return strlen($label) > 30 ? substr($label, 0, 30)."..." : $label;
 	}
 	

@@ -45,8 +45,9 @@ class DataObjectManager extends ComplexTableField
 		Requirements::block(SAPPHIRE_DIR . "/css/ComplexTableField.css");
 		Requirements::css('dataobject_manager/css/dataobject_manager.css');
 		Requirements::css('dataobject_manager/css/facebox.css');
+		Requirements::javascript('dataobject_manager/javascript/jquery.js');
 		Requirements::javascript('dataobject_manager/javascript/facebox.js');	
-		Requirements::javascript('dataobject_manager/javascript/ui.js');
+		Requirements::javascript('dataobject_manager/javascript/jquery-ui.js');
 		Requirements::javascript('dataobject_manager/javascript/sort.js');
 		Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
 		Requirements::javascript('dataobject_manager/javascript/tooltip.js');
@@ -353,6 +354,8 @@ class DataObjectManager_Popup extends Form {
 	
 }
 
+
+
 class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest 
 {
 	function __construct($ctf, $itemID) 
@@ -368,6 +371,47 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 
 
 }
+
+// (!) What is this doing here?
+// In an effort to reduce the amount of javascript in the popup, the legacy CTF requirements
+// have been cleared, which really trips up the CalendarDateField.
+// This class renders a jQuery compliant (and much nicer looking) datepicker.
+// The DataObjectManager::getCustomFields() function sniffs out the date field and replaces it.
+
+class DatePickerField extends DateField 
+{
+	
+	static function HTMLField( $id, $name, $val ) {
+		return <<<HTML
+			<input type="text" id="$id" name="$name" value="$val" />
+HTML;
+	}
+	
+	function Field() {
+		$id = $this->id();
+		$val = $this->attrValue();
+
+		Requirements::javascript("dataobject_manager/javascript/jquery.js");
+		Requirements::javascript("dataobject_manager/javascript/jquery-ui.js");
+		Requirements::css("dataobject_manager/css/ui/ui.core.css");
+		Requirements::css("dataobject_manager/css/ui/ui.datepicker.css");
+		Requirements::css("dataobject_manager/css/ui/ui.theme.css");
+
+		Requirements::customScript(
+			"\$('#$id').datepicker({dateFormat : 'dd/mm/yy', buttonImage : '/sapphire/images/calendar-icon.gif', buttonImageOnly : true});"
+		);
+		$field = parent::Field();
+				
+		$innerHTML = self::HTMLField( $id, $this->name, $val );
+		
+		return <<<HTML
+			<div class="calendardate$futureClass">
+				$innerHTML
+			</div>
+HTML;
+	}
+}
+
 
 
 
