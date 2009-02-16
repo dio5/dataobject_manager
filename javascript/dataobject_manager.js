@@ -35,10 +35,18 @@ $j.fn.DataObjectManager.init = function() {
 		});
 
 		// Pagination
-		$container.find('.Pagination a, .viewbutton').click(function() {
+		$container.find('.Pagination a').click(function() {
 			$container.parent().load($j(this).attr('href'), {}, function() {$j(container_id).DataObjectManager();});
 			return false;
 		});
+		
+		// View
+		if($container.hasClass('FileDataObjectManager') && !$container.hasClass('ImageDataObjectManager')) {
+			$container.find('.viewbutton a').click(function() {
+				$container.parent().load($j(this).attr('href'), {}, function() {$j(container_id).DataObjectManager();});
+				return false;
+			});
+		}
 
 		// Sortable
 		$container.find('.sort-control input').click(function(e) {
@@ -58,10 +66,14 @@ $j.fn.DataObjectManager.init = function() {
 			tolerance : 'intersect',
 			handle : ($j('#list-holder').hasClass('grid') ? '.handle' : null)
 		});
-		$container.find('li.head a').click(function() {
-			$container.parent().load($j(this).attr('href'), {}, function() {$j(container_id).DataObjectManager();});
-			return false;
-		});
+		
+		// Column sort
+		if(!$container.hasClass('ImageDataObjectManager')) {
+			$container.find('li.head a').click(function() {
+				$container.parent().load($j(this).attr('href'), {}, function() {$j(container_id).DataObjectManager();});
+				return false;
+			});
+		}
 		
 		$j('.dataobjectmanager-filter select').change(function() {
 			$container.parent().load($j(this).attr('value'),{}, function() {
@@ -89,20 +101,49 @@ $j.fn.DataObjectManager.init = function() {
 			$j('#srch_fld').attr('value','').keyup();
 		});
 
-	    $j('a.tooltip').tooltip({
-			  delay: 500,
-			  showURL: false,
-			  track: true,
-			  bodyHandler: function() {
-				  return $j(this).parents('li').find('span.tooltip-info').html();
-			  }
-	    });
-	    
-	    // Columns. God forbid there are more than 10.
-	    cols = $j('.list #dataobject-list li.head .fields-wrap .col').length;
-	    if(cols > 10) {
-	    	$j('.list #dataobject-list li .fields-wrap .col').css({'width' : ((Math.floor(100/cols)) - 0.1) + '%' });
-	    }  
+    $j('a.tooltip').tooltip({
+		  delay: 500,
+		  showURL: false,
+		  track: true,
+		  bodyHandler: function() {
+			  return $j(this).parents('li').find('span.tooltip-info').html();
+		  }
+    });
+    
+    
+    // Add the slider to the ImageDataObjectManager
+    if($container.hasClass('ImageDataObjectManager')) {
+			var MIN_IMG_SIZE = 25
+			var MAX_IMG_SIZE = 300;
+			var START_IMG_SIZE = 100;
+			var new_image_size;
+			$j('.size-control').slider({
+				
+				// Stupid thing doesn't work. Have to force it with CSS
+				//startValue : (START_IMG_SIZE - MIN_IMG_SIZE) / ((MAX_IMG_SIZE - MIN_IMG_SIZE) / 100),
+				slide : function(e, ui) {
+					new_image_size = MIN_IMG_SIZE + (ui.value * ((MAX_IMG_SIZE - MIN_IMG_SIZE)/100));
+					$j('.grid li img.image').css({'width': new_image_size+'px'});
+					$j('.grid li').css({'width': new_image_size+'px', 'height' : new_image_size +'px'});
+				},
+				
+				stop : function(e, ui) {
+					new_image_size = MIN_IMG_SIZE + (ui.value * ((MAX_IMG_SIZE - MIN_IMG_SIZE)/100));				
+					url = $j(container_id).attr('href').replace(/\[imagesize\]=(.)*/, '[imagesize]='+Math.floor(new_image_size));
+					$container.parent().load(url,{}, function() {$j(container_id).DataObjectManager();})
+				
+				}
+			});
+			
+			$j('.ui-slider-handle').css({'left' : $j('#size-control-wrap').attr('class').replace('position','')+'px'});    
+    
+    }  
+		
+    // Columns. God forbid there are more than 10.
+    cols = $j('.list #dataobject-list li.head .fields-wrap .col').length;
+    if(cols > 10) {
+    	$j('.list #dataobject-list li .fields-wrap .col').css({'width' : ((Math.floor(100/cols)) - 0.1) + '%' });
+    }
 		
 
 };
