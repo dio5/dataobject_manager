@@ -19,3 +19,12 @@ $(function() {
 		}).find('option:contains((0 files))').attr('disabled',true);
 	}
 });
+
+$().ajaxSend(function(r,s){  
+ $(".ajax-loader").show();  
+});  
+   
+$().ajaxStop(function(r,s){  
+  $(".ajax-loader").fadeOut("fast");  
+});  
+

@@ -26,8 +26,6 @@ class ImageDataObjectManager extends FileDataObjectManager
 		if(isset($_REQUEST['ctf'][$this->Name()])) {		
 				$this->imageSize = $_REQUEST['ctf'][$this->Name()]['imagesize'];
 		}
-
-	
 		$this->setAllowedFileTypes($this->limitFileTypes);
 	}
 
@@ -101,7 +99,7 @@ class ImageDataObjectManager_ItemRequest extends DataObjectManager_ItemRequest
 		$fileField = $this->ctf->fileFieldName;
 		$imgObj = $this->dataObj()->$fileField();
 		$form = parent::DetailForm($childID);
-		$form->Fields()->insertBefore(new LiteralField("preview", "<div class='preview-image'><img src='".$imgObj->SetHeight(200)->URL."' alt='' /></div>"), $form->Fields()->First()->Name());
+		$form->Fields()->insertBefore($this->ctf->getPreviewFieldFor($imgObj, 200), $form->Fields()->First()->Name());
 		return $form;
 	}
 

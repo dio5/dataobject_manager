@@ -408,7 +408,7 @@ HTML;
 		$innerHTML = self::HTMLField( $id, $this->name, $val );
 		
 		return <<<HTML
-			<div class="calendardate$futureClass">
+			<div class="datepicker field">
 				$innerHTML
 			</div>
 HTML;

@@ -7,9 +7,11 @@
 			</a>	
 		<% end_if %>
 	</div>
-	<div class="dataobjectmanager-filter">
-		<% if HasFilter %>$FilterDropdown<% end_if %>
-	</div>
+	<% if HasFilter %>
+		<div class="dataobjectmanager-filter">
+			$FilterDropdown
+		</div>
+	<% end_if %>
 	<div style="clear:both;"></div>
 	<div class="top-controls">
 		<div class="rounded_table_top_right">

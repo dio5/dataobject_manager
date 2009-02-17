@@ -208,7 +208,7 @@ class FileDataObjectManager extends DataObjectManager
 		$form->setActions(new FieldSet(new FormAction("saveUploadForm","Upload")));
 
 		$header = new HeaderField($title = "Import from an existing folder", $headingLevel = 3);
-		$holder = 	new LiteralField("holder","<div id='import-holder'></div>");
+		$holder = 	new LiteralField("holder","<div class='ajax-loader'></div><div id='import-holder'></div>");
 		if(!isset($_POST['uploaded_files']))
 			return $form->forTemplate() . $header->Field() . $this->ImportDropdown()->FieldHolder() . $holder->Field();
 		else
@@ -229,6 +229,22 @@ class FileDataObjectManager extends DataObjectManager
 	{
 		$class = $this->sourceClass();
 		return new $class();
+	}
+	
+	public function getPreviewFieldFor($fileObject, $size = 150)
+	{
+		if($fileObject instanceof Image) {
+			$URL = $fileObject->SetHeight($size)->URL;
+			return new LiteralField("icon",
+				"<div class='current-image'><img src='$URL' alt='' /><h3>$fileObject->Filename</h3></div>"
+			);
+		}
+		else {
+			$URL = $fileObject->Icon();			
+			return new LiteralField("icon",
+				"<h3><img src='$URL' alt='' /><span>$fileObject->Filename</span></h3>"
+			);			
+		}	
 	}
 	
 	public function EditUploadedForm()
@@ -252,20 +268,8 @@ class FileDataObjectManager extends DataObjectManager
 				$first = $fields->First()->Name();
 				$fields->insertBefore(new HeaderField($title = "Editing file $index of $total", $headingLevel = 2), $first);
 				$fileObject = DataObject::get_by_id($this->sourceClass(), $current)->obj($this->fileFieldName);
-				if($fileObject instanceof Image) {
-					$URL = $fileObject->SetHeight(150)->URL;
-					$fields->insertBefore(new LiteralField("icon",
-						"<div class='current-image'><img src='$URL' alt='' /><h3>$fileObject->Filename</h3></div>"
-					), $first);
-				}
-				else {
-					$URL = $fileObject->Icon();			
-					$fields->insertBefore(new LiteralField("icon",
-						"<h3><img src='$URL' alt='' /><span>$fileObject->Filename</span></h3>"
-					), $first);			
-				}
+				$fields->insertBefore($this->getPreviewFieldFor($fileObject), $first);
 			}
-
 			$form = Object::create(
 				$this->popupClass,
 				$this,
@@ -354,6 +358,13 @@ class FileDataObjectManager extends DataObjectManager
 		if(isset($data['imported_files']) && is_array($data['imported_files'])) {
 			$_POST['uploaded_files'] = array();
 			foreach($data['imported_files'] as $file_id) {
+				$file = DataObject::get_by_id("File",$file_id);
+				// If something other than File has been specified as the linked file class,
+				// we need to "upgrade" the imported file to the correct class.
+				if($this->fileClassName != "File" && $file->ClassName != $this->fileClassName) {
+					$file->ClassName = $this->fileClassName;
+					$file->write();
+				}
 				$do_class = $data['dataObjectClassName'];
 				$idxfield = $data['fileFieldName']."ID";
 				$owner_id = $data['controllerFieldName']."ID";

@@ -43,8 +43,8 @@
 .import-title {vertical-align:80%;margin-left:10px;}
 
 
-.dataobjectmanager-actions {width:55%;float:left;}
-.dataobjectmanager-actions.filter {padding-top:2em;}
+.dataobjectmanager-actions {width:55%;float:left;height:35px;}
+.dataobjectmanager-actions.filter {padding-top:2em;height:auto;}
 .dataobjectmanager-actions a {background: transparent url('/dataobject_manager/images/bg_button_a.gif') no-repeat scroll top right;display: block;float: left;height: 24px;margin-right: 6px;padding-right: 13px;text-decoration: none;color: #333;font-size:13px;font-weight:bold;cursor:pointer;}
 .dataobjectmanager-actions a span {background: transparent url('/dataobject_manager/images/bg_button_span.gif') no-repeat;display: block;line-height: 22px;padding: 2px 0 5px 10px;font-size:12px;height:17px;} 
 .dataobjectmanager-actions a:active {background: transparent url('/dataobject_manager/images/bg_button_a.gif') no-repeat scroll right -24px;;display: block;float: left;height: 24px;margin-right: 6px;padding-right: 13px;text-decoration: none;color: #333;font-size:13px;font-weight:bold;}
@@ -121,6 +121,7 @@
 .DataObjectManager-popup .queue-file-name {font-size:11px;}
 .DataObjectManager-popup .current-image {text-align:center;padding-top:5px;}
 .DataObjectManager-popup small a {display:none;}
+.DataObjectManager-popup .ajax-loader {width:32px;height:32px;background:url(/dataobject_manager/images/ajax-loader-lg.gif) no-repeat;position:absolute; top:50%;left:50%;margin:-16px 0 0 -16px;display:none;}
 
 /* Target IE7 only */
 html>body .DataObjectManager {*width:96%;}
