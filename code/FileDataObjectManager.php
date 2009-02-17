@@ -5,11 +5,11 @@ class FileDataObjectManager extends DataObjectManager
 	static $url_handlers = array(
 		'import/$ID' => 'handleImport'
 	);
-	static $thumbnail_dimensions = "32,32";	
 	
 	public $view = "list";
 	protected $allowedFileTypes;
 	protected $limitFileTypes;
+	public $importClass = "File";
 
 	protected $permissions = array(
 		"add",
@@ -68,7 +68,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public function PluralTitle()
 	{
-		return $this->pluralTitle ? $this->pluralTitle : $this->Title()."s";
+		return $this->pluralTitle ? $this->pluralTitle : $this->AddTitle()."s";
 	}
 		
 	public function GridLink()
@@ -96,6 +96,11 @@ class FileDataObjectManager extends DataObjectManager
 		return new DropdownField('ImportFolder','',$this->getFolderHierarchy(0),null, null, "-- Select a folder --");
 	}
 	
+	protected function importLinkFor($file)
+	{
+		return $this->BaseLink()."/import/$file->ID";
+	}
+	
 	protected function getFolderHierarchy($parentID, $level = 0)
 	{
 		$options = array();		
@@ -103,9 +108,9 @@ class FileDataObjectManager extends DataObjectManager
 			foreach($children as $child) {
 				$indent="";
 				for($i=0;$i<$level;$i++) $indent .= "&nbsp;&nbsp;";
-				$files = DataObject::get("File", "ClassName != 'Folder' AND ParentID = $child->ID");
+				$files = DataObject::get($this->importClass, "ClassName != 'Folder' AND ParentID = $child->ID");
 				$count = $files ? $files->Count() : "0";
-				$options[$this->BaseLink()."/import/$child->ID"] = $indent.$child->Title . " <span>($count files)</span>";
+				$options[$this->importLinkFor($child)] = $indent.$child->Title . " <span>($count files)</span>";
 				$options += $this->getFolderHierarchy($child->ID, $level+1);
 			}
 		}
@@ -152,6 +157,27 @@ class FileDataObjectManager extends DataObjectManager
 		return $this->BaseLink().'/upload';
 	}
 	
+	protected function getUploadFields()
+	{
+		return new FieldSet(
+			new HeaderField($title = "Add ".$this->PluralTitle(), $headingLevel = 2),
+			new HeaderField($title = "Upload from my computer", $headingLevel = 3),
+			new SWFUploadField(
+				"UploadForm",
+				"Upload",
+				"",
+				array(
+					'file_upload_limit' => '20', // how many files can be uploaded
+					'file_queue_limit' => '20', // how many files can be in the queue at once
+					'browse_button_text' => $this->getBrowseButtonText(),
+					'upload_url' => Director::absoluteURL('FileDataObjectManager_Controller/handleswfupload'),
+					'required' => 'true'			
+				)
+			)
+		);
+	
+	}
+	
 	public function UploadForm()
 	{
 		$className = $this->sourceClass();
@@ -169,28 +195,12 @@ class FileDataObjectManager extends DataObjectManager
 		if($this->getAllowedFileTypes()) 
 			SWFUploadConfig::addFileTypes($this->getAllowedFileTypes());
 						
-		$fields = new FieldSet(
-			new HeaderField($title = "Add ".$this->PluralTitle(), $headingLevel = 2),
-			new HeaderField($title = "Upload from my computer", $headingLevel = 3),
-			new SWFUploadField(
-				"UploadForm",
-				"Upload",
-				"",
-				array(
-					'file_upload_limit' => '20', // how many files can be uploaded
-					'file_queue_limit' => '20', // how many files can be in the queue at once
-					'browse_button_text' => $this->getBrowseButtonText(),
-					'upload_url' => Director::absoluteURL('FileDataObjectManager_Controller/handleswfupload'),
-					'required' => 'true'			
-				)
-			)
-		);
 
 		$form = Object::create(
 			$this->popupClass,
 			$this,
 			'UploadForm',
-			$fields,
+			$this->getUploadFields(),
 			$validator,
 			false,
 			$childData
@@ -215,10 +225,15 @@ class FileDataObjectManager extends DataObjectManager
 		}
 	}
 	
+	protected function getChildDataObj()
+	{
+		$class = $this->sourceClass();
+		return new $class();
+	}
+	
 	public function EditUploadedForm()
 	{
-		$className = $this->sourceClass();
-		$childData = new $className();
+		$childData = $this->getChildDataObj();
 		$validator = $this->getValidatorFor($childData);
 		$fields = $this->getFieldsFor($childData);
 		$fields->removeByName($this->fileFieldName);
@@ -277,14 +292,12 @@ class FileDataObjectManager extends DataObjectManager
 		else {
 			Requirements::clear();
 			Requirements::customScript("
-					var container = parent.\$container;
+					var container = parent.jQuery('#".$this->id()."');
 					parent.jQuery('#facebox').fadeOut(function() {
 					parent.jQuery('#facebox .content').removeClass().addClass('content');
 					parent.jQuery('#facebox_overlay').remove();
 					parent.jQuery('#facebox .loading').remove();
-					container.load(container.attr('href'),{}, function(){
-					parent.jQuery(container).DataObjectManager();
-				});
+					parent.refresh(container, container.attr('href'));
 			});");
 			return $this->customise(array(
 				'DetailForm' => 'Closing...'
@@ -299,18 +312,22 @@ class FileDataObjectManager extends DataObjectManager
 		die($this->ImportForm($this->importFolderID)->forTemplate());
 	}
 	
-	protected function ImportForm($folder_id = null)
+	protected function getImportFields()
 	{
-		$folder_id = isset($_POST['folder_id']) ? $_POST['folder_id'] : $this->importFolderID;;
-		if($files = DataObject::get("File", "ClassName != 'Folder' AND ParentID = $folder_id"))
-			$fields = new FieldSet(
-				new HiddenField('folder_id','',$folder_id),
+		return new FieldSet(
 				new HiddenField('dataObjectClassName','',$this->sourceClass()),
 				new HiddenField('fileFieldName','', $this->fileFieldName),
 				new HiddenField('controllerFieldName','', $this->controllerFieldName),
 				new HiddenField('controllerID','',$this->controllerID)
 			);
-			
+	}
+	
+	protected function ImportForm($folder_id = null)
+	{
+		$folder_id = isset($_POST['folder_id']) ? $_POST['folder_id'] : $this->importFolderID;;
+		if($files = DataObject::get($this->importClass, "ClassName != 'Folder' AND ParentID = $folder_id"))
+			$fields = $this->getImportFields();
+			$fields->push(new HiddenField('folder_id','',$folder_id));
 			$fields->push(new LiteralField("ul","<ul>"));
 			foreach($files as $file) {
 				$icon = $file instanceof Image ? $file->croppedImage(35,35)->URL : $file->Icon();

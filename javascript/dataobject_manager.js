@@ -3,19 +3,19 @@ $j = jQuery.noConflict();
 var $container;
 
 $j.fn.DataObjectManager = function() {
-	$container = $(this);
-	container_id = '#'+$container.attr('id');
-	$j.fn.DataObjectManager.init();
+	this.each(function() {
+		$j.fn.DataObjectManager.init(this);
+	});
 };
 
-$j.fn.DataObjectManager.init = function() {
-		
+$j.fn.DataObjectManager.init = function(obj) {
+		var $container = $j(obj);
+		var container_id = '#'+$container.attr('id');
+
 		// Popup links
 		$container.find('a.popuplink').click(function() {
 			$j(document).bind('close.facebox', function(e) {
-				$container.parent().load($container.attr('href'),{}, function(){
-						$j(container_id).DataObjectManager();
-				});
+				refresh($container, $container.attr('href'));
 				e.stopPropagation();
 			});
 			$j.facebox('<iframe src="'+$j(this).attr('href')+'" frameborder="0" width="500" height="' + ($j.fn.DataObjectManager.getPageHeight()*.6) + '"></iframe>');
@@ -29,28 +29,28 @@ $j.fn.DataObjectManager.init = function() {
 			$j.post(
 				$target.attr('href'),
 				params,
-				function() {$($target).parents('li:first').fadeOut()}
+				function() {$($target).parents('li:first').fadeOut();$j(".ajax-loader").fadeOut("fast");}
 			);
 			return false;
 		});
 
 		// Pagination
 		$container.find('.Pagination a').click(function() {
-			$container.parent().load($j(this).attr('href'), {}, function() {$j(container_id).DataObjectManager();});
+			refresh($container, $j(this).attr('href'));
 			return false;
 		});
 		
 		// View
 		if($container.hasClass('FileDataObjectManager') && !$container.hasClass('ImageDataObjectManager')) {
 			$container.find('.viewbutton a').click(function() {
-				$container.parent().load($j(this).attr('href'), {}, function() {$j(container_id).DataObjectManager();});
+				refresh($container, $j(this).attr('href'));
 				return false;
 			});
 		}
 
 		// Sortable
 		$container.find('.sort-control input').click(function(e) {
-			$container.parent().load($j(this).attr('value'), {}, function() {$j(container_id).DataObjectManager();});
+			refresh($container, $j(this).attr('value'));
 			$j(this).attr('disabled', true);
 			e.stopPropagation();
 		});
@@ -70,20 +70,19 @@ $j.fn.DataObjectManager.init = function() {
 		// Column sort
 		if(!$container.hasClass('ImageDataObjectManager')) {
 			$container.find('li.head a').click(function() {
-				$container.parent().load($j(this).attr('href'), {}, function() {$j(container_id).DataObjectManager();});
+				refresh($container, $j(this).attr('href'));
 				return false;
 			});
 		}
 		
-		$j('.dataobjectmanager-filter select').change(function() {
-			$container.parent().load($j(this).attr('value'),{}, function() {
-				$j(container_id).DataObjectManager();
-			});
+		// Filter
+		$container.find('.dataobjectmanager-filter select').change(function(e) {
+			refresh($container, $j(this).attr('value'));
 		});
 	
 		// Search
 		var request = false;
-		$j('#srch_fld').focus(function() {
+		$container.find('#srch_fld').focus(function() {
 			if($j(this).attr('value') == "Search") $j(this).attr('value','').css({'color' : '#333'});
 		}).blur(function() {
 			if($j(this).attr('value') == '') $j(this).attr('value','Search').css({'color' : '#666'});
@@ -92,16 +91,16 @@ $j.fn.DataObjectManager.init = function() {
 				$input = $j(this);
 				request = window.setTimeout(function() {
 					url = $j(container_id).attr('href').replace(/\[search\]=(.)*?&/, '[search]='+$input.attr('value')+'&');
-					$container.parent().load(url,{}, function() {$j(container_id).DataObjectManager();$input.focus();})
+					refresh($container, url);
 				},200)
 			e.stopPropagation();
 		});
 		
-		$j('#srch_clear').click(function() {
-			$j('#srch_fld').attr('value','').keyup();
+		$container.find('#srch_clear').click(function() {
+			$container.find('#srch_fld').attr('value','').keyup();
 		});
 
-    $j('a.tooltip').tooltip({
+    $container.find('a.tooltip').tooltip({
 		  delay: 500,
 		  showURL: false,
 		  track: true,
@@ -130,8 +129,7 @@ $j.fn.DataObjectManager.init = function() {
 				stop : function(e, ui) {
 					new_image_size = MIN_IMG_SIZE + (ui.value * ((MAX_IMG_SIZE - MIN_IMG_SIZE)/100));				
 					url = $j(container_id).attr('href').replace(/\[imagesize\]=(.)*/, '[imagesize]='+Math.floor(new_image_size));
-					$container.parent().load(url,{}, function() {$j(container_id).DataObjectManager();})
-				
+					refresh($container, url);
 				}
 			});
 			
@@ -159,6 +157,20 @@ $j.fn.DataObjectManager.getPageHeight = function() {
     }	
     return windowHeight;
 };
+
+function refresh($div, link)
+{
+	 $j.ajax({
+	   type: "GET",
+	   url: link,
+	   success: function(html){
+	   		if(document.getElementById($div.attr('id')).parentNode) {
+				$div.replaceWith(html);
+				$j('#'+$div.attr('id')).DataObjectManager();
+				}
+	   }
+	 });
+}
 
 $j().ajaxSend(function(r,s){  
  $j(".ajax-loader").show();  

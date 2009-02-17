@@ -12,6 +12,7 @@ class ImageDataObjectManager extends FileDataObjectManager
 	public $template = "ImageDataObjectManager";
 	public $itemClass = "ImageDataObjectManager_Item";
 	public $popupClass = "ImageDataObjectManager_Popup";
+	public $importClass = "Image";
 	
 	public $imageSize = 100;
 

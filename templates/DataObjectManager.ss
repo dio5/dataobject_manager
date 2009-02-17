@@ -1,9 +1,9 @@
 <div id="$id" class="RequestHandler FormField DataObjectManager field" href="$CurrentLink">
 	<div class="ajax-loader"></div>
-	<div class="dataobjectmanager-actions">
+	<div class="dataobjectmanager-actions <% if HasFilter %>filter<% end_if %>">
 		<% if Can(add) %>
 			<a class="popuplink" href="$AddLink" alt="upload">
-				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% sprintf(_t('ADDITEM', 'Add %s', PR_MEDIUM, 'Add [name]'),$Title) %></span>
+				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% sprintf(_t('ADDITEM', 'Add %s', PR_MEDIUM, 'Add [name]'),$AddTitle) %></span>
 			</a>	
 		<% end_if %>
 	</div>

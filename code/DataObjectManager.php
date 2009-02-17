@@ -13,7 +13,9 @@ class DataObjectManager extends ComplexTableField
 	protected $filter_map = array();
 	protected $filtered_field;
 	protected $filter_label = "Filter results";
+	protected $filter_empty_string = true;
 	public $itemClass = "DataObjectManager_Item";
+	public $addTitle;
 
 	public $actions = array(
 		'edit' => array(
@@ -244,7 +246,7 @@ class DataObjectManager extends ComplexTableField
 	
 	public function FilterDropdown()
 	{
-		$map = array($this->RelativeLink(array('filter' => '')) => '-- No filter --');
+		$map = $this->filter_empty_string ? array($this->RelativeLink(array('filter' => '')) => '-- No filter --') : array();
 		foreach($this->filter_map as $k => $v) {
 			$map[$this->RelativeLink(array('filter' => $this->filtered_field.'_'.$k))] = $v;
 		}
@@ -256,6 +258,16 @@ class DataObjectManager extends ComplexTableField
 	public function SearchValue()
 	{
 		return !empty($this->search) ? $this->search : false;
+	}
+	
+	public function AddTitle()
+	{
+		return $this->addTitle ? $this->addTitle : $this->Title();
+	}
+	
+	public function setAddTitle($title)
+	{
+		$this->addTitle = $title;
 	}
 
 }
@@ -322,19 +334,7 @@ class DataObjectManager_Popup extends Form {
 		// Override the close popup method.
 		Requirements::customScript("
 			jQuery(function() {
-				jQuery('iframe').css({'width':'433px'});
-				
-				jQuery('small a').attr('onclick','').click(function() {
-					var container = parent.\$container;
-					parent.jQuery('#facebox').fadeOut(function() {
-						parent.jQuery('#facebox .content').removeClass().addClass('content');
-						parent.jQuery('#facebox_overlay').remove();
-						parent.jQuery('#facebox .loading').remove();
-						container.load(container.attr('href'),{}, function(){
-							parent.jQuery(container).DataObjectManager();	
-						});
-					});			
-				});
+				jQuery('iframe').css({'width':'433px'});				
 			});
 		");
 		
