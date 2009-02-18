@@ -67,7 +67,7 @@ class ImageDataObjectManager_Item extends FileDataObjectManager_Item
 		elseif($this->parent->imageSize <= 100) $size = 100;
 		elseif($this->parent->imageSize <= 200) $size = 200;
 		else $size = 300;
-		return ($file instanceof Image) ? $file->CroppedImage($size, $size)->URL : $file->Icon();
+		return ($file instanceof Image && $cropped = $file->CroppedImage($size, $size)) ? $cropped->URL : $file->Icon();
 	}
 	
 	public function ImageSize()

@@ -16,6 +16,7 @@ class DataObjectManager extends ComplexTableField
 	protected $filter_empty_string = true;
 	public $itemClass = "DataObjectManager_Item";
 	public $addTitle;
+	public $singleTitle;
 
 	public $actions = array(
 		'edit' => array(
@@ -142,6 +143,21 @@ class DataObjectManager extends ComplexTableField
 		return $headings;
 	}
 	
+	function saveComplexTableField($data, $form, $params) {
+		$className = $this->sourceClass();
+		$childData = new $className();
+		$form->saveInto($childData);
+		$childData->write();
+		$form->sessionMessage('Added new ' . $this->SingleTitle() .' successfully', 'good');
+		if($form->hasFileField()) {
+			$form->clearMessage();
+			Director::redirect($this->BaseLink().'/item/'.$childData->ID.'/edit');
+		}
+		else Director::redirectBack();
+
+	}
+	
+	
 	function getCustomFieldsFor($childData) {
 		if(is_a($this->detailFormFields,"Fieldset")) 
 			$fields = $this->detailFormFields;
@@ -158,6 +174,21 @@ class DataObjectManager extends ComplexTableField
 				$fields->replaceField($field->Name(), new DatePickerField($field->Name(), $field->Title()));
 		}
 		return $fields;
+	}
+	
+	function AddForm($childID = null)
+	{
+		$form = parent::AddForm($childID);
+		$actions = new FieldSet();	
+		$text = $form->hasFileField() ? "Save and add file(s)" : "Save";
+		$actions->push(
+			$saveAction = new FormAction("saveComplexTableField", $text)
+		);	
+		$saveAction->addExtraClass('save');
+		$form->setActions($actions);
+		return $form;
+
+		
 	}
 	
 	public function Link()
@@ -265,9 +296,19 @@ class DataObjectManager extends ComplexTableField
 		return $this->addTitle ? $this->addTitle : $this->Title();
 	}
 	
+	public function SingleTitle()
+	{
+		return $this->singleTitle ? $this->singleTitle : $this->AddTitle();
+	}
+	
 	public function setAddTitle($title)
 	{
 		$this->addTitle = $title;
+	}
+	
+	public function setSingleTitle($title)
+	{
+		$this->singleTitle = $title;
 	}
 
 }
@@ -355,6 +396,16 @@ class DataObjectManager_Popup extends Form {
 		return $this->renderWith('ComplexTableField_Form');
 	}
 	
+	public function hasFileField()
+	{
+		foreach($this->Fields() as $field) {
+			if($field instanceof FileIFrameField || $field instanceof ImageField)
+				return true;
+		}
+		
+		return false;
+	}
+	
 }
 
 
@@ -370,6 +421,16 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 	{
 		return $this->ctf->BaseLink() . '/item/' . $this->itemID;
 	}
+
+	function saveComplexTableField($data, $form, $request) {
+		$form->saveInto($this->dataObj());
+		$this->dataObj()->write();
+		
+		$form->sessionMessage('Saved '.$this->ctf->SingleTitle(). ' successfully', 'good');
+
+		Director::redirectBack();
+	}
+	
 	
 
 
