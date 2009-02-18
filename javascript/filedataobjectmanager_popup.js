@@ -8,11 +8,14 @@ $(function() {
 			else {
 				$('#import-holder').load($(this).val(), {},function() {
 					$('#action_saveUploadForm').hide();
-					$('#Form_ImportForm li').click(function() {
-						i = $(this).find('input'); 
-						c = i.attr('checked'); 
-						i.attr('checked', !c); 
+					$('#Form_ImportForm li').click(function(e) {
+						if(e.target.nodeName != "INPUT") {
+							i = $(this).find('input'); 
+							c = i.attr('checked'); 
+							i.attr('checked', !c);
+						}
 						$(this).toggleClass('current');
+						e.stopPropagation();
 					});
 				});
 			}				 
@@ -21,7 +24,7 @@ $(function() {
 });
 
 $().ajaxSend(function(r,s){  
- $(".ajax-loader").show();  
+ $(".ajax-loader").fadeIn("fast");  
 });  
    
 $().ajaxStop(function(r,s){  

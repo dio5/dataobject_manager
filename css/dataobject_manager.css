@@ -122,7 +122,10 @@
 .DataObjectManager-popup .current-image {text-align:center;padding-top:5px;}
 .DataObjectManager-popup small a {display:none;}
 .DataObjectManager-popup .ajax-loader {width:32px;height:32px;background:url(/dataobject_manager/images/ajax-loader-lg.gif) no-repeat;position:absolute; top:50%;left:50%;margin:-16px 0 0 -16px;display:none;}
-
+.DataObjectManager-popup .rotate-controls a:hover {background:none;}
+.DataObjectManager-popup #preview-image {position:relative;}
+.DataObjectManager-popup #preview-image .ajax-loader {height:auto;width:100%;position:static;margin:0;text-align:center;background:none;}
+.DataObjectManager-popup #preview-image .ajax-loader img {vertical-align:-5px;}
 /* Target IE7 only */
 html>body .DataObjectManager {*width:96%;}
 /* end */
