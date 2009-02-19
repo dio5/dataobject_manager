@@ -185,7 +185,7 @@
 	// delete timeout and show helper
 	function show() {
 		tID = null;
-		if ((!IE || !jQuery.fn.bgiframe) && settings(current).fade) {
+		if ((!IE || !jQuery.fn.bgiframe) && settings(current) && settings(current).fade) {
 			if (helper.parent.is(":animated"))
 				helper.parent.stop().show().fadeTo(settings(current).fade, current.tOpacity);
 			else
@@ -225,7 +225,7 @@
 		
 		var left = helper.parent[0].offsetLeft;
 		var top = helper.parent[0].offsetTop;
-		if (event) {
+		if (event && settings(current)) {
 			// position the helper 15 pixel to bottom right, starting from mouse position
 			left = event.pageX + settings(current).left;
 			top = event.pageY + settings(current).top;

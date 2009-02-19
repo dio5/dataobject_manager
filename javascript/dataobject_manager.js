@@ -51,7 +51,7 @@ $j.fn.DataObjectManager.init = function(obj) {
 		
 		// View
 		if($container.hasClass('FileDataObjectManager') && !$container.hasClass('ImageDataObjectManager')) {
-			$container.find('.viewbutton a').unbind('click').click(function() {
+			$container.find('a.viewbutton').unbind('click').click(function() {
 				refresh($container, $j(this).attr('href'));
 				return false;
 			});

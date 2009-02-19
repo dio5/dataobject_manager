@@ -149,7 +149,7 @@ class DataObjectManager extends ComplexTableField
 		$form->saveInto($childData);
 		$childData->write();
 		$form->sessionMessage('Added new ' . $this->SingleTitle() .' successfully', 'good');
-		if($form->hasFileField()) {
+		if($form->getFileField()) {
 			$form->clearMessage();
 			Director::redirect($this->BaseLink().'/item/'.$childData->ID.'/edit');
 		}
@@ -180,7 +180,7 @@ class DataObjectManager extends ComplexTableField
 	{
 		$form = parent::AddForm($childID);
 		$actions = new FieldSet();	
-		$text = $form->hasFileField() ? "Save and add file(s)" : "Save";
+		$text = ($field = $form->getFileField()) ? "Save and add " . $field->Title() : "Save";
 		$actions->push(
 			$saveAction = new FormAction("saveComplexTableField", $text)
 		);	
@@ -396,11 +396,11 @@ class DataObjectManager_Popup extends Form {
 		return $this->renderWith('ComplexTableField_Form');
 	}
 	
-	public function hasFileField()
+	public function getFileField()
 	{
 		foreach($this->Fields() as $field) {
 			if($field instanceof FileIFrameField || $field instanceof ImageField)
-				return true;
+				return $field;
 		}
 		
 		return false;
