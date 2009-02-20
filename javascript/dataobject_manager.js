@@ -88,6 +88,13 @@ $j.fn.DataObjectManager.init = function(obj) {
 		$container.find('.dataobjectmanager-filter select').unbind('change').change(function(e) {
 			refresh($container, $j(this).attr('value'));
 		});
+		
+		// Refresh filter
+		$container.find('.dataobjectmanager-filter .refresh').unbind('click').click(function(e) {
+			refresh($container, $container.attr('href'));
+			e.stopPropagation();
+			return false;
+		})
 	
 		// Search
 		var request = false;
