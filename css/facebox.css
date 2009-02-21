@@ -1,21 +1,21 @@
 #facebox .b {
-  background:url(/dataobject_manager/images/b.png);
+  background:url(../images/b.png);
 }
 
 #facebox .tl {
-  background:url(/dataobject_manager/images/tl.png);
+  background:url(../images/tl.png);
 }
 
 #facebox .tr {
-  background:url(/dataobject_manager/images/tr.png);
+  background:url(../images/tr.png);
 }
 
 #facebox .bl {
-  background:url(/dataobject_manager/images/bl.png);
+  background:url(../images/bl.png);
 }
 
 #facebox .br {
-  background:url(/dataobject_manager/images/br.png);
+  background:url(../images/br.png);
 }
 
 #facebox {

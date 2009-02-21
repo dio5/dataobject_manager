@@ -83,7 +83,7 @@
 			<div class="rounded_table_bottom_left">
 				<div class="sort-control">
 					<% if Sortable %>
-						<input id="showall" type="checkbox" <% if ShowAll %>checked="checked"<% end_if %> value="<% if Paginated %>$ShowAllLink<% else %>$PaginatedLink<% end_if %>" /><label for="showall">Allow drag & drop reordering</label>
+						<input id="showall-{$id}" type="checkbox" <% if ShowAll %>checked="checked"<% end_if %> value="<% if Paginated %>$ShowAllLink<% else %>$PaginatedLink<% end_if %>" /><label for="showall-{$id}">Allow drag & drop reordering</label>
 					<% end_if %>
 				</div>
 			</div>

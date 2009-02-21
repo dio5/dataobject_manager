@@ -67,7 +67,7 @@ $j.fn.DataObjectManager.init = function(obj) {
 			update : function(e) {
 				$list = $j(this);
 				do_class = $list.attr('class').replace('sortable-','').replace('ui-sortable','');
-				$j.post('/DataObjectManager_Controller/dosort/' + do_class, $list.sortable("serialize"));
+				$j.post('DataObjectManager_Controller/dosort/' + do_class, $list.sortable("serialize"));
 				e.stopPropagation();
 			},
 			items : 'li',

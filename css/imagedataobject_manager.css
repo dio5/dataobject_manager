@@ -4,7 +4,7 @@
 .DataObjectManager-popup .preview-image {text-align:center;position:relative;}
 
 .size-control.ui-slider {background:#ccc;height:3px;border:1px solid #aaa;}
-.size-control .ui-slider-handle {background:url(/dataobject_manager/images/slider1.gif) no-repeat center;height:18px;top:-9px;width:16px;border:0;}
+.size-control .ui-slider-handle {background:url(../images/slider1.gif) no-repeat center;height:18px;top:-9px;width:16px;border:0;}
 #size-control-wrap {padding:0 20px;}
 #size-control-wrap {width:150px;position:absolute; left:10px;top:15px;}
 #size-control-wrap img {position:absolute;top:-6px;}
