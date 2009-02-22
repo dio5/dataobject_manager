@@ -142,6 +142,12 @@ class FileDataObjectManager extends DataObjectManager
 		return $this->browseButtonText;
 	}
 	
+	public function ButtonAddTitle()
+	{
+		return $this->addTitle ? $this->addTitle : $this->PluralTitle();
+	}
+	
+	
 	public function upload()
 	{
 		if(!$this->can('upload')) return;

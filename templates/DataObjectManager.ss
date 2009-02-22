@@ -30,7 +30,7 @@
 					<% else %><span class="Last"><img src="dataobject_manager/images/resultset_last_disabled.png" alt="" /></span><% end_if %>
 				</div>
 				<div class="dataobjectmanager-search">
-					<span class="sbox_l"></span><span class="sbox"><input value="<% if SearchValue %>$SearchValue<% else %>Search<% end_if %>" type="text" id="srch_fld"  /></span><span class="sbox_r" id="srch_clear"></span>
+					<span class="sbox_l"></span><span class="sbox"><input value="<% if SearchValue %>$SearchValue<% else %><% _t('SEARCH','Search') %><% end_if %>" type="text" id="srch_fld"  /></span><span class="sbox_r" id="srch_clear"></span>
 				</div>
 				<div style="clear:both;"></div>
 			</div>
@@ -63,7 +63,7 @@
 				<li id="record-$Parent.id-$ID">
 						<div class="fields-wrap">
 						<% control Fields %>
-						<div class="col"><div class="pad">$Value</div></div>
+						<div class="col"><div class="pad"><% if Value %>$Value<% else %>&nbsp;<% end_if %></div></div>
 						<% end_control %>
 						</div>
 						<div class="actions col">
@@ -83,7 +83,7 @@
 			<div class="rounded_table_bottom_left">
 				<div class="sort-control">
 					<% if Sortable %>
-						<input id="showall-{$id}" type="checkbox" <% if ShowAll %>checked="checked"<% end_if %> value="<% if Paginated %>$ShowAllLink<% else %>$PaginatedLink<% end_if %>" /><label for="showall-{$id}">Allow drag & drop reordering</label>
+						<input id="showall-{$id}" type="checkbox" <% if ShowAll %>checked="checked"<% end_if %> value="<% if Paginated %>$ShowAllLink<% else %>$PaginatedLink<% end_if %>" /><label for="showall-{$id}"><% _t('DRAGDROP','Allow drag &amp; drop reordering') %></label>
 					<% end_if %>
 				</div>
 			</div>

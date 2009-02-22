@@ -3,7 +3,7 @@
 	<div class="dataobjectmanager-actions <% if HasFilter %>filter<% end_if %>">
 		<% if Can(upload) %>
 			<a class="popuplink" href="$UploadLink" alt="upload">
-				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% sprintf(_t('ADDITEM', 'Add %s', PR_MEDIUM, 'Add [name]'),$PluralTitle) %></span>
+				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% _t('ADD','Add') %> $ButtonAddTitle</span>
 			</a>	
 		<% end_if %>
 	</div>
@@ -69,9 +69,7 @@
 					<% if Top.ListView %>
 						<div class="fields-wrap">
 						<% control Fields %>
-						<div class="col">
-							<div class="pad">$Value</div>
-						</div>
+							<div class="col"><div class="pad"><% if Value %>$Value<% else %>&nbsp;<% end_if %></div></div>
 						<% end_control %>
 						</div>
 						<div class="actions col">

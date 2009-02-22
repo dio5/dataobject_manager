@@ -3,7 +3,7 @@
 	<div class="dataobjectmanager-actions <% if HasFilter %>filter<% end_if %>">
 		<% if Can(upload) %>
 			<a class="popuplink" href="$UploadLink" alt="upload">
-				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% sprintf(_t('ADDITEM', 'Add %s', PR_MEDIUM, 'Add [name]'),$PluralTitle) %></span>
+				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% sprintf(_t('ADDITEM', 'Add %s', PR_MEDIUM, 'Add [name]'),$AddTitle) %></span>
 			</a>	
 		<% end_if %>
 	</div>
@@ -30,7 +30,7 @@
 					<% else %><span class="Last"><img src="dataobject_manager/images/resultset_last_disabled.png" alt="" /></span><% end_if %>
 				</div>
 				<div class="dataobjectmanager-search">
-					<span class="sbox_l"></span><span class="sbox"><input value="<% if SearchValue %>$SearchValue<% else %>Search<% end_if %>" type="text" id="srch_fld"  /></span><span class="sbox_r" id="srch_clear"></span>
+					<span class="sbox_l"></span><span class="sbox"><input value="<% if SearchValue %>$SearchValue<% else %><% _t('SEARCH','Search') %><% end_if %>" type="text" id="srch_fld"  /></span><span class="sbox_r" id="srch_clear"></span>
 				</div>
 				<div style="clear:both;"></div>
 			</div>
@@ -66,7 +66,7 @@
 							<div class="pad">
 								<% if Top.ShowAll %><span class="handle"><img src="dataobject_manager/images/move_icon.jpg" /></span><% end_if %>
 								<div class="file-icon"><a href="$EditLink" class="popuplink editlink tooltip"><img class="image" src="$FileIcon" alt="" style="width:{$ImageSize}px;" /></a></div>
-								<div class="delete"><a href="$DeleteLink" class="deletelink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a></div>
+								<div class="delete"><a title="<% _t('DELETE','Delete') %>" href="$DeleteLink" class="deletelink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a></div>
 								<span class="tooltip-info" style="display:none">
 									<% control Fields %>
 										<strong>$Name</strong>: $Value<% if Last %><% else %><br /><% end_if %>
@@ -88,7 +88,7 @@
 			<div class="rounded_table_bottom_left">
 				<div class="sort-control">
 					<% if Sortable %>
-						<input id="showall-{$id}" type="checkbox" <% if ShowAll %>checked="checked"<% end_if %> value="<% if Paginated %>$ShowAllLink<% else %>$PaginatedLink<% end_if %>" /><label for="showall-{$id}">Allow drag & drop reordering</label>
+						<input id="showall-{$id}" type="checkbox" <% if ShowAll %>checked="checked"<% end_if %> value="<% if Paginated %>$ShowAllLink<% else %>$PaginatedLink<% end_if %>" /><label for="showall-{$id}"><% _t('DRAGDROP','Allow drag &amp; drop reordering') %></label>
 					<% end_if %>
 				</div>
 			</div>
