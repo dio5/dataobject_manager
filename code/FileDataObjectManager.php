@@ -9,6 +9,7 @@ class FileDataObjectManager extends DataObjectManager
 	public $view = "list";
 	protected $allowedFileTypes;
 	protected $limitFileTypes;
+	protected $uploadLimit = "20";
 	public $importClass = "File";
 
 	protected $permissions = array(
@@ -132,6 +133,16 @@ class FileDataObjectManager extends DataObjectManager
 		return $this->allowedFileTypes;
 	}
 	
+	public function setUploadLimit($num)
+	{
+		$this->uploadLimit = $num;
+	}
+	
+	public function getUploadLimit()
+	{
+		return $this->uploadLimit;
+	}
+	
 	public function setBrowseButtonText($text)
 	{
 		$this->browseButtonText = $text;
@@ -173,8 +184,8 @@ class FileDataObjectManager extends DataObjectManager
 				"Upload",
 				"",
 				array(
-					'file_upload_limit' => '20', // how many files can be uploaded
-					'file_queue_limit' => '20', // how many files can be in the queue at once
+					'file_upload_limit' => $this->getUploadLimit(), // how many files can be uploaded
+					'file_queue_limit' => $this->getUploadLimit(), // how many files can be in the queue at once
 					'browse_button_text' => $this->getBrowseButtonText(),
 					'upload_url' => Director::absoluteURL('FileDataObjectManager_Controller/handleswfupload'),
 					'required' => 'true'			
