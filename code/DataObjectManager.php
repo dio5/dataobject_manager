@@ -114,13 +114,13 @@ class DataObjectManager extends ComplexTableField
 
 	protected function getQueryString($params = array())
 	{ 
-		$per_page = isset($params['per_page'])? $params['per_page'] : $this->per_page;
-		$show_all = isset($params['show_all'])? $params['show_all'] : $this->showAll;
-		$sort 	  = isset($params['sort'])? $params['sort'] 				: $this->sort;
-		$sort_dir = isset($params['sort_dir'])? $params['sort_dir'] : $this->sort_dir;
-		$filter   = isset($params['filter'])? $params['filter'] 		: $this->filter;
-		$search   = isset($params['search'])? $params['search'] 		: $this->search;
-		return "ctf[{$this->Name()}][showall]={$show_all}&ctf[{$this->Name()}][sort]={$sort}&ctf[{$this->Name()}][sort_dir]={$sort_dir}&ctf[{$this->Name()}][search]={$search}&ctf[{$this->Name()}][filter]={$filter}";
+		$per_page = isset($params['per_page'])? $params['per_page'] : 	$this->per_page;
+		$show_all = isset($params['show_all'])? $params['show_all'] : 	$this->showAll;
+		$sort 	  = isset($params['sort'])? $params['sort'] 		: 	$this->sort;
+		$sort_dir = isset($params['sort_dir'])? $params['sort_dir'] : 	$this->sort_dir;
+		$filter   = isset($params['filter'])? $params['filter'] 	: 	$this->filter;
+		$search   = isset($params['search'])? $params['search'] 	: 	$this->search;
+		return "ctf[{$this->Name()}][per_page]={$per_page}&ctf[{$this->Name()}][showall]={$show_all}&ctf[{$this->Name()}][sort]={$sort}&ctf[{$this->Name()}][sort_dir]={$sort_dir}&ctf[{$this->Name()}][search]={$search}&ctf[{$this->Name()}][filter]={$filter}";
 	}
 
 	public function ListStyle()
@@ -291,23 +291,15 @@ class DataObjectManager extends ComplexTableField
 	
 	public function PerPageDropdown()
 	{
-		$map = array(
-			$this->RelativeLink(array('per_page' => '10')) => '10',
-			$this->RelativeLink(array('per_page' => '20')) => '20',
-			$this->RelativeLink(array('per_page' => '30')) => '30',
-			$this->RelativeLink(array('per_page' => '40')) => '40',
-			$this->RelativeLink(array('per_page' => '50')) => '50'									
-		);
-		
+		$map = array();
+		for($i=10;$i<=50;$i+=10) $map[$this->RelativeLink(array('per_page' => $i))] = $i;
 		$value = !empty($this->per_page) ? $this->RelativeLink(array('per_page' => $this->per_page)) : null;
-		
 		return new FieldGroup(
-				new LabelField('show', 'Show '),
-				new DropdownField('PerPage','', $map, $value),
-				new LabelField('per',' results per page')
-			);
+			new LabelField('show', 'Show '),
+			new DropdownField('PerPage','',$map, $value),
+			new LabelField('results', ' results per page')
+		);
 	}
-	
 	public function SearchValue()
 	{
 		return !empty($this->search) ? $this->search : false;
