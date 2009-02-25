@@ -82,8 +82,9 @@
 .bottom-controls .rounded_table_bottom_left {height:34px;background:url(../images/rounded_bottom_left.gif) no-repeat top left;}
 
 .sort-control {width:200px;position:absolute;left:6px;top:8px;}
-.sort-control label {vertical-align:22%;margin-left:3px;font-size:10px !important;}
+.sort-control label {position:absolute; left:15px;top:2px;font-size:10px !important;}
 
+.per-page-control {position:absolute;right:10px;}
 .ajax-loader {width:16px;height:16px;background:url(../images/ajax-loader.gif);display:none;position:absolute;left:50%;margin-left:-8px;top:15px;}
 
 /* preload column widths */

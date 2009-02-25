@@ -86,6 +86,9 @@
 						<input id="showall-{$id}" type="checkbox" <% if ShowAll %>checked="checked"<% end_if %> value="<% if Paginated %>$ShowAllLink<% else %>$PaginatedLink<% end_if %>" /><label for="showall-{$id}"><% _t('DRAGDROP','Allow drag &amp; drop reordering') %></label>
 					<% end_if %>
 				</div>
+				<div class="per-page-control">
+					<% if ShowAll %><% else %>$PerPageDropdown<% end_if %>
+				</div>
 			</div>
 		</div>
 	</div>
