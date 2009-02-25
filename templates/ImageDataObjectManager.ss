@@ -37,51 +37,52 @@
 		</div>
 	</div>
 	<div class="$ListStyle column{$Headings.Count}" id="list-holder" style="width:100%;">
-		<ul id="dataobject-list" <% if ShowAll %>class="sortable-{$sourceClass}"<% end_if %>>
-			<% if ListView %>
-				<li class="head">
-					<div class="fields-wrap">
-					<% control Headings %>
-					<div class="col $FirstLast">
-						<div class="pad">
-								<a href="$SortLink">$Title &nbsp;
-								<% if IsSorted %>
-									<% if SortDirection = ASC %>
-									<img src="cms/images/bullet_arrow_up.png" alt="" />
-									<% else %>
-									<img src="cms/images/bullet_arrow_down.png" alt="" />
-									<% end_if %>
-								<% end_if %>
-								</a>
-						</div>
-					</div>
-					<% end_control %>
-					</div>
-					<div class="actions col">&nbsp;</div>
-				</li>
-			<% end_if %>
-			<% if Items %>
-			<% control Items %>
-				<li id="record-$Parent.id-$ID" style="width:{$ImageSize}px; height:{$ImageSize}px;">
+		<div class="dataobject-list">
+			<ul <% if ShowAll %>class="sortable-{$sourceClass}"<% end_if %>>
+				<% if ListView %>
+					<li class="head">
+						<div class="fields-wrap">
+						<% control Headings %>
+						<div class="col $FirstLast">
 							<div class="pad">
-								<% if Top.ShowAll %><span class="handle"><img src="dataobject_manager/images/move_icon.jpg" /></span><% end_if %>
-								<div class="file-icon"><a href="$EditLink" class="popuplink editlink tooltip"><img class="image" src="$FileIcon" alt="" style="width:{$ImageSize}px;" /></a></div>
-								<div class="delete"><a title="<% _t('DELETE','Delete') %>" href="$DeleteLink" class="deletelink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a></div>
-								<span class="tooltip-info" style="display:none">
-									<% control Fields %>
-										<strong>$Name</strong>: $Value<% if Last %><% else %><br /><% end_if %>
-									<% end_control %>
-								</span>
+									<a href="$SortLink">$Title &nbsp;
+									<% if IsSorted %>
+										<% if SortDirection = ASC %>
+										<img src="cms/images/bullet_arrow_up.png" alt="" />
+										<% else %>
+										<img src="cms/images/bullet_arrow_down.png" alt="" />
+										<% end_if %>
+									<% end_if %>
+									</a>
 							</div>
-					
-
-				</li>
-			<% end_control %>
-			<% else %>
-					<li><i><% _t('NOITEMSFOUND', 'No items found') %></i></li>
-			<% end_if %>
-			
-		</ul>
+						</div>
+						<% end_control %>
+						</div>
+						<div class="actions col">&nbsp;</div>
+					</li>
+				<% end_if %>
+				<% if Items %>
+				<% control Items %>
+					<li id="record-$Parent.id-$ID" style="width:{$ImageSize}px; height:{$ImageSize}px;">
+								<div class="pad">
+									<% if Top.ShowAll %><span class="handle"><img src="dataobject_manager/images/move_icon.jpg" /></span><% end_if %>
+									<div class="file-icon"><a href="$EditLink" class="popuplink editlink tooltip"><img class="image" src="$FileIcon" alt="" style="width:{$ImageSize}px;" /></a></div>
+									<div class="delete"><a title="<% _t('DELETE','Delete') %>" href="$DeleteLink" class="deletelink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a></div>
+									<span class="tooltip-info" style="display:none">
+										<% control Fields %>
+											<strong>$Name</strong>: $Value<% if Last %><% else %><br /><% end_if %>
+										<% end_control %>
+									</span>
+								</div>
+						
+	
+					</li>
+				<% end_control %>
+				<% else %>
+						<li><i><% _t('NOITEMSFOUND', 'No items found') %></i></li>
+				<% end_if %>
+			</ul>
+		</div>
 	</div>
 	<div class="bottom-controls">
 		<div class="rounded_table_bottom_right">

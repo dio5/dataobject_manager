@@ -39,45 +39,46 @@
 		</div>
 	</div>
 	<div class="$ListStyle column{$Headings.Count}" id="list-holder" style="width:100%;">
-		<ul id="dataobject-list" <% if ShowAll %>class="sortable-{$sourceClass}"<% end_if %>>
-			<% if ListView %>
-				<li class="head">
-					<div class="fields-wrap">
-					<% control Headings %>
-					<div class="col $FirstLast">
-						<div class="pad">
-								<a href="$SortLink">$Title &nbsp;
-								<% if IsSorted %>
-									<% if SortDirection = ASC %>
-									<img src="cms/images/bullet_arrow_up.png" alt="" />
-									<% else %>
-									<img src="cms/images/bullet_arrow_down.png" alt="" />
-									<% end_if %>
-								<% end_if %>
-								</a>
-						</div>
-					</div>
-					<% end_control %>
-					</div>
-					<div class="actions col">&nbsp;</div>
-				</li>
-			<% end_if %>
-			<% if Items %>
-			<% control Items %>
-				<li id="record-$Parent.id-$ID">
-					<! -- LIST VIEW -->
-					<% if Top.ListView %>
+		<div class="dataobject-list">
+			<ul <% if ShowAll %>class="sortable-{$sourceClass}"<% end_if %>>
+				<% if ListView %>
+					<li class="head">
 						<div class="fields-wrap">
-						<% control Fields %>
-							<div class="col"><div class="pad"><% if Value %>$Value<% else %>&nbsp;<% end_if %></div></div>
+						<% control Headings %>
+						<div class="col $FirstLast">
+							<div class="pad">
+									<a href="$SortLink">$Title &nbsp;
+									<% if IsSorted %>
+										<% if SortDirection = ASC %>
+										<img src="cms/images/bullet_arrow_up.png" alt="" />
+										<% else %>
+										<img src="cms/images/bullet_arrow_down.png" alt="" />
+										<% end_if %>
+									<% end_if %>
+									</a>
+							</div>
+						</div>
 						<% end_control %>
 						</div>
-						<div class="actions col">
+						<div class="actions col">&nbsp;</div>
+					</li>
+				<% end_if %>
+				<% if Items %>
+				<% control Items %>
+					<li id="record-$Parent.id-$ID">
+						<!-- LIST VIEW -->
+						<% if Top.ListView %>
+							<div class="fields-wrap">
+							<% control Fields %>
+								<div class="col"><div class="pad"><% if Value %>$Value<% else %>&nbsp;<% end_if %></div></div>
+							<% end_control %>
+							</div>
+							<div class="actions col">
 								<a class="popuplink editlink" href="$EditLink"><img src="dataobject_manager/images/page_white_edit.png" height="12px" alt="edit" /></a>
 								<a class="deletelink" href="$DeleteLink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a>
-						</div>
-					<!-- GRID VIEW -->
-					<% else %>
+							</div>
+						<!-- GRID VIEW -->
+						<% else %>
 							<div class="pad">
 								<% if Top.ShowAll %><span class="handle"><img src="dataobject_manager/images/move_icon.jpg" /></span><% end_if %>
 								<div class="file-icon"><a href="$EditLink" class="popuplink editlink tooltip"><img src="$FileIcon" alt="" /></a></div>
@@ -89,15 +90,15 @@
 									<% end_control %>
 								</span>
 							</div>
-					
-					<% end_if %>
-				</li>
-			<% end_control %>
-			<% else %>
-					<li><i><% _t('NOITEMSFOUND', 'No items found') %></i></li>
-			<% end_if %>
-			
-		</ul>
+						<% end_if %>
+					</li>
+				<% end_control %>
+				<% else %>
+						<li><i><% _t('NOITEMSFOUND', 'No items found') %></i></li>
+				<% end_if %>
+				
+			</ul>
+		</div>		
 	</div>
 	<div class="bottom-controls">
 		<div class="rounded_table_bottom_right">

@@ -63,7 +63,7 @@ $j.fn.DataObjectManager.init = function(obj) {
 			$j(this).attr('disabled', true);
 			e.stopPropagation();
 		});
-		$j("ul[class^='sortable-']").sortable({
+		$container.find("ul[class^='sortable-']").sortable({
 			update : function(e) {
 				$list = $j(this);
 				do_class = $list.attr('class').replace('sortable-','').replace('ui-sortable','');

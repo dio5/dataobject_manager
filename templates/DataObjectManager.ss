@@ -37,7 +37,8 @@
 		</div>
 	</div>
 	<div class="$ListStyle column{$Headings.Count}" id="list-holder" style="width:100%;">
-		<ul id="dataobject-list" <% if ShowAll %>class="sortable-{$sourceClass}"<% end_if %>>
+		<div class="dataobject-list">		
+		<ul <% if ShowAll %>class="sortable-{$sourceClass}"<% end_if %>>
 				<li class="head">
 					<div class="fields-wrap">
 					<% control Headings %>
@@ -75,8 +76,8 @@
 			<% else %>
 					<li><i><% _t('NOITEMSFOUND', 'No items found') %></i></li>
 			<% end_if %>
-			
 		</ul>
+		</div>
 	</div>
 	<div class="bottom-controls">
 		<div class="rounded_table_bottom_right">
