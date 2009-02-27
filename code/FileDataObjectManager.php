@@ -10,6 +10,7 @@ class FileDataObjectManager extends DataObjectManager
 	protected $allowedFileTypes;
 	protected $limitFileTypes;
 	protected $uploadLimit = "20";
+	protected $allowUploadFolderSelection = false;
 	public $importClass = "File";
 
 	protected $permissions = array(
@@ -28,6 +29,8 @@ class FileDataObjectManager extends DataObjectManager
 	public $gridLabelField;
 	public $pluralTitle;
 	public $browseButtonText = "Upload files";
+	
+
 	
 	
 	
@@ -94,7 +97,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public function ImportDropdown()
 	{
-		return new DropdownField('ImportFolder','',$this->getFolderHierarchy(0),null, null, "-- Select a folder --");
+		return new DropdownField('ImportFolder','',$this->getImportFolderHierarchy(0),null, null, "-- Select a folder --");
 	}
 	
 	protected function importLinkFor($file)
@@ -102,7 +105,7 @@ class FileDataObjectManager extends DataObjectManager
 		return $this->BaseLink()."/import/$file->ID";
 	}
 	
-	protected function getFolderHierarchy($parentID, $level = 0)
+	protected function getImportFolderHierarchy($parentID, $level = 0)
 	{
 		$options = array();		
 		if($children = DataObject::get("Folder", "ParentID = $parentID")) {
@@ -112,11 +115,26 @@ class FileDataObjectManager extends DataObjectManager
 				$files = DataObject::get($this->importClass, "ClassName != 'Folder' AND ParentID = $child->ID");
 				$count = $files ? $files->Count() : "0";
 				$options[$this->importLinkFor($child)] = $indent.$child->Title . " <span>($count files)</span>";
-				$options += $this->getFolderHierarchy($child->ID, $level+1);
+				$options += $this->getImportFolderHierarchy($child->ID, $level+1);
 			}
 		}
 		return $options;
 	}
+
+	protected function getUploadFolderHierarchy($parentID, $level = 0)
+	{
+		$options = array();		
+		if($children = DataObject::get("Folder", "ParentID = $parentID")) {
+			foreach($children as $child) {
+				$indent="";
+				for($i=0;$i<$level;$i++) $indent .= "&nbsp;&nbsp;";
+				$options[$child->ID] = empty($child->Title) ? "<em>$indent Untitled</em>" : $indent.$child->Title;
+				$options += $this->getUploadFolderHierarchy($child->ID, $level+1);
+			}
+		}
+		return $options;
+	}
+
 	
 	public function setAllowedFileTypes($types = array())
 	{
@@ -158,6 +176,11 @@ class FileDataObjectManager extends DataObjectManager
 		return $this->addTitle ? $this->addTitle : $this->PluralTitle();
 	}
 	
+	public function allowUploadFolderSelection()
+	{
+		$this->allowUploadFolderSelection = true;
+	}
+	
 	
 	public function upload()
 	{
@@ -176,7 +199,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	protected function getUploadFields()
 	{
-		return new FieldSet(
+		$fields = new FieldSet(
 			new HeaderField($title = "Add ".$this->PluralTitle(), $headingLevel = 2),
 			new HeaderField($title = "Upload from my computer", $headingLevel = 3),
 			new SWFUploadField(
@@ -192,11 +215,16 @@ class FileDataObjectManager extends DataObjectManager
 				)
 			)
 		);
-	
+
+		if($this->allowUploadFolderSelection) 
+			$fields->insertBefore(new DropdownField('UploadFolder','',$this->getUploadFolderHierarchy(0),null, null, "-- Select a folder --"),"Upload");
+		return $fields;
 	}
 	
 	public function UploadForm()
 	{
+		// Sync up the DB
+		singleton('Folder')->syncChildren();
 		$className = $this->sourceClass();
 		$childData = new $className();
 		$validator = $this->getValidatorFor($childData);
@@ -209,6 +237,9 @@ class FileDataObjectManager extends DataObjectManager
 			'controllerID' => $this->controllerID
 		));
 		
+		if($this->allowUploadFolderSelection)
+			SWFUploadConfig::addDynamicPostParam('UploadFolder','FileDataObjectManager_Popup_UploadForm_UploadFolder');
+
 		if($this->getAllowedFileTypes()) 
 			SWFUploadConfig::addFileTypes($this->getAllowedFileTypes());
 						
@@ -411,13 +442,23 @@ class FileDataObjectManager_Controller extends Controller
 			$idxfield = $_POST['fileFieldName']."ID";
 			$file = new $file_class();
 			
+			if(isset($_POST['UploadFolder'])) {
+				$folder = DataObject::get_by_id("Folder",$_POST['UploadFolder']);
+				$path = str_replace("assets/","",$folder->Filename);
+			}
+			else 
+				$path = false;
+			
 			if(class_exists("Upload")) {
 				$u = new Upload();
-				$u->loadIntoFile($_FILES['swfupload_file'], $file);
+				$u->loadIntoFile($_FILES['swfupload_file'], $file, $path);
 			}
 			else
 				$file->loadUploaded($_FILES['swfupload_file']);
 			
+			if(isset($_POST['UploadFolder']))
+				$file->setField("ParentID",$folder->ID);
+
 			$file->write();
 			$obj->$idxfield = $file->ID;
 			$ownerID = $_POST['controllerFieldName']."ID";
