@@ -11,6 +11,7 @@ class FileDataObjectManager extends DataObjectManager
 	protected $limitFileTypes;
 	protected $uploadLimit = "20";
 	protected $allowUploadFolderSelection = false;
+	protected $enableUploadDebugging = false;
 	public $importClass = "File";
 
 	protected $permissions = array(
@@ -181,6 +182,10 @@ class FileDataObjectManager extends DataObjectManager
 		$this->allowUploadFolderSelection = true;
 	}
 	
+	public function enableUploadDebugging()
+	{
+		$this->enableUploadDebugging = true;
+	}
 	
 	public function upload()
 	{
@@ -199,6 +204,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	protected function getUploadFields()
 	{
+		
 		$fields = new FieldSet(
 			new HeaderField($title = "Add ".$this->PluralTitle(), $headingLevel = 2),
 			new HeaderField($title = "Upload from my computer", $headingLevel = 3),
@@ -242,6 +248,9 @@ class FileDataObjectManager extends DataObjectManager
 
 		if($this->getAllowedFileTypes()) 
 			SWFUploadConfig::addFileTypes($this->getAllowedFileTypes());
+		
+		if($this->enableUploadDebugging)
+			SWFUploadConfig::set_var('debug','true');
 						
 
 		$form = Object::create(
