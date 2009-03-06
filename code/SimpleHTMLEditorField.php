@@ -3,7 +3,8 @@
 class SimpleHTMLEditorField extends TextareaField
 {
 	
-	function __construct($name, $title = null, $rows = 5, $cols = 20, $value = "", $form = null) {
+	function __construct($name, $title = null, $rows = 5, $cols = 55
+	, $value = "", $form = null) {
 		parent::__construct($name, $title, $rows, $cols, $value, $form);
 		$this->extraClasses = array('hidden');
 	}
