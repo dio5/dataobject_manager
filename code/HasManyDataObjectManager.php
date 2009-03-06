@@ -10,6 +10,11 @@ class HasManyDataObjectManager extends DataObjectManager
 	public $itemClass = 'HasManyDataObjectManager_Item';
 	protected $relationAutoSetting = false;
 
+	/**
+	 * Most of the code below was copied from HasManyComplexTableField.
+	 * Painful, but necessary, until PHP supports multiple inheritance.
+	 */
+	
 	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "")
 	{
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);

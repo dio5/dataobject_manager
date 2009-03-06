@@ -2,9 +2,17 @@
 
 class ManyManyDataObjectManager extends HasManyDataObjectManager
 {
+
 	private $manyManyParentClass;
 	
 	public $itemClass = 'ManyManyDataObjectManager_Item';
+
+	/**
+	 * Most of the code below was copied from ManyManyComplexTableField.
+	 * Painful, but necessary, until PHP supports multiple inheritance.
+	 */
+	
+
 		
 	function __construct($controller, $name, $sourceClass, $fieldList, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 
