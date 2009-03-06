@@ -9,6 +9,7 @@
 .list .dataobject-list li div {float:left;}
 .list .dataobject-list div.actions.col {width:9%;float:right;text-align:right;border:0;}
 .list .dataobject-list div.actions.col a {visibility:hidden;display:inline;margin:0 5px;}
+.list .dataobject-list div.actions.col input {border:0;padding:0;margin:0;background:none;}
 .list .dataobject-list li.head {font-weight:bold;font-size:12px;background:url(../images/heading_bg.gif) repeat-x top left;}
 .list .dataobject-list li.head .col .pad {border-right:1px solid #aaa;}
 .list .dataobject-list li.head .col.last .pad {border:0;}
@@ -132,6 +133,12 @@
 .DataObjectManager-popup .message {border: 1px solid;margin: 10px 0px;padding:15px 10px 15px 50px;background-repeat: no-repeat;background-position: 10px center;}
 .DataObjectManager-popup .message.good {color: #4F8A10;background-color: #DFF2BF;background-image:url('../images/success.png');}
 .DataObjectManager-popup input#action_saveUploadForm {display:none;}
+
+/* accommodate input field for relation dataobjectmangaer */
+.RelationDataObjectManager .list .dataobject-list li .fields-wrap {width:85%;}
+.RelationDataObjectManager .list .dataobject-list div.actions.col {width:14%;}
+
+
 /* Target IE7 only */
 html>body .DataObjectManager {*width:96%;}
 /* end */

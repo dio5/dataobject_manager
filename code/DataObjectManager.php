@@ -467,6 +467,7 @@ HTML;
 	}
 	
 	function Field() {
+		$this->setReadonly(true);
 		$id = $this->id();
 		$val = $this->attrValue();
 		Requirements::javascript("jsparty/jquery/jquery.js");
