@@ -162,12 +162,10 @@ $j.fn.DataObjectManager.init = function(obj) {
     
     if($container.hasClass('RelationDataObjectManager')) {
 		var $checkedList = $j(container_id+'_CheckedList');
-		//alert($checkedList.val());
 		$container.find('.actions input:checkbox').unbind('click').click(function(e){
 			$j(this).parents('li').toggleClass('selected');
 			val = ($j(this).attr('checked')) ? $checkedList.val() + $j(this).val()+"," : $checkedList.val().replace(","+$j(this).val()+",",",");
 			$checkedList.attr('value', val);
-			//alert($checkedList.val());
 			e.stopPropagation();
 		});
 
