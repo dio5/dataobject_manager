@@ -6,7 +6,7 @@ class FileDataObjectManager extends DataObjectManager
 		'import/$ID' => 'handleImport'
 	);
 	
-	public $view = "list";
+	public $view = "grid";
 	protected $allowedFileTypes;
 	protected $limitFileTypes;
 	protected $uploadLimit = "20";

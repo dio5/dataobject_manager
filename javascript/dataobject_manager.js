@@ -158,6 +158,27 @@ $j.fn.DataObjectManager.init = function(obj) {
 			$j('.ui-slider-handle').css({'left' : $j('#size-control-wrap').attr('class').replace('position','')+'px'});    
     
     }  
+    // RelationDataObjectManager
+    
+    if($container.hasClass('RelationDataObjectManager')) {
+		var $checkedList = $j(container_id+'_CheckedList');
+		//alert($checkedList.val());
+		$container.find('.actions input:checkbox').unbind('click').click(function(e){
+			$j(this).parents('li').toggleClass('selected');
+			val = ($j(this).attr('checked')) ? $checkedList.val() + $j(this).val()+"," : $checkedList.val().replace(","+$j(this).val()+",",",");
+			$checkedList.attr('value', val);
+			//alert($checkedList.val());
+			e.stopPropagation();
+		});
+
+		$container.find('.actions input:checkbox').each(function(i,e) {
+			if($checkedList.val().indexOf(","+$j(e).val()+",") != -1)
+				$j(e).attr('checked',true).parents('li').toggleClass('selected');
+				
+		});		
+    
+    
+    }
 		
     // Columns. God forbid there are more than 10.
     cols = $j('.list #dataobject-list li.head .fields-wrap .col').length;
@@ -182,17 +203,21 @@ $j.fn.DataObjectManager.getPageHeight = function() {
 
 function refresh($div, link)
 {
+	 // Kind of a hack. Pass the list of ids to the next refresh
+	 var listValue = ($div.hasClass('RelationDataObjectManager')) ? $j('#'+$div.attr('id')+'_CheckedList').val() : false;
+	 	 
 	 $j.ajax({
 	   type: "GET",
 	   url: link,
 	   success: function(html){
-	   		if(!$div.next().length && !$div.prev().length) {
+	   		if(!$div.next().length && !$div.prev().length)
 	   			$div.parent().html(html);
-	   		}
-	   		else {
+	   		else
 				$div.replaceWith(html);
-	   		}
-
+	
+			if(listValue) {
+				 $j('#'+$div.attr('id')+'_CheckedList').attr('value',listValue);
+			}
 			$j('#'+$div.attr('id')).DataObjectManager();
 		}
 	 });

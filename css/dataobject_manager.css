@@ -1,7 +1,7 @@
 .DataObjectManager {position:relative;}
 
 .dataobject-list {padding:0;overflow:hidden;}
-.dataobject-list li:hover{background:#feffe0;}
+.dataobject-list li:hover, .dataobject-list li.selected {background:#feffe0;}
 .dataobject-list li:hover div.actions.col a {visibility:visible;}
 .dataobject-list li:hover div.actions.col a:hover {background:none;}
 

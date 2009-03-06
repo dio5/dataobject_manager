@@ -370,6 +370,7 @@ class DataObjectManager_Popup extends Form {
 		Requirements::block('sapphire/javascript/Validator.js');
 		Requirements::block('jsparty/prototype.js');
 		Requirements::block('jsparty/behavior.js');
+		Requirements::block('jsparty/jquery/jquery.js');
 		Requirements::clear('jsparty/behavior.js');
 
 		Requirements::block('sapphire/javascript/i18n.js');
