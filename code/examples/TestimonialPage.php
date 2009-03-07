@@ -1,5 +1,5 @@
 <?php
-
+/*
 class TestimonialPage extends Page
 {
 	static $has_many = array (
@@ -30,5 +30,5 @@ class TestimonialPage extends Page
 class TestimonialPage_Controller extends Page_Controller
 {
 }
-
+*/
 ?>
