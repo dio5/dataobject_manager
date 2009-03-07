@@ -161,20 +161,29 @@ $j.fn.DataObjectManager.init = function(obj) {
     // RelationDataObjectManager
     
     if($container.hasClass('RelationDataObjectManager')) {
-		var $checkedList = $j(container_id+'_CheckedList');
-		$container.find('.actions input:checkbox').unbind('click').click(function(e){
-			$j(this).parents('li').toggleClass('selected');
-			val = ($j(this).attr('checked')) ? $checkedList.val() + $j(this).val()+"," : $checkedList.val().replace(","+$j(this).val()+",",",");
-			$checkedList.attr('value', val);
-			e.stopPropagation();
-		});
-
-		$container.find('.actions input:checkbox').each(function(i,e) {
-			if($checkedList.val().indexOf(","+$j(e).val()+",") != -1)
-				$j(e).attr('checked',true).parents('li').toggleClass('selected');
-				
-		});		
-    
+			var $checkedList = $j(container_id+'_CheckedList');
+			$container.find('.actions input').unbind('click').click(function(e){
+				if($j(this).attr('type') == "radio") {
+					$j(this).parents('li').siblings('li').removeClass('selected');
+					$j(this).parents('li').toggleClass('selected');
+					$checkedList.attr('value', ","+$j(this).val()+",");
+				}
+				else {
+					$j(this).parents('li').toggleClass('selected');
+					val = ($j(this).attr('checked')) ? $checkedList.val() + $j(this).val()+"," : $checkedList.val().replace(","+$j(this).val()+",",",");
+					$checkedList.attr('value', val);
+				}
+				e.stopPropagation();
+			});
+	
+			$container.find('.actions input').each(function(i,e) {
+				if($checkedList.val().indexOf(","+$j(e).val()+",") != -1)
+					$j(e).attr('checked',true).parents('li').toggleClass('selected');
+				else
+					$j(e).attr('checked',false);
+					
+			});		
+	    
     
     }
 		

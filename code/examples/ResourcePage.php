@@ -13,7 +13,7 @@ class ResourcePage extends Page
 			$this, // Controller
 			'Resources', // Source name
 			'Resource', // Source class
-			'Attachment', // File name on DataObject ( Resource::$has_one = array('Attachment' => 'File') )
+			'Attachment', // File name on DataObject
 			array(
 				'Name' => 'Name', 
 				'Description' => 'Description', 

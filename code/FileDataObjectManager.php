@@ -498,12 +498,19 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
 	public function FileIcon()
 	{
 		$file = $this->obj($this->parent->fileFieldName);
-		return ($file instanceof Image) ? $file->CroppedImage(50,50)->URL : $file->Icon();
+		if($file && $file->ID)
+			return ($file instanceof Image) ? $file->CroppedImage(50,50)->URL : $file->Icon();
+		else return "file not found";
 	}
 	
 	public function FileLabel()
 	{
-		$label = ($this->parent->gridLabelField) ? $this->obj($this->parent->gridLabelField) : $this->obj($this->parent->fileFieldName)->Title;
+		if($this->parent->gridLabelField)
+			$label = $this->obj($this->parent->gridLabelField);
+		else if($file = $this->obj($this->parent->fileFieldName))
+			$label = $file->Title;
+		else
+			$label = "";
 		return strlen($label) > 30 ? substr($label, 0, 30)."..." : $label;
 	}
 	
