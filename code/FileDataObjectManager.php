@@ -187,6 +187,11 @@ class FileDataObjectManager extends DataObjectManager
 		$this->enableUploadDebugging = true;
 	}
 	
+	public function setDefaultView($type)
+	{
+		$this->view = $type;
+	}
+	
 	public function upload()
 	{
 		if(!$this->can('upload')) return;
@@ -505,8 +510,10 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
 	
 	public function FileLabel()
 	{
-		if($this->parent->gridLabelField)
-			$label = $this->obj($this->parent->gridLabelField);
+		if($this->parent->gridLabelField) {
+			$field = $this->parent->gridLabelField;
+			return $this->$field;
+		}
 		else if($file = $this->obj($this->parent->fileFieldName))
 			$label = $file->Title;
 		else
