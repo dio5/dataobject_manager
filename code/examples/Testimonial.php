@@ -1,5 +1,4 @@
 <?php
-/*
 class Testimonial extends DataObject
 {
 	static $db = array (
@@ -21,5 +20,4 @@ class Testimonial extends DataObject
 		);
 	}
 }
-*/
 ?>

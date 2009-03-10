@@ -1,5 +1,4 @@
 <?php
-/*
 class ResourcePage extends Page
 {
 	static $has_many = array (
@@ -54,5 +53,4 @@ class ResourcePage extends Page
 class ResourcePage_Controller extends Page_Controller
 {
 }
-*/
 ?>

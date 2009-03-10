@@ -1,5 +1,4 @@
 <?php 
-/*
 class Resource extends DataObject
 {
 	static $db = array (
@@ -23,5 +22,4 @@ class Resource extends DataObject
 		);
 	}
 }
-*/
 ?>
