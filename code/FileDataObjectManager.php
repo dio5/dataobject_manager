@@ -329,8 +329,10 @@ class FileDataObjectManager extends DataObjectManager
 			
 				$first = $fields->First()->Name();
 				$fields->insertBefore(new HeaderField($title = "Editing file $index of $total", $headingLevel = 2), $first);
-				$fileObject = DataObject::get_by_id($this->sourceClass(), $current)->obj($this->fileFieldName);
-				$fields->insertBefore($this->getPreviewFieldFor($fileObject), $first);
+				$dataObject = DataObject::get_by_id($this->sourceClass(), $current);
+				$fileObject = $dataObject->obj($this->fileFieldName);
+				
+				$fields->insertBefore($this->getPreviewFieldFor($fileObject), $first); 
 			}
 			$form = Object::create(
 				$this->popupClass,
@@ -342,6 +344,7 @@ class FileDataObjectManager extends DataObjectManager
 				$childData
 			);
 			$form->setActions(new FieldSet(new FormAction("saveEditUploadedForm", $index == $total ? "Finish" : "Next")));
+			if(isset($dataObject) && $dataObject) $form->loadDataFrom($dataObject);
 			return $form;
 	}
 	
