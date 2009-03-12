@@ -70,7 +70,7 @@ $j.fn.DataObjectManager.init = function(obj) {
 				$j.post('DataObjectManager_Controller/dosort/' + do_class, $list.sortable("serialize"));
 				e.stopPropagation();
 			},
-			items : 'li',
+			items : 'li:not(.head)',
 			containment : 'document',
 			tolerance : 'intersect',
 			handle : ($j('#list-holder').hasClass('grid') ? '.handle' : null)
