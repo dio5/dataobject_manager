@@ -260,13 +260,20 @@
 
             separator06 : { separator : true },
 
-            h1mozilla : { visible : true && $.browser.mozilla, className : 'h1', command : 'heading', arguments : ['h1'], tags : ['h1'] },
-            h2mozilla : { visible : true && $.browser.mozilla, className : 'h2', command : 'heading', arguments : ['h2'], tags : ['h2'] },
+            h1mozilla : { visible : false && $.browser.mozilla, className : 'h1', command : 'heading', arguments : ['h1'], tags : ['h1'] },
+            h2mozilla : { visible : false && $.browser.mozilla, className : 'h2', command : 'heading', arguments : ['h2'], tags : ['h2'] },
             h3mozilla : { visible : true && $.browser.mozilla, className : 'h3', command : 'heading', arguments : ['h3'], tags : ['h3'] },
 
-            h1 : { visible : true && !( $.browser.mozilla ), className : 'h1', command : 'formatBlock', arguments : ['Heading 1'], tags : ['h1'] },
-            h2 : { visible : true && !( $.browser.mozilla ), className : 'h2', command : 'formatBlock', arguments : ['Heading 2'], tags : ['h2'] },
+            h4mozilla : { visible : true && $.browser.mozilla, className : 'h4', command : 'heading', arguments : ['h4'], tags : ['h4'] },
+            h5mozilla : { visible : true && $.browser.mozilla, className : 'h5', command : 'heading', arguments : ['h5'], tags : ['h5'] },
+            h6mozilla : { visible : false && $.browser.mozilla, className : 'h6', command : 'heading', arguments : ['h6'], tags : ['h6'] },
+
+            h1 : { visible : false && !( $.browser.mozilla ), className : 'h1', command : 'formatBlock', arguments : ['Heading 1'], tags : ['h1'] },
+            h2 : { visible : false && !( $.browser.mozilla ), className : 'h2', command : 'formatBlock', arguments : ['Heading 2'], tags : ['h2'] },
             h3 : { visible : true && !( $.browser.mozilla ), className : 'h3', command : 'formatBlock', arguments : ['Heading 3'], tags : ['h3'] },
+            h4 : { visible : true && !( $.browser.mozilla ), className : 'h4', command : 'formatBlock', arguments : ['Heading 4'], tags : ['h4'] },
+            h5 : { visible : true && !( $.browser.mozilla ), className : 'h5', command : 'formatBlock', arguments : ['Heading 5'], tags : ['h5'] },
+            h6 : { visible : false && !( $.browser.mozilla ), className : 'h6', command : 'formatBlock', arguments : ['Heading 6'], tags : ['h6'] },
 
             separator07 : { visible : false, separator : true },
 

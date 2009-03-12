@@ -6,6 +6,7 @@ class SimpleHTMLEditorField extends TextareaField
 	protected $controls = array (
 		'insertOrderedList' 	=>	true,
 		'insertUnorderedList'	=> 	true,
+		'insertImage'			=>  true,
 		'justifyLeft' 			=>	true,
 		'justifyRight' 			=> 	true,
 		'justifyCenter'			=> 	true,
@@ -14,7 +15,15 @@ class SimpleHTMLEditorField extends TextareaField
 		'copy' 					=>	false,
 		'paste' 				=> 	false,
 		'increaseFontSize' 		=> 	true,
-		'decreaseFontSize' 		=> 	true
+		'decreaseFontSize' 		=> 	true,
+		'h1'					=>  false,
+		'h2'					=>  false,
+		'h3'					=>  true,
+		'h4'					=>  true,
+		'h5'					=>  true,
+		'h6'					=>  false
+		
+		
 	);
 
 	function __construct($name, $title = null, $config = array(), $rows = 5, $cols = 55, $value = "", $form = null) {
@@ -40,6 +49,12 @@ class SimpleHTMLEditorField extends TextareaField
 		$first = true;
 		foreach($this->controls as $var => $value) {
 			$controls .= $first ? "" : ",";
+			if((strlen($var) == 2 && $var[0] == "h") 
+				&& stristr($_SERVER['HTTP_USER_AGENT'], "Mozilla")
+				&& stristr($_SERVER['HTTP_USER_AGENT'], "Safari") === false
+			) {
+				$var.="mozilla";
+			}
 			$controls .= $var . " : ";
 			$controls .= $value ? "{visible : true}" : "{visible : false}";
 			$controls .=  "\n";

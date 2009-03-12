@@ -1,5 +1,5 @@
 
-div.wysiwyg { border: 1px solid #cccccc; padding: 5px; background-color: #ffffff; width:99% !important;}
+div.wysiwyg { border: 1px solid #cccccc; padding: 5px; background-color: #ffffff; width:99% !important; font-family:arial !important;font-size:11px !important;}
 div.wysiwyg * { margin: 0; padding: 0; }
 
 div.wysiwyg ul.panel { border-bottom: 1px solid #cccccc; float: left; width: 100%; padding: 0 0 4px 0; }
