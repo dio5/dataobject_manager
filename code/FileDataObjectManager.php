@@ -46,6 +46,8 @@ class FileDataObjectManager extends DataObjectManager
 		$this->dataObjectFieldName = $name;
 		$this->fileFieldName = $fileFieldName;
 		$this->fileClassName = singleton($this->sourceClass())->has_one($this->fileFieldName);
+			die('<strong>Error</strong>: FileDataObjectManager::__construct() -- could not determine has_one relationship with a File object.');
+		
 		$this->controllerClassName = $controller->class;
 		if($key = array_search($this->controllerClassName, singleton($this->sourceClass())->stat('has_one')))
 			$this->controllerFieldName = $key;
