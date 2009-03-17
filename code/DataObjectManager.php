@@ -4,7 +4,6 @@ class DataObjectManager extends ComplexTableField
 {
 	
 	protected $template = "DataObjectManager";
-	protected $view = "list";
 	protected $per_page = "10";
 	protected $showAll = "0";
 	protected $search = "";
@@ -123,10 +122,6 @@ class DataObjectManager extends ComplexTableField
 		return "ctf[{$this->Name()}][per_page]={$per_page}&ctf[{$this->Name()}][showall]={$show_all}&ctf[{$this->Name()}][sort]={$sort}&ctf[{$this->Name()}][sort_dir]={$sort_dir}&ctf[{$this->Name()}][search]={$search}&ctf[{$this->Name()}][filter]={$filter}";
 	}
 
-	public function ListStyle()
-	{
-		return $this->view;
-	}
 	
 	public function Headings()
 	{
@@ -151,7 +146,8 @@ class DataObjectManager extends ComplexTableField
 		$childData = new $className();
 		$form->saveInto($childData);
 		$childData->write();
-		$form->sessionMessage('Added new ' . $this->SingleTitle() .' successfully', 'good');
+		$form->sessionMessage(sprintf(_t('DataObjectManager.ADDEDNEW','Added new %s successfully'),$this->SingleTitle()), 'good');
+
 		if($form->getFileField()) {
 			$form->clearMessage();
 			Director::redirect($this->BaseLink().'/item/'.$childData->ID.'/edit');
@@ -183,7 +179,8 @@ class DataObjectManager extends ComplexTableField
 	{
 		$form = parent::AddForm($childID);
 		$actions = new FieldSet();	
-		$text = ($field = $form->getFileField()) ? "Save and add " . $field->Title() : "Save";
+		$text = ($field = $form->getFileField()) ? sprintf(_t('DataObjectManager.SAVEANDADD','Save and add %s'), $field->Title()) : _t('DataObjectManager.SAVE','SAVE');
+
 		$actions->push(
 			$saveAction = new FormAction("saveComplexTableField", $text)
 		);	
@@ -280,12 +277,13 @@ class DataObjectManager extends ComplexTableField
 	
 	public function FilterDropdown()
 	{
-		$map = $this->filter_empty_string ? array($this->RelativeLink(array('filter' => '')) => '-- No filter --') : array();
+		$map = $this->filter_empty_string ? array($this->RelativeLink(array('filter' => '')) => '-- '._t('DataObjectManager.NOFILTER','No filter').' --') : array();
 		foreach($this->filter_map as $k => $v) {
 			$map[$this->RelativeLink(array('filter' => $this->filtered_field.'_'.$k))] = $v;
 		}
 		$value = !empty($this->filter) ? $this->RelativeLink(array('filter' => $this->filter)) : null;
-		$dropdown = new DropdownField('Filter',$this->filter_label . " (<a href='#' class='refresh'>refresh</a>)", $map, $value);
+		$dropdown = new DropdownField('Filter',$this->filter_label . " (<a href='#' class='refresh'>'._t('DataObjectManager.REFRESH','refresh').'</a>)", $map, $value);
+
 		return $dropdown->FieldHolder();
 	}
 	
@@ -295,9 +293,10 @@ class DataObjectManager extends ComplexTableField
 		for($i=10;$i<=50;$i+=10) $map[$this->RelativeLink(array('per_page' => $i))] = $i;
 		$value = !empty($this->per_page) ? $this->RelativeLink(array('per_page' => $this->per_page)) : null;
 		return new FieldGroup(
-			new LabelField('show', 'Show '),
+			new LabelField('show', _t('DataObjectManager.PERPAGESHOW','Show').' '),
 			new DropdownField('PerPage','',$map, $value),
-			new LabelField('results', ' results per page')
+			new LabelField('results', ' '._t('DataObjectManager.PERPAGERESULTS','results per page'))
+
 		);
 	}
 	public function SearchValue()
@@ -397,7 +396,8 @@ class DataObjectManager_Popup extends Form {
 		$actions = new FieldSet();	
 		if(!$readonly) {
 			$actions->push(
-				$saveAction = new FormAction("saveComplexTableField", "Save")
+				$saveAction = new FormAction("saveComplexTableField", _t('DataObjectManager.SAVE','Save'))
+
 			);	
 			$saveAction->addExtraClass('save');
 		}
@@ -440,8 +440,7 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 	function saveComplexTableField($data, $form, $request) {
 		$form->saveInto($this->dataObj());
 		$this->dataObj()->write();
-		
-		$form->sessionMessage('Saved '.$this->ctf->SingleTitle(). ' successfully', 'good');
+		$form->sessionMessage(sprintf(_t('DataObjectManager.SAVED','Saved %s successfully'),$this->ctf->SingleTitle()), 'good');
 
 		Director::redirectBack();
 	}
