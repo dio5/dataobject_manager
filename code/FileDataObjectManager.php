@@ -6,7 +6,8 @@ class FileDataObjectManager extends DataObjectManager
 		'import/$ID' => 'handleImport'
 	);
 	
-	public $view = "grid";
+	public $view;
+	public $default_view = "grid";
 	protected $allowedFileTypes;
 	protected $limitFileTypes;
 	protected $uploadLimit = "20";
@@ -47,7 +48,7 @@ class FileDataObjectManager extends DataObjectManager
 		$this->fileFieldName = $fileFieldName;
 		$this->fileClassName = singleton($this->sourceClass())->has_one($this->fileFieldName);
 		if(!$this->fileClassName)
-			die('<strong>Error</strong>: FileDataObjectManager::__construct() -- could not determine has_one relationship with a File object.');
+			die("<strong>".$this->class . "::setAllowedFileTypes() -- ".sprintf(_t('DataObjectManager.ALLOWEDFILETYPES', 'Only files of type %s are allowed'),implode(", ", $this->limitFileTypes))."</strong>");
 		
 		$this->controllerClassName = $controller->class;
 		if($key = array_search($this->controllerClassName, singleton($this->sourceClass())->stat('has_one')))
@@ -91,17 +92,23 @@ class FileDataObjectManager extends DataObjectManager
 
 	public function GridView()
 	{
-		return $this->view == 'grid';
+		return $this->ListStyle() == "grid";
 	}
 	
 	public function ListView()
 	{
-		return $this->view == 'list';
+		return $this->ListStyle() == "list";
 	}
+
+	public function ListStyle()
+	{
+		return $this->view ? $this->view : $this->default_view;
+	}
+	
 	
 	public function ImportDropdown()
 	{
-		return new DropdownField('ImportFolder','',$this->getImportFolderHierarchy(0),null, null, "-- Select a folder --");
+		return new DropdownField('ImportFolder','',$this->getImportFolderHierarchy(0),null, null, "-- "._t('DataObjectManager.SELECTFOLDER', 'Select a folder')." --");
 	}
 	
 	protected function importLinkFor($file)
@@ -192,7 +199,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public function setDefaultView($type)
 	{
-		$this->view = $type;
+		$this->default_view = $type;
 	}
 	
 	public function upload()
@@ -215,7 +222,8 @@ class FileDataObjectManager extends DataObjectManager
 		
 		$fields = new FieldSet(
 			new HeaderField($title = "Add ".$this->PluralTitle(), $headingLevel = 2),
-			new HeaderField($title = "Upload from my computer", $headingLevel = 3),
+			new HeaderField($title = sprintf(_t('DataObjectManager.ADD', 'Add %s'),$this->PluralTitle()), $headingLevel = 2),
+			new HeaderField($title = _t('DataObjectManager.UPLOADFROMPC', 'Upload from my computer'), $headingLevel = 3),
 			new SWFUploadField(
 				"UploadForm",
 				"Upload",
@@ -259,6 +267,7 @@ class FileDataObjectManager extends DataObjectManager
 		
 		if($this->enableUploadDebugging)
 			SWFUploadConfig::set_var('debug','true');
+
 						
 
 		$form = Object::create(
@@ -272,7 +281,7 @@ class FileDataObjectManager extends DataObjectManager
 		);
 		$form->setActions(new FieldSet(new FormAction("saveUploadForm","Upload")));
 
-		$header = new HeaderField($title = "Import from an existing folder", $headingLevel = 3);
+		$header = new HeaderField($title = _t('DataObjectManager.IMPORTFROMFOLDER', 'Import from an existing folder'), $headingLevel = 3);
 		$holder = 	new LiteralField("holder","<div class='ajax-loader'></div><div id='import-holder'></div>");
 		if(!isset($_POST['uploaded_files']))
 			return $form->forTemplate() . $header->Field() . $this->ImportDropdown()->FieldHolder() . $holder->Field();
@@ -508,10 +517,10 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
 	
 	public function FileIcon()
 	{
-		$file = $this->obj($this->parent->fileFieldName);
+		$file = $this->item->obj($this->parent->fileFieldName);
 		if($file && $file->ID)
 			return ($file instanceof Image) ? $file->CroppedImage(50,50)->URL : $file->Icon();
-		else return "file not found";
+		else return "";
 	}
 	
 	public function FileLabel()
@@ -520,7 +529,7 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
 			$field = $this->parent->gridLabelField;
 			return $this->$field;
 		}
-		else if($file = $this->obj($this->parent->fileFieldName))
+		else if($file = $this->item->obj($this->parent->fileFieldName))
 			$label = $file->Title;
 		else
 			$label = "";
