@@ -38,7 +38,12 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public function __construct($controller, $name, $sourceClass, $fileFieldName, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
 	{
+		
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
+		
+		if(!class_exists("SWFUploadField"))
+			die("<strong>"._t('DataObjectManager.ERROR','Error')."</strong>: "._t('FileDataObjectManager.SWFUPLOAD','DataObjectManager requires the SWFUpload module.'));
+			
 		
 		if(isset($_REQUEST['ctf'][$this->Name()])) {		
 				$this->view = $_REQUEST['ctf'][$this->Name()]['view'];
