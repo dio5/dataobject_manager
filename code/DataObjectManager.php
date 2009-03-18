@@ -37,6 +37,9 @@ class DataObjectManager extends ComplexTableField
 	
 	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
 	{
+		if(!class_exists("ComplexTableField_ItemRequest"))
+			die("<strong>"._t('DataObjectManager.ERROR','Error')."</strong>: "._t('DataObjectManager.SILVERSTRIPEVERSION','DataObjectManager requires Silverstripe version 2.3 or higher.'));
+
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 		Requirements::block(THIRDPARTY_DIR . "/greybox/AmiJS.js");
 		Requirements::block(THIRDPARTY_DIR . "prototype.js");
