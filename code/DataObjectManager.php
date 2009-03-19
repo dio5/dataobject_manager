@@ -285,7 +285,7 @@ class DataObjectManager extends ComplexTableField
 			$map[$this->RelativeLink(array('filter' => $this->filtered_field.'_'.$k))] = $v;
 		}
 		$value = !empty($this->filter) ? $this->RelativeLink(array('filter' => $this->filter)) : null;
-		$dropdown = new DropdownField('Filter',$this->filter_label . " (<a href='#' class='refresh'> "._t('DataObjectManager.REFRESH','refresh')."</a>)", $map, $value);
+		$dropdown = new DropdownField('Filter',$this->filter_label . " (<a href='#' class='refresh'>"._t('DataObjectManager.REFRESH','refresh')."</a>)", $map, $value);
 		return $dropdown->FieldHolder();
 	}
 	

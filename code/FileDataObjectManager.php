@@ -226,7 +226,6 @@ class FileDataObjectManager extends DataObjectManager
 	{
 		
 		$fields = new FieldSet(
-			new HeaderField($title = "Add ".$this->PluralTitle(), $headingLevel = 2),
 			new HeaderField($title = sprintf(_t('DataObjectManager.ADD', 'Add %s'),$this->PluralTitle()), $headingLevel = 2),
 			new HeaderField($title = _t('DataObjectManager.UPLOADFROMPC', 'Upload from my computer'), $headingLevel = 3),
 			new SWFUploadField(
@@ -522,19 +521,21 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
 	
 	public function FileIcon()
 	{
-		$file = $this->item->obj($this->parent->fileFieldName);
+		$field = $this->parent->fileFieldName."ID";
+		$file = DataObject::get_by_id($this->parent->fileClassName, $this->item->$field);
 		if($file && $file->ID)
 			return ($file instanceof Image) ? $file->CroppedImage(50,50)->URL : $file->Icon();
-		else return "";
+		else return "{$this->item->$field}";
 	}
 	
 	public function FileLabel()
 	{
+		$idField = $this->parent->fileFieldName."ID";
 		if($this->parent->gridLabelField) {
 			$field = $this->parent->gridLabelField;
 			return $this->$field;
 		}
-		else if($file = $this->item->obj($this->parent->fileFieldName))
+		else if($file = DataObject::get_by_id($this->parent->fileClassName, $this->item->$idField))
 			$label = $file->Title;
 		else
 			$label = "";
