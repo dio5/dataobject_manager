@@ -36,7 +36,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="$ListStyle column{$Headings.Count}" id="list-holder" style="width:100%;">
+	<div class="list column{$Headings.Count}" id="list-holder" style="width:100%;">
 		<div class="dataobject-list">		
 		<ul <% if ShowAll %>class="sortable-{$sourceClass}"<% end_if %>>
 				<li class="head">
