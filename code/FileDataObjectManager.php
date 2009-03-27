@@ -32,7 +32,7 @@ class FileDataObjectManager extends DataObjectManager
 	public $pluralTitle;
 	public $browseButtonText = "Upload files";
 	
-
+	public $uploadFolder = "Uploads";
 	
 	
 	
@@ -260,7 +260,9 @@ class FileDataObjectManager extends DataObjectManager
 			'fileFieldName' => $this->fileFieldName,
 			'fileClassName' => $this->fileClassName,
 			'controllerFieldName' => $this->controllerFieldName,
-			'controllerID' => $this->controllerID
+			'controllerID' => $this->controllerID,
+			'OverrideUploadFolder' => $this->uploadFolder
+			
 		));
 		
 		if($this->allowUploadFolderSelection)
@@ -462,6 +464,14 @@ class FileDataObjectManager extends DataObjectManager
 
 		}
 	}
+	public function setUploadFolder($override)
+	{
+		$this->uploadFolder = $override;
+	}
+	public function getUploadFolder()
+	{
+		return $this->uploadFolder;
+	}
 }
 
 class FileDataObjectManager_Controller extends Controller
@@ -479,15 +489,15 @@ class FileDataObjectManager_Controller extends Controller
 				$folder = DataObject::get_by_id("Folder",$_POST['UploadFolder']);
 				$path = str_replace("assets/","",$folder->Filename);
 			}
-			else 
-				$path = false;
-			
+			else
+				$path = str_replace("assets/","",$_POST['OverrideUploadFolder']);
+				
 			if(class_exists("Upload")) {
 				$u = new Upload();
 				$u->loadIntoFile($_FILES['swfupload_file'], $file, $path);
 			}
 			else
-				$file->loadUploaded($_FILES['swfupload_file']);
+				$file->loadUploaded($_FILES['swfupload_file'],$path);
 			
 			if(isset($_POST['UploadFolder']))
 				$file->setField("ParentID",$folder->ID);
