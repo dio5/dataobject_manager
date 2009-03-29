@@ -42,7 +42,7 @@
 				<li class="head">
 					<div class="fields-wrap">
 					<% control Headings %>
-					<div class="col $FirstLast">
+					<div class="col $FirstLast" {$ColumnWidthCSS}>
 						<div class="pad">
 								<a href="$SortLink">$Title &nbsp;
 								<% if IsSorted %>
@@ -64,7 +64,7 @@
 				<li id="record-$Parent.id-$ID">
 						<div class="fields-wrap">
 						<% control Fields %>
-						<div class="col"><div class="pad"><% if Value %>$Value<% else %>&nbsp;<% end_if %></div></div>
+						<div class="col" {$ColumnWidthCSS}><div class="pad"><% if Value %>$Value<% else %>&nbsp;<% end_if %></div></div>
 						<% end_control %>
 						</div>
 						<div class="actions col">

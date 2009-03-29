@@ -14,9 +14,11 @@ class DataObjectManager extends ComplexTableField
 	protected $filtered_field;
 	protected $filter_label = "Filter results";
 	protected $filter_empty_string = true;
+	protected $column_widths = array();
 	public $itemClass = "DataObjectManager_Item";
 	public $addTitle;
 	public $singleTitle;
+	
 
 	public $actions = array(
 		'edit' => array(
@@ -136,6 +138,7 @@ class DataObjectManager extends ComplexTableField
 			else 
 				$dir = "ASC"; 
 			$heading->SortDirection = $dir;
+			$heading->ColumnWidthCSS = !empty($this->column_widths) ? sprintf("style='width:%f%%;'",($this->column_widths[$heading->Name] - 0.1)) : "";
 			$heading->SortLink = $this->RelativeLink(array(
 				'sort_dir' => $heading->SortDirection, 
 				'sort' => $heading->Name
@@ -325,11 +328,22 @@ class DataObjectManager extends ComplexTableField
 	{
 		$this->singleTitle = $title;
 	}
+	
+	public function getColumnWidths()
+	{
+		return $this->column_widths;
+	}
+	
+	public function setColumnWidths($widths)
+	{
+		if(is_array($widths))
+			$this->column_widths = $widths;
+	}
 
 }
 
 class DataObjectManager_Item extends ComplexTableField_Item {
-	function __construct(DataObject $item, ComplexTableField $parent, $start) 
+	function __construct(DataObject $item, DataObjectManager $parent, $start) 
 	{
 		parent::__construct($item, $parent, $start);
 	}
@@ -337,6 +351,18 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 	function Link() {
 		return $this->parent->BaseLink() . '/item/' . $this->item->ID;
 	}
+	
+	function Fields() {
+		$fields = parent::Fields();
+		$widths = $this->parent->getColumnWidths();
+		if(!empty($widths)) {
+			foreach($fields as $field) {
+				$field->ColumnWidthCSS = sprintf("style='width:%f%%;'",($widths[$field->Name] - 0.1));
+			}
+		}
+		return $fields;		
+	}
+	
 }
 
 class DataObjectManager_Controller extends Controller

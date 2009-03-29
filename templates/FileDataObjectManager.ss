@@ -70,7 +70,7 @@
 						<% if Top.ListView %>
 							<div class="fields-wrap">
 							<% control Fields %>
-								<div class="col"><div class="pad"><% if Value %>$Value<% else %>&nbsp;<% end_if %></div></div>
+								<div class="col" {$ColumnWidthCSS}><div class="pad"><% if Value %>$Value<% else %>&nbsp;<% end_if %></div></div>
 							<% end_control %>
 							</div>
 							<div class="actions col">
