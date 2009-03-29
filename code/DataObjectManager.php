@@ -336,8 +336,14 @@ class DataObjectManager extends ComplexTableField
 	
 	public function setColumnWidths($widths)
 	{
-		if(is_array($widths))
-			$this->column_widths = $widths;
+		if(is_array($widths)) {
+			$total = 0;
+			foreach($widths as $name => $value)	$total += $value;
+			if($total != 100) 
+				die('<strong>DataObjectManager::setColumnWidths()</strong>:' . _t('DataObjectManager.TOTALNOT100','Column widths must total 100.'));
+			else
+				$this->column_widths = $widths;
+		}
 	}
 
 }
