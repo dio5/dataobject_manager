@@ -47,6 +47,7 @@
 						<% control Headings %>
 						<div class="col $FirstLast">
 							<div class="pad">
+									<% if IsSortable %>
 									<a href="$SortLink">$Title &nbsp;
 									<% if IsSorted %>
 										<% if SortDirection = ASC %>
@@ -56,6 +57,9 @@
 										<% end_if %>
 									<% end_if %>
 									</a>
+									<% else %>
+									$Title
+									<% end_if %>
 							</div>
 						</div>
 						<% end_control %>

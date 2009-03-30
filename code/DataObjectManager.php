@@ -146,6 +146,7 @@ class DataObjectManager extends ComplexTableField
 				'sort_dir' => $heading->SortDirection, 
 				'sort' => $heading->Name
 			));
+	        $heading->IsSortable = singleton($this->sourceClass)->hasField($heading->Name); 			
 		}
 		return $headings;
 	}
