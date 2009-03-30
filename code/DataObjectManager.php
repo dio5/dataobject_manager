@@ -102,8 +102,11 @@ class DataObjectManager extends ComplexTableField
 		$search_string = "";
 		if(!empty($this->search)) {
 			$search = array();
-			foreach(parent::Headings() as $field)
-				$search[] = "UPPER($field->Name) LIKE '%".strtoupper($this->search)."%'";
+	        $SNG = singleton($this->sourceClass); 			
+			foreach(parent::Headings() as $field) {
+				if($SNG->hasField($field->Name))	
+					$search[] = "UPPER($field->Name) LIKE '%".strtoupper($this->search)."%'";
+			}
 			$search_string = "(".implode(" OR ", $search).")";
 		}
 		$and = (!empty($this->filter) && !empty($this->search)) ? " AND " : "";
