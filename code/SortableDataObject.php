@@ -35,6 +35,14 @@ class SortableDataObject extends DataObjectDecorator
 				'SortOrder' => 'Int'
 			)
 		);
+	}
+	
+	public function onBeforeWrite()
+	{
+		if(!$this->owner->ID) {
+			if($peers = DataObject::get($this->owner->class))
+				$this->owner->SortOrder = $peers->Count()+1;
+		}
 	}	
 
 }
