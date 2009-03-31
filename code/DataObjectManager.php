@@ -84,8 +84,6 @@ class DataObjectManager extends ComplexTableField
 		}
 		elseif(isset($_REQUEST['ctf'][$this->Name()]['sort']))
 			$this->sourceSort = $_REQUEST['ctf'][$this->Name()]['sort'] . " " . $this->sort_dir;
-		else 
-			$this->sourceSort = null;
 	
 	}
 	
