@@ -342,7 +342,7 @@ class DataObjectManager extends ComplexTableField
 			$total = 0;
 			foreach($widths as $name => $value)	$total += $value;
 			if($total != 100) 
-				die('<strong>DataObjectManager::setColumnWidths()</strong>:' . _t('DataObjectManager.TOTALNOT100','Column widths must total 100.'));
+				die('<strong>DataObjectManager::setColumnWidths()</strong>:' . sprintf(_t('DataObjectManager.TOTALNOT100','Column widths must total 100 and not %s'), $total));
 			else
 				$this->column_widths = $widths;
 		}
