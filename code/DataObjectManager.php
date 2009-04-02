@@ -187,7 +187,7 @@ class DataObjectManager extends ComplexTableField
 	{
 		$form = parent::AddForm($childID);
 		$actions = new FieldSet();	
-		$text = ($field = $form->getFileField()) ? sprintf(_t('DataObjectManager.SAVEANDADD','Save and add %s'), $field->Title()) : _t('DataObjectManager.SAVE','SAVE');
+		$text = ($field = $form->getFileField()) ? sprintf(_t('DataObjectManager.SAVEANDADD','Save and add %s'), $field->Title()) : _t('DataObjectManager.SAVE','Save');
 
 		$actions->push(
 			$saveAction = new FormAction("saveComplexTableField", $text)
