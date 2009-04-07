@@ -9,10 +9,17 @@
 class DatePickerField extends DateField 
 {
 	
+	protected $dateFormat = "dd/mm/yyyy";
+	
 	static function HTMLField( $id, $name, $val ) {
 		return <<<HTML
 			<input type="text" readonly="readonly" id="$id" name="$name" value="$val" />
 HTML;
+	}
+	
+	public function setDateFormat($format)
+	{
+		$this->dateFormat = $format;
 	}
 	
 	function Field() {
@@ -27,7 +34,7 @@ HTML;
 		Requirements::css("dataobject_manager/css/ui/ui.theme.css");
 
 		Requirements::customScript(
-			"\$('#$id').datepicker({dateFormat : 'dd/mm/yy', buttonImage : '/sapphire/images/calendar-icon.gif', buttonImageOnly : true});"
+			"\$('#$id').datepicker({dateFormat : '$this->dateFormat', buttonImage : '/sapphire/images/calendar-icon.gif', buttonImageOnly : true});"
 		);
 		$field = parent::Field();
 				
