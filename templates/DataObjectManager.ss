@@ -65,7 +65,7 @@
 				</li>
 			<% if Items %>
 			<% control Items %>
-				<li id="record-$Parent.id-$ID">
+				<li class="data" id="record-$Parent.id-$ID">
 						<div class="fields-wrap">
 						<% control Fields %>
 						<div class="col" {$ColumnWidthCSS}><div class="pad"><% if Value %>$Value<% else %>&nbsp;<% end_if %></div></div>

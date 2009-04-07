@@ -69,7 +69,7 @@
 				<% end_if %>
 				<% if Items %>
 				<% control Items %>
-					<li id="record-$Parent.id-$ID">
+					<li class="data" id="record-$Parent.id-$ID">
 						<!-- LIST VIEW -->
 						<% if Top.ListView %>
 							<div class="fields-wrap">
