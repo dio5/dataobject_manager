@@ -9,7 +9,7 @@
 class DatePickerField extends DateField 
 {
 	
-	static $dateFormat = "dd/mm/yyyy";
+	static $dateFormat = "dd/mm/yy";
 	
 	static function HTMLField( $id, $name, $val ) {
 		return <<<HTML
