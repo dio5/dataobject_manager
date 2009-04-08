@@ -25,7 +25,7 @@ HTML;
 	function Field() {
 		$id = $this->id();
 		$val = $this->attrValue();
-		if(!$val) $val = date("d/m/Y");
+		if(!$val) $val = self::$dateFormat == "dd/mm/yy" ? date("d/m/Y") : date("m/d/Y");
 		Requirements::javascript("jsparty/jquery/jquery.js");
 
 		Requirements::javascript("dataobject_manager/javascript/jquery-ui.1.6.js");
