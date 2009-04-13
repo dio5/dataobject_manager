@@ -1,7 +1,7 @@
 <div id="$id" class="RequestHandler FormField DataObjectManager FileDataObjectManager RelationDataObjectManager field" href="$CurrentLink">
 	<div class="ajax-loader"></div>
 	<div class="dataobjectmanager-actions <% if HasFilter %>filter<% end_if %>">
-		<% if Can(upload) %>
+		<% if Can(add) %>
 			<a class="popuplink" href="$UploadLink" alt="upload">
 				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% _t('ADD','Add') %> $ButtonAddTitle</span>
 			</a>	
