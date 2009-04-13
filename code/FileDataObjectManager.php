@@ -209,7 +209,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public function upload()
 	{
-		if(!$this->can('upload')) return;
+		if(!$this->can('add')) return;
 		
 		return $this->customise(array(
 			'DetailForm' => $this->UploadForm(),
@@ -254,43 +254,45 @@ class FileDataObjectManager extends DataObjectManager
 		$className = $this->sourceClass();
 		$childData = new $className();
 		$validator = $this->getValidatorFor($childData);
-		SWFUploadConfig::addPostParams(array(
-			'dataObjectClassName' => $this->sourceClass(),
-			'dataObjectFieldName' => $this->dataObjectFieldName,
-			'fileFieldName' => $this->fileFieldName,
-			'fileClassName' => $this->fileClassName,
-			'parentIDName' => $this->getParentIdName( $this->getParentClass(), $this->sourceClass() ),
-			'controllerID' => $this->controllerID,
-			'OverrideUploadFolder' => $this->uploadFolder
+		if($this->Can('upload')) {
+			SWFUploadConfig::addPostParams(array(
+				'dataObjectClassName' => $this->sourceClass(),
+				'dataObjectFieldName' => $this->dataObjectFieldName,
+				'fileFieldName' => $this->fileFieldName,
+				'fileClassName' => $this->fileClassName,
+				'parentIDName' => $this->getParentIdName( $this->getParentClass(), $this->sourceClass() ),
+				'controllerID' => $this->controllerID,
+				'OverrideUploadFolder' => $this->uploadFolder
+				
+			));
 			
-		));
-		
-		if($this->allowUploadFolderSelection)
-			SWFUploadConfig::addDynamicPostParam('UploadFolder','FileDataObjectManager_Popup_UploadForm_UploadFolder');
-
-		if($this->getAllowedFileTypes()) 
-			SWFUploadConfig::addFileTypes($this->getAllowedFileTypes());
-		
-		if($this->enableUploadDebugging)
-			SWFUploadConfig::set_var('debug','true');
-
+			if($this->allowUploadFolderSelection)
+				SWFUploadConfig::addDynamicPostParam('UploadFolder','FileDataObjectManager_Popup_UploadForm_UploadFolder');
+	
+			if($this->getAllowedFileTypes()) 
+				SWFUploadConfig::addFileTypes($this->getAllowedFileTypes());
+			
+			if($this->enableUploadDebugging)
+				SWFUploadConfig::set_var('debug','true');
+		}
 						
-
+		$fields = $this->Can('upload') ? $this->getUploadFields() : new FieldSet();
+		
 		$form = Object::create(
 			$this->popupClass,
 			$this,
 			'UploadForm',
-			$this->getUploadFields(),
+			$fields,
 			$validator,
 			false,
 			$childData
 		);
-		$form->setActions(new FieldSet(new FormAction("saveUploadForm","Upload")));
-
+		$action = $this->Can('upload') ? new FieldSet(new FormAction('saveUploadForm', 'Upload')) : new FieldSet();
+		$form->setActions($action);
 		$header = new HeaderField($title = _t('DataObjectManager.IMPORTFROMFOLDER', 'Import from an existing folder'), $headingLevel = 3);
 		$holder = 	new LiteralField("holder","<div class='ajax-loader'></div><div id='import-holder'></div>");
 		if(!isset($_POST['uploaded_files']))
-			return $form->forTemplate() . $header->Field() . $this->ImportDropdown()->FieldHolder() . $holder->Field();
+			return $form->forTemplate() . $header->Field() . $this->ImportDropdown()->Field() . $holder->Field();
 		else
 			return $form;
 		
@@ -395,7 +397,6 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public function handleImport($request)
 	{
-		if(!$this->can('import')) return;
 		$this->importFolderID = $request->param('ID');
 		die($this->ImportForm($this->importFolderID)->forTemplate());
 	}
@@ -563,7 +564,7 @@ class FileDataObjectManager_Popup extends DataObjectManager_Popup
 			
 			// Hack!
 			Requirements::block('jsparty/prototype.js');
-			if($name == "UploadForm" && !isset($_POST['uploaded_files'])) SWFUploadConfig::bootstrap();
+			if($name == "UploadForm" && !isset($_POST['uploaded_files']) && $controller->Can('upload')) SWFUploadConfig::bootstrap();
 			
 			Requirements::javascript('dataobject_manager/javascript/filedataobjectmanager_popup.js');			
 	}
