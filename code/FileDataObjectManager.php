@@ -259,7 +259,7 @@ class FileDataObjectManager extends DataObjectManager
 			'dataObjectFieldName' => $this->dataObjectFieldName,
 			'fileFieldName' => $this->fileFieldName,
 			'fileClassName' => $this->fileClassName,
-			'controllerFieldName' => $this->controllerFieldName,
+			'parentIDName' => $this->getParentIdName( $this->getParentClass(), $this->sourceClass() ),
 			'controllerID' => $this->controllerID,
 			'OverrideUploadFolder' => $this->uploadFolder
 			
@@ -404,7 +404,7 @@ class FileDataObjectManager extends DataObjectManager
 		return new FieldSet(
 				new HiddenField('dataObjectClassName','',$this->sourceClass()),
 				new HiddenField('fileFieldName','', $this->fileFieldName),
-				new HiddenField('controllerFieldName','', $this->controllerFieldName),
+				new HiddenField('parentIDName','', $this->getParentIdName( $this->getParentClass(), $this->sourceClass() )),
 				new HiddenField('controllerID','',$this->controllerID)
 			);
 	}
@@ -450,7 +450,7 @@ class FileDataObjectManager extends DataObjectManager
 				}
 				$do_class = $data['dataObjectClassName'];
 				$idxfield = $data['fileFieldName']."ID";
-				$owner_id = $data['controllerFieldName']."ID";
+				$owner_id = $data['parentIDName'];
 				$obj = new $do_class();
 				$obj->$idxfield = $file_id;
 				$obj->$owner_id = $data['controllerID'];
@@ -504,7 +504,7 @@ class FileDataObjectManager_Controller extends Controller
 
 			$file->write();
 			$obj->$idxfield = $file->ID;
-			$ownerID = $_POST['controllerFieldName']."ID";
+			$ownerID = $_POST['parentIDName'];
 			$obj->$ownerID = $_POST['controllerID'];
 
 			$obj->write();
