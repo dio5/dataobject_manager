@@ -314,7 +314,8 @@ class FileDataObjectManager extends DataObjectManager
 	public function getPreviewFieldFor($fileObject, $size = 150)
 	{
 		if($fileObject instanceof Image) {
-			$URL = $fileObject->SetHeight($size)->URL;
+			$URL = $fileObject->getHeight() > $size ? $fileObject->SetHeight($size)->URL : $fileObject->URL
+			;
 			return new LiteralField("icon",
 				"<div class='current-image'><img src='$URL' alt='' /><h3>$fileObject->Filename</h3></div>"
 			);
