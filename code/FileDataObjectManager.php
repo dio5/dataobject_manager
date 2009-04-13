@@ -276,7 +276,9 @@ class FileDataObjectManager extends DataObjectManager
 				SWFUploadConfig::set_var('debug','true');
 		}
 						
-		$fields = $this->Can('upload') ? $this->getUploadFields() : new FieldSet();
+		$fields = $this->Can('upload') ? $this->getUploadFields() : new FieldSet(			
+			new HeaderField($title = sprintf(_t('DataObjectManager.ADD', 'Add %s'),$this->PluralTitle()), $headingLevel = 2)
+		);
 		
 		$form = Object::create(
 			$this->popupClass,
