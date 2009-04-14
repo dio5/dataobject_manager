@@ -13,7 +13,7 @@ class DataObjectManager extends ComplexTableField
 	protected $filter_map = array();
 	protected $filtered_field;
 	protected $filter_label = "Filter results";
-	protected $filter_empty_string = true;
+	protected $filter_empty_string = "";
 	protected $column_widths = array();
 	public $itemClass = "DataObjectManager_Item";
 	public $addTitle;
@@ -58,7 +58,7 @@ class DataObjectManager extends ComplexTableField
 		Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
 		Requirements::javascript('dataobject_manager/javascript/tooltip.js');
 		
-		
+		$this->filter_empty_string = '-- '._t('DataObjectManager.NOFILTER','No filter').' --';
 
 		if(isset($_REQUEST['ctf'][$this->Name()])) {
 			$this->per_page = $_REQUEST['ctf'][$this->Name()]['per_page'];
@@ -285,7 +285,7 @@ class DataObjectManager extends ComplexTableField
 	
 	public function FilterDropdown()
 	{
-		$map = $this->filter_empty_string ? array($this->RelativeLink(array('filter' => '')) => '-- '._t('DataObjectManager.NOFILTER','No filter').' --') : array();
+		$map = $this->filter_empty_string ? array($this->RelativeLink(array('filter' => '')) => $this->filter_empty_string) : array();
 		foreach($this->filter_map as $k => $v) {
 			$map[$this->RelativeLink(array('filter' => $this->filtered_field.'_'.$k))] = $v;
 		}
@@ -346,6 +346,11 @@ class DataObjectManager extends ComplexTableField
 			else
 				$this->column_widths = $widths;
 		}
+	}
+	
+	public function setFilterEmptyString($str)
+	{
+		$this->filter_empty_string = $str;
 	}
 
 }
