@@ -19,13 +19,61 @@ HTML;
 	
 	public static function set_date_format($format)
 	{
-		self::$dateFormat = $format;
+		switch($format) {
+			case "mdy":
+			self::$dateFormat = "mm/dd/yy";
+			break;
+			
+			case "dmy":
+			self::$dateFormat = "dd/mm/yy";
+			break;
+			
+			default:
+			self::$dateFormat = "dd/mm/yy";
+			break;
+		}
 	}
+	
+	public static function dmy()
+	{
+		return self::$dateFormat == "dd/mm/yy";
+	}
+	
+	public static function mdy()
+	{
+		return self::$dateFormat == "mm/dd/yy";
+	}
+	
+	function setValue($val) {
+		if(is_string($val) && preg_match('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/', $val)) {
+			$this->value = self::mdy() ? 
+				preg_replace('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/','\\2/\\3/\\1', $val) :
+				preg_replace('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/','\\3/\\2/\\1', $val);		
+		} else {
+			$this->value = $val;
+		}
+	}
+	
+	function dataValue() {
+		if(is_array($this->value)) {
+			if(isset($this->value['Year']) && isset($this->value['Month']) && isset($this->value['Day'])) {
+				return $this->value['Year'] . '-' . $this->value['Month'] . '-' . $this->value['Day'];
+			} else {
+				user_error("Bad DateField value " . var_export($this->value,true), E_USER_WARNING);
+			}
+		} elseif(preg_match('/^([\d]{1,2})\/([\d]{1,2})\/([\d]{2,4})/', $this->value, $parts)) {
+			return self::mdy() ? "$parts[3]-$parts[1]-$parts[2]" : "$parts[3]-$parts[2]-$parts[1]";
+		} elseif(!empty($this->value)) {
+			return date('Y-m-d', strtotime($this->value));
+		} else {
+			return null;
+		}
+	}
+	
 	
 	function Field() {
 		$id = $this->id();
 		$val = $this->attrValue();
-		if(!$val) $val = self::$dateFormat == "dd/mm/yy" ? date("d/m/Y") : date("m/d/Y");
 		Requirements::javascript("jsparty/jquery/jquery.js");
 
 		Requirements::javascript("dataobject_manager/javascript/jquery-ui.1.6.js");
