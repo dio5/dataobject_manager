@@ -492,6 +492,7 @@ class FileDataObjectManager_Controller extends Controller
 			if(isset($_POST['UploadFolder'])) {
 				$folder = DataObject::get_by_id("Folder",$_POST['UploadFolder']);
 				$path = str_replace("assets/","",$folder->Filename);
+				if(substr($path,-1)=="/") $path = substr($path,0, -1);
 			}
 			else
 				$path = str_replace("assets/","",$_POST['OverrideUploadFolder']);
