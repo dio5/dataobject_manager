@@ -536,12 +536,23 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
 	
 	public function FileIcon()
 	{
-		$field = $this->parent->fileFieldName."ID";
-		$file = DataObject::get_by_id($this->parent->fileClassName, $this->item->$field);
-		if($file && $file->ID)
-			return ($file instanceof Image) ? $file->CroppedImage(50,50)->URL : $file->Icon();
-		else return "{$this->item->$field}";
-	}
+    $field = $this->parent->fileFieldName."ID";
+    $file = DataObject::get_by_id($this->parent->fileClassName, $this->item->$field);
+    if($file && $file->ID) {
+       if($file instanceof Image) {
+          $img = $file;
+       } else {
+          $ext = $file->Extension;
+          $imgExts = array('jpg','jpeg','gif');
+          if(in_array($ext, $imgExts)) {
+             $img = new Image_Cached($file->Filename);
+             $img->ID = $file->ID; //image resize functions require an id
+          }
+       }         
+       return (isset($img)) ? $img->CroppedImage(50,50)->URL : $file->Icon();         
+    }
+    else return "{$this->item->$field}"; 
+ 	}
 	
 	public function FileLabel()
 	{
