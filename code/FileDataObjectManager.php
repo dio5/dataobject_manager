@@ -262,7 +262,7 @@ class FileDataObjectManager extends DataObjectManager
 				'fileClassName' => $this->fileClassName,
 				'parentIDName' => $this->getParentIdName( $this->getParentClass(), $this->sourceClass() ),
 				'controllerID' => $this->controllerID,
-				'OverrideUploadFolder' => $this->uploadFolder
+				'OverrideUploadFolder' => $this->getUploadFolder()
 				
 			));
 			
