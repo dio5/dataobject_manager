@@ -21,7 +21,8 @@ class SimpleHTMLEditorField extends TextareaField
 		'h3'					=>  true,
 		'h4'					=>  true,
 		'h5'					=>  true,
-		'h6'					=>  false
+		'h6'					=>  false,
+		'html'					=>  true
 		
 		
 	);
