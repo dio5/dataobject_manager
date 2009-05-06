@@ -494,9 +494,10 @@ class FileDataObjectManager_Controller extends Controller
 				$path = str_replace("assets/","",$folder->Filename);
 				if(substr($path,-1)=="/") $path = substr($path,0, -1);
 			}
-			else
+			else {
 				$path = str_replace("assets/","",$_POST['OverrideUploadFolder']);
-				
+				if(substr($path,-1)=="/") $path = substr($path,0, -1);
+			}
 			if(class_exists("Upload")) {
 				$u = new Upload();
 				$u->loadIntoFile($_FILES['swfupload_file'], $file, $path);
