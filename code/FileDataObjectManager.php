@@ -6,6 +6,9 @@ class FileDataObjectManager extends DataObjectManager
 		'import/$ID' => 'handleImport'
 	);
 	
+	public static $upgrade_audio = true;
+	public static $upgrade_video = true;
+	
 	public $view;
 	public $default_view = "grid";
 	protected $allowedFileTypes;
@@ -48,19 +51,24 @@ class FileDataObjectManager extends DataObjectManager
 		if(isset($_REQUEST['ctf'][$this->Name()])) {		
 				$this->view = $_REQUEST['ctf'][$this->Name()]['view'];
 		}
-		
+		$SNG = singleton($this->sourceClass());
 		$this->dataObjectFieldName = $name;
 		$this->fileFieldName = $fileFieldName;
-		$this->fileClassName = singleton($this->sourceClass())->has_one($this->fileFieldName);
+		$this->fileClassName = $SNG->has_one($this->fileFieldName);
 		if(!$this->fileClassName)
-			die("<strong>".$this->class . "::setAllowedFileTypes() -- ".sprintf(_t('DataObjectManager.ALLOWEDFILETYPES', 'Only files of type %s are allowed'),implode(", ", $this->limitFileTypes))."</strong>");
+			die("<strong>FileDataObjectManager::__construct():</strong>"._t('FileDataObjectManager.FILERELATION','Could not determine file relationship'));
 		
 		$this->controllerClassName = $controller->class;
-		if($key = array_search($this->controllerClassName, singleton($this->sourceClass())->stat('has_one')))
+		if($key = array_search($this->controllerClassName, $SNG->stat('has_one')))
 			$this->controllerFieldName = $key;
 		else
 			$this->controllerFieldName = $this->controllerClassName;
 		$this->controllerID = $controller->ID;
+		
+		// Check for allowed file types
+		$SNG = singleton($this->fileClassName);
+		if(property_exists("allowed_file_types", $SNG))
+			$this->setAllowedFileTypes($SNG->stat('allowed_file_types'));
 
 	}
 
@@ -226,7 +234,7 @@ class FileDataObjectManager extends DataObjectManager
 	{
 		
 		$fields = new FieldSet(
-			new HeaderField($title = sprintf(_t('DataObjectManager.ADD', 'Add %s'),$this->PluralTitle()), $headingLevel = 2),
+			new HeaderField($title = sprintf(_t('DataObjectManager.ADDITEM', 'Add %s'),$this->PluralTitle()), $headingLevel = 2),
 			new HeaderField($title = _t('DataObjectManager.UPLOADFROMPC', 'Upload from my computer'), $headingLevel = 3),
 			new SWFUploadField(
 				"UploadForm",
@@ -484,11 +492,12 @@ class FileDataObjectManager_Controller extends Controller
 	{
 		if(isset($_FILES['swfupload_file']) && !empty($_FILES['swfupload_file'])) {
 			$do_class = $_POST['dataObjectClassName'];
-			$file_class = $_POST['fileClassName'];
+
 			$obj = new $do_class();
 			$idxfield = $_POST['fileFieldName']."ID";
+			$file_class = $_POST['fileClassName'];
 			$file = new $file_class();
-			
+
 			if(isset($_POST['UploadFolder'])) {
 				$folder = DataObject::get_by_id("Folder",$_POST['UploadFolder']);
 				$path = str_replace("assets/","",$folder->Filename);
@@ -507,6 +516,15 @@ class FileDataObjectManager_Controller extends Controller
 			
 			if(isset($_POST['UploadFolder']))
 				$file->setField("ParentID",$folder->ID);
+
+			// Provide an "upgrade" to File subclasses
+			if($file->class == "File") {
+				$ext = strtolower($file->Extension);
+				if($ext == "mp3" && FileDataObjectManager::$upgrade_audio)
+					$file = $file->newClassInstance("MP3");
+				else if(in_array($ext, FLV::$allowed_file_types) && FileDataObjectManager::$upgrade_video)
+					$file = $file->newClassInstance("FLV");
+			}
 
 			$file->write();
 			$obj->$idxfield = $file->ID;
@@ -540,9 +558,9 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
     $field = $this->parent->fileFieldName."ID";
     $file = DataObject::get_by_id($this->parent->fileClassName, $this->item->$field);
     if($file && $file->ID) {
-       if($file instanceof Image) {
+       if($file instanceof Image)
           $img = $file;
-       } else {
+       else {
           $ext = $file->Extension;
           $imgExts = array('jpg','jpeg','gif');
           if(in_array($ext, $imgExts)) {
