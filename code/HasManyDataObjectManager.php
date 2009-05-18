@@ -82,8 +82,10 @@ class HasManyDataObjectManager extends DataObjectManager
 		$records = $dataQuery->execute();
 		$unpagedItems = new DataObjectSet();
 		foreach($records as $record) {
-			if(! get_class($record))
-				$record = new DataObject($record);
+			if(! get_class($record)) {
+				$class = $this->sourceClass;
+				$record = new $class($record);
+			}
 			$unpagedItems->push($record);
 		}
 		$this->unpagedSourceItems = $unpagedItems;

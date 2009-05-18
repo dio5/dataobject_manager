@@ -8,6 +8,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public static $upgrade_audio = true;
 	public static $upgrade_video = true;
+	public static $upgrade_image = true;
 	
 	public $view;
 	public $default_view = "grid";
@@ -522,6 +523,8 @@ class FileDataObjectManager_Controller extends Controller
 				$ext = strtolower($file->Extension);
 				if($ext == "mp3" && FileDataObjectManager::$upgrade_audio)
 					$file = $file->newClassInstance("MP3");
+				else if(in_array($ext, array('jpg','jpeg','gif','png')) && FileDataObjectManager::$upgrade_image)
+					$file = $file->newClassInstance("Image");
 				else if(in_array($ext, FLV::$allowed_file_types) && FileDataObjectManager::$upgrade_video)
 					$file = $file->newClassInstance("FLV");
 			}
