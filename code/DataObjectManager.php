@@ -131,22 +131,26 @@ class DataObjectManager extends ComplexTableField
 	
 	public function Headings()
 	{
-		$headings = parent::Headings();
-		foreach($headings as $heading) {
-			$heading->IsSorted = (isset($_REQUEST['ctf'][$this->Name()]['sort'])) && ($_REQUEST['ctf'][$this->Name()]['sort'] == $heading->Name);
+		$headings = array();
+		foreach($this->fieldList as $fieldName => $fieldTitle) {
 			if(isset($_REQUEST['ctf'][$this->Name()]['sort_dir'])) 
 				$dir = $_REQUEST['ctf'][$this->Name()]['sort_dir'] == "ASC" ? "DESC" : "ASC";
 			else 
 				$dir = "ASC"; 
-			$heading->SortDirection = $dir;
-			$heading->ColumnWidthCSS = !empty($this->column_widths) ? sprintf("style='width:%f%%;'",($this->column_widths[$heading->Name] - 0.1)) : "";
-			$heading->SortLink = $this->RelativeLink(array(
-				'sort_dir' => $heading->SortDirection, 
-				'sort' => $heading->Name
+			$headings[] = new ArrayData(array(
+				"Name" => $fieldName, 
+				"Title" => ($this->sourceClass) ? singleton($this->sourceClass)->fieldLabel($fieldTitle) : $fieldTitle,
+	      "IsSortable" => singleton($this->sourceClass)->hasField($fieldName),
+				"SortLink" => $this->RelativeLink(array(
+					'sort_dir' => $dir,
+					'sort' => $fieldName
+				)),
+				"SortDirection" => $dir,
+			  "IsSorted" => (isset($_REQUEST['ctf'][$this->Name()]['sort'])) && ($_REQUEST['ctf'][$this->Name()]['sort'] == $fieldName),
+				"ColumnWidthCSS" => !empty($this->column_widths) ? sprintf("style='width:%f%%;'",($this->column_widths[$fieldName] - 0.1)) : ""
 			));
-	        $heading->IsSortable = singleton($this->sourceClass)->hasField($heading->Name); 			
 		}
-		return $headings;
+		return new DataObjectSet($headings);
 	}
 	
 	function saveComplexTableField($data, $form, $params) {
