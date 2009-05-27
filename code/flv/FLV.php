@@ -136,14 +136,6 @@ class FLV extends File
 	
 	private function createFLV()
 	{
-/*die(sprintf("ffmpeg -i %s -ar %d -ab %d -f flv %s",
-			$this->absoluteRawVideoLink(),
-			self::$audio_sampling_rate,
-			self::$audio_bit_rate,
-			$this->absoluteFLVLink()
-		));
-*/		
-		
 		$cmd = sprintf("ffmpeg -i %s -ar %d -ab %d -f flv %s",
 			$this->absoluteRawVideoLink(),
 			self::$audio_sampling_rate,
