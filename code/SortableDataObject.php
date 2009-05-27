@@ -25,7 +25,14 @@ class SortableDataObject extends DataObjectDecorator
 	
 	public static function is_sortable_class($classname)
 	{
-		return in_array($classname, self::$sortable_classes);	
+		if(in_array($classname, self::$sortable_classes))
+			return true;
+		foreach(self::$sortable_classes as $class) {
+			if(is_subclass_of($classname, $class))
+				return true;
+		}
+		return false;
+			
 	}
 	
 	public function extraStatics()
