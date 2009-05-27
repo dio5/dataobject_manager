@@ -31,7 +31,7 @@ class FLV extends File
 			if($code == 1) $success = true;
 		}
 
-		echo $success ? "<span style='color:green'>FFMPEG is installed on your server and working properly.</span>" : "<span class='color:red'>FFMPEG does not appear to be installed on your server.</span>";
+		echo $success ? "<span style='color:green'>FFMPEG is installed on your server and working properly. Code: $code</span>" : "<span class='color:red'>FFMPEG does not appear to be installed on your server. Code: $code</span>";
 	}
 	
 	
