@@ -7,7 +7,7 @@ class FLV extends File
 	);
 
 	private $allow_full_screen = true;	
-
+	private static $ffmpeg_root = "";
 	public static $player_count = 0;
 	public static $video_width = 400;
 	public static $video_height = 300;
@@ -20,6 +20,17 @@ class FLV extends File
 	public static $audio_sampling_rate = 22050;
 	public static $audio_bit_rate = 32;
 	
+	public static function set_ffmpeg_root($path)
+	{
+		if(substr($path,-1)!="/") $path .= "/";
+		self::$ffmpeg_root = $path;
+	}
+	
+	private static function ffmpeg($args)
+	{
+		return self::$ffmpeg_root."ffmpeg $args";
+	}
+	
 	public static function echo_ffmpeg_test()
 	{
 		$success = false;
@@ -27,7 +38,7 @@ class FLV extends File
 			$success = true;
 		else {
 			$code = false;
-			$output = self::run_command("ffmpeg", &$code);
+			$output = self::ffmpeg("", &$code);
 			if($code == 1) $success = true;
 		}
 
@@ -35,7 +46,7 @@ class FLV extends File
 	}
 	
 	
-	protected static function run_command($cmd, &$code)
+	protected static function ffmpeg($args, &$code)
 	{
 	   $descriptorspec = array(
 	       0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
@@ -44,6 +55,7 @@ class FLV extends File
 	   );
 	
 	   $pipes= array();
+	   $cmd = self::$ffmpeg_root."ffmpeg ".$args;	   
 	   $process = proc_open($cmd, $descriptorspec, $pipes);
 	
 	   $output= "";
@@ -136,7 +148,7 @@ class FLV extends File
 	
 	private function createFLV()
 	{
-		$cmd = sprintf("ffmpeg -i %s -ar %d -ab %d -f flv %s",
+		$args = sprintf("-i %s -ar %d -ab %d -f flv %s",
 			$this->absoluteRawVideoLink(),
 			self::$audio_sampling_rate,
 			self::$audio_bit_rate,
@@ -144,7 +156,7 @@ class FLV extends File
 		);
 		
 		$code = "";
-		$output = self::run_command($cmd, &$code);	
+		$output = self::ffmpeg($args, &$code);	
 	}
 	
 	public function onBeforeWrite()
@@ -188,14 +200,14 @@ class FLV extends File
 		$thumb = self::remove_file_extension($this->Filename)."_thumb_{$width}_{$height}.jpg";
 		$abs_thumb = Director::baseFolder()."/".$thumb;
 		if(!Director::fileExists($thumb)) {
-			$cmd = sprintf("ffmpeg -y -i %s -f mjpeg -ss %d -s %s -an %s",
+			$args = sprintf("-y -i %s -f mjpeg -ss %d -s %s -an %s",
 				$this->absoluteRawVideoLink(),
 				self::$thumbnail_seconds,
 				$width."x".$height,
 				$abs_thumb
 			);
 			$code = "";
-			self::run_command($cmd, &$code);
+			self::ffmpeg($args, &$code);
 		}
 
 		return sprintf("<img src='%s' alt='%s' width='%d' height='%d' />",
