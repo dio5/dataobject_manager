@@ -203,7 +203,7 @@ class FLV extends File
 				$abs_thumb
 			);
 			$code = "";
-			self::run_command($cms, &$code);
+			self::run_command($cmd, &$code);
 		}
 
 		return sprintf("<img src='%s' alt='%s' width='%d' height='%d' />",
