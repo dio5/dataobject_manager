@@ -26,10 +26,6 @@ class FLV extends File
 		self::$ffmpeg_root = $path;
 	}
 	
-	private static function ffmpeg($args)
-	{
-		return self::$ffmpeg_root."ffmpeg $args";
-	}
 	
 	public static function echo_ffmpeg_test()
 	{
