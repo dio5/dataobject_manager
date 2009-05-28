@@ -8,6 +8,7 @@ class FLV extends File
 
 	private $allow_full_screen = true;	
 	private static $ffmpeg_root = "";
+	private static $termination_code;
 	public static $player_count = 0;
 	public static $video_width = 400;
 	public static $video_height = 300;
@@ -33,16 +34,16 @@ class FLV extends File
 		if(extension_loaded('ffmpeg'))
 			$success = true;
 		else {
-			$code = false;
-			$output = self::ffmpeg("", &$code);
-			if($code == 1) $success = true;
+			$output = self::ffmpeg("");
+			if(self::$termination_code == 1) $success = true;
 		}
 
-		echo $success ? "<span style='color:green'>FFMPEG is installed on your server and working properly. Code: $code</span>" : "<span class='color:red'>FFMPEG does not appear to be installed on your server. Code: $code</span>";
+		echo $success ? "<span style='color:green'>FFMPEG is installed on your server and working properly. Code: ".self::$termination_code."</span>" : 
+						"<span class='color:red'>FFMPEG does not appear to be installed on your server. Code: ".self::$termination_code."</span>";
 	}
 	
 	
-	protected static function ffmpeg($args, &$code)
+	protected static function ffmpeg($args)
 	{
 	   $descriptorspec = array(
 	       0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
@@ -88,7 +89,7 @@ class FLV extends File
 	   fclose($pipes[1]);
 	   fclose($pipes[2]);
 	
-	   $code= proc_close($process);
+	   self::$termination_code = proc_close($process);
 	
 	   return $output;
 		
@@ -151,8 +152,7 @@ class FLV extends File
 			$this->absoluteFLVPath()
 		);
 		
-		$code = "";
-		$output = self::ffmpeg($args, &$code);	
+		$output = self::ffmpeg($args);	
 	}
 	
 	public function onBeforeWrite()
@@ -202,8 +202,7 @@ class FLV extends File
 				$width."x".$height,
 				$abs_thumb
 			);
-			$code = "";
-			self::ffmpeg($args, &$code);
+			self::ffmpeg($args);
 		}
 
 		return sprintf("<img src='%s' alt='%s' width='%d' height='%d' />",
