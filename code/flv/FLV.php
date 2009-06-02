@@ -10,12 +10,13 @@ class FLV extends File
 	private static $ffmpeg_root = "";
 	private static $termination_code;
 	public static $player_count = 0;
-	public static $video_width = 400;
-	public static $video_height = 300;
-	public static $default_thumbnail_width = 400;
-	public static $default_thumbnail_height = 300;
-	public static $default_popup_width = 800;
-	public static $default_popup_height = 450;
+	public static $video_width = 640;
+	public static $video_height = 480;
+	public static $default_thumbnail_width = 640;
+	public static $default_thumbnail_height = 480;
+	public static $thumbnail_folder = "video_thumbnails";
+	public static $default_popup_width = 640;
+	public static $default_popup_height = 480;
 
 	public static $thumbnail_seconds = 1;
 	public static $audio_sampling_rate = 22050;
@@ -143,6 +144,11 @@ class FLV extends File
 		return Director::fileExists(self::remove_file_extension($this->Filename).".flv");
 	}
 	
+	private function getThumbnail()
+	{
+	 return DataObject::get_one("Image","Title = 'flv_thumb_{$this->ID}'");
+	}
+	
 	private function createFLV()
 	{
 		$args = sprintf("-i %s -ar %d -ab %d -f flv %s",
@@ -155,11 +161,33 @@ class FLV extends File
 		$output = self::ffmpeg($args);	
 	}
 	
+	private function createThumbnail()
+	{
+			$folder = Folder::findOrMake(self::$thumbnail_folder);
+			$img_filename = self::remove_file_extension($this->Title).".jpg";
+			$abs_thumb = Director::baseFolder()."/".$folder->Filename.$img_filename;
+			$args = sprintf("-y -i %s -f mjpeg -ss %d -s %s -an %s",
+				$this->absoluteRawVideoLink(),
+				self::$thumbnail_seconds,
+				self::$default_thumbnail_width."x".self::$default_thumbnail_height,
+				$abs_thumb
+			);
+			self::ffmpeg($args);	
+
+			$img = new Image();
+			$img->setField('ParentID',$folder->ID);
+			$img->Filename = $folder->Filename.$img_filename;
+			$img->Title = "flv_thumb_".$this->ID;
+			$img->write();
+	}
+	
 	public function onBeforeWrite()
 	{
 		parent::onBeforeWrite();
 		if(!$this->hasFLV())
 			$this->createFLV();
+		if(!$this->getThumbnail())
+		  $this->createThumbnail();
 	}
 	
 	
@@ -188,29 +216,14 @@ class FLV extends File
 		return $this->Player();
 	}
 	
-	public function VideoThumbnail($width = null, $height = null)
+	public function VideoThumbnail()
 	{
-		if($width === null) $width = self::$default_thumbnail_width;
-		if($height === null) $height = self::$default_thumbnail_height;
-		
-		$thumb = self::remove_file_extension($this->Filename)."_thumb_{$width}_{$height}.jpg";
-		$abs_thumb = Director::baseFolder()."/".$thumb;
-		if(!Director::fileExists($thumb)) {
-			$args = sprintf("-y -i %s -f mjpeg -ss %d -s %s -an %s",
-				$this->absoluteRawVideoLink(),
-				self::$thumbnail_seconds,
-				$width."x".$height,
-				$abs_thumb
-			);
-			self::ffmpeg($args);
-		}
-
-		return sprintf("<img src='%s' alt='%s' width='%d' height='%d' />",
-			Director::absoluteURL($thumb),
-			$this->Title,
-			$width,
-			$height
-		);
+	  if(!$img = $this->getThumbnail()) {
+	    $this->createThumbnail();
+	    $img = $this->getThumbnail();
+	  }
+	  return $img;
+	  
 	}
 	
 	public function VideoPopup($thumb_width = null, $thumb_height = null, $popup_width = null, $popup_height = null)
@@ -223,7 +236,7 @@ class FLV extends File
 			'PopupHeight' => $popup_height,
 			'Title' => $this->Title,
 			'Link' => $this->FLVLink(),
-			'Thumbnail' => $this->VideoThumbnail($thumb_width, $thumb_height)
+			'Thumbnail' => $this->VideoThumbnail()->CroppedImage($thumb_width, $thumb_height)
 		))->renderWith(array('FLVpopup'));
 		
 	}
