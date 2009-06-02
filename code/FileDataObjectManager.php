@@ -521,7 +521,7 @@ class FileDataObjectManager_Controller extends Controller
 			// Provide an "upgrade" to File subclasses
 			if($file->class == "File") {
 				$ext = strtolower($file->Extension);
-				if($ext == "mp3" && FileDataObjectManager::$upgrade_audio)
+				if(in_array($ext, MP3::$allowed_file_types) && FileDataObjectManager::$upgrade_audio)
 					$file = $file->newClassInstance("MP3");
 				else if(in_array($ext, array('jpg','jpeg','gif','png')) && FileDataObjectManager::$upgrade_image)
 					$file = $file->newClassInstance("Image");
