@@ -101,10 +101,11 @@ class FLV extends File
 	private static function log_command($cmd)
 	{
     if(self::$log_file_path) {
-      $f = fopen(Director::baseFolder()."/".self::$log_file_path, 'a');
+      $log = Director::baseFolder()."/".self::$log_file_path;
+      $f = @fopen($log, 'a');
       $entry = "[".date('Y-m-d H:i:s')."] ".$cmd."\n";
       @fwrite($f, $entry);
-      fclose($f);
+      @fclose($f);
     }
 	}
 		
