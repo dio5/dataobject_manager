@@ -15,6 +15,7 @@ class FLV extends File
 	public static $default_thumbnail_width = 640;
 	public static $default_thumbnail_height = 480;
 	public static $thumbnail_folder = "video_thumbnails";
+	public static $log_file_path = "dataobject_manager/code/flv/ffmpeg_log.txt";
 	public static $default_popup_width = 640;
 	public static $default_popup_height = 480;
 
@@ -53,7 +54,8 @@ class FLV extends File
 	   );
 	
 	   $pipes= array();
-	   $cmd = self::$ffmpeg_root."ffmpeg ".$args;	   
+	   $cmd = self::$ffmpeg_root."ffmpeg ".$args;
+	   self::log_command($cmd);	   
 	   $process = proc_open($cmd, $descriptorspec, $pipes);
 	
 	   $output= "";
@@ -95,6 +97,16 @@ class FLV extends File
 	   return $output;
 		
 	}
+	
+	private static function log_command($cmd)
+	{
+    if(self::$log_file_path) {
+      $f = fopen(Director::baseFolder()."/".self::$log_file_path, 'a');
+      $entry = "[".date('Y-m-d H:i:s')."] ".$cmd."\n";
+      @fwrite($f, $entry);
+      fclose($f);
+    }
+	}
 		
 	private function SWFLink()
 	{
@@ -112,6 +124,16 @@ class FLV extends File
 		if($ext !== false)  
 			$filename = substr($filename, 0, -strlen($ext));  
 		return $filename;
+	}
+	
+	private static function clean_file($str)
+	{
+		$t = strtolower($str);
+		$t = str_replace('&amp;','-and-',$t);
+		$t = str_replace('&','-and-',$t);
+		$t = ereg_replace('[^A-Za-z0-9]+','-',$t);
+		$t = ereg_replace('-+','-',$t);
+		return $t;
 	}
 	
 	public function Icon()
@@ -144,9 +166,14 @@ class FLV extends File
 		return Director::fileExists(self::remove_file_extension($this->Filename).".flv");
 	}
 	
-	private function getThumbnail()
+	public function getThumbnail()
 	{
-	 return DataObject::get_one("Image","Title = 'flv_thumb_{$this->ID}'");
+	 if($img = DataObject::get_one("Image","Title = 'flv_thumb_{$this->ID}'")) {
+	   if(Director::fileExists($img->Filename)) 
+	     return $img;
+	   return false;
+	 }
+	 return false;
 	}
 	
 	private function createFLV()
@@ -163,8 +190,12 @@ class FLV extends File
 	
 	private function createThumbnail()
 	{
+      $img_title = "flv_thumb_".$this->ID;
+      if($existing = DataObject::get("Image","Title = '$img_title'")) {
+        foreach($existing as $file) $file->delete();
+      }
 			$folder = Folder::findOrMake(self::$thumbnail_folder);
-			$img_filename = self::remove_file_extension($this->Title).".jpg";
+			$img_filename = self::clean_file(self::remove_file_extension($this->Title).".jpg");
 			$abs_thumb = Director::baseFolder()."/".$folder->Filename.$img_filename;
 			$args = sprintf("-y -i %s -f mjpeg -ss %d -s %s -an %s",
 				$this->absoluteRawVideoLink(),
@@ -177,7 +208,7 @@ class FLV extends File
 			$img = new Image();
 			$img->setField('ParentID',$folder->ID);
 			$img->Filename = $folder->Filename.$img_filename;
-			$img->Title = "flv_thumb_".$this->ID;
+			$img->Title = $img_title;
 			$img->write();
 	}
 	
