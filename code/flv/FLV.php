@@ -10,14 +10,14 @@ class FLV extends File
 	private static $ffmpeg_root = "";
 	private static $termination_code;
 	public static $player_count = 0;
-	public static $video_width = 640;
-	public static $video_height = 480;
+	public static $video_width = 840;
+	public static $video_height = 525;
 	public static $default_thumbnail_width = 640;
 	public static $default_thumbnail_height = 480;
 	public static $thumbnail_folder = "video_thumbnails";
 	public static $log_file_path = "dataobject_manager/code/flv/ffmpeg_log.txt";
-	public static $default_popup_width = 640;
-	public static $default_popup_height = 480;
+	public static $default_popup_width = 840;
+	public static $default_popup_height = 525;
 
 	public static $thumbnail_seconds = 1;
 	public static $audio_sampling_rate = 22050;
@@ -93,7 +93,7 @@ class FLV extends File
 	   fclose($pipes[2]);
 	
 	   self::$termination_code = proc_close($process);
-	
+	   self::log_command($output);
 	   return $output;
 		
 	}
@@ -164,7 +164,7 @@ class FLV extends File
 	
 	private function hasFLV()
 	{
-		return Director::fileExists(self::remove_file_extension($this->Filename).".flv");
+		return Director::fileExists($this->FLVPath());
 	}
 	
 	public function getThumbnail()
@@ -196,12 +196,12 @@ class FLV extends File
         foreach($existing as $file) $file->delete();
       }
 			$folder = Folder::findOrMake(self::$thumbnail_folder);
-			$img_filename = self::clean_file(self::remove_file_extension($this->Title).".jpg");
+			$img_filename = self::clean_file(self::remove_file_extension($this->Title)).".jpg";
 			$abs_thumb = Director::baseFolder()."/".$folder->Filename.$img_filename;
-			$args = sprintf("-y -i %s -f mjpeg -ss %d -s %s -an %s",
-				$this->absoluteRawVideoLink(),
-				self::$thumbnail_seconds,
+			$args = sprintf("-y -i %s -an -s %s -ss %d -an -r 1 -vframes 1 -y -vcodec mjpeg -f mjpeg %s",
+				$this->absoluteFLVPath(),
 				self::$default_thumbnail_width."x".self::$default_thumbnail_height,
+				self::$thumbnail_seconds,
 				$abs_thumb
 			);
 			self::ffmpeg($args);	
