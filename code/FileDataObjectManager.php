@@ -571,7 +571,7 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
              $img->ID = $file->ID; //image resize functions require an id
           }
        }         
-       return (isset($img)) ? $img->CroppedImage(50,50)->URL : $file->Icon();         
+       return (is_object($img)) ? $img->CroppedImage(50,50)->URL : (is_object($file) ? $file->Icon() : '');         
     }
     else return "{$this->item->$field}"; 
  	}

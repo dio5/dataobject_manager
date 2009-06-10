@@ -138,7 +138,10 @@
 /* accommodate input field for relation dataobjectmangaer */
 .RelationDataObjectManager .list .dataobject-list li .fields-wrap {width:85%;}
 .RelationDataObjectManager .list .dataobject-list div.actions.col {width:14%;}
-
+.RelationDataObjectManager .list .dataobject-list div.actions.col {text-align:left;text-indent:}
+.RelationDataObjectManager .list .dataobject-list li.head div.actions.col a {visibility:visible;font-weight:normal;font-size:10px;color:#0074c6;display:block;}
+.RelationDataObjectManager .grid .dataobject-list div.actions.col {float:none;width:100%;text-align:right;}
+.RelationDataObjectManager .grid .dataobject-list div.actions.col a {text-decoration:none;}
 
 /* Target IE7 only */
 html>body .DataObjectManager {*width:96%;}

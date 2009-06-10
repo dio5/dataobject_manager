@@ -121,6 +121,7 @@ $j.fn.DataObjectManager.init = function(obj) {
 		$container.find('#srch_clear').unbind('click').click(function() {
 			$container.find('#srch_fld').attr('value','').keyup();
 		});
+		
 
     $container.find('a.tooltip').tooltip({
 		  delay: 500,
@@ -182,9 +183,14 @@ $j.fn.DataObjectManager.init = function(obj) {
 				else
 					$j(e).attr('checked',false);
 					
-			});		
-	    
-    
+			});	
+			
+			$container.find('a[rel=clear]').unbind('click').click(function(e) {
+			 $container.find('.actions input, .file-label input').each(function(i,e) {
+			   $j(e).attr('checked', false).parents('li').removeClass('selected');
+			   $checkedList.attr('value','');
+			 });
+			});	
     }
 		
     // Columns. God forbid there are more than 10.

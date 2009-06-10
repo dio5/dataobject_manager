@@ -61,7 +61,7 @@
 					</div>
 					<% end_control %>
 					</div>
-					<div class="actions col">&nbsp;</div>
+					<div class="actions col"><a href="javascript:void(0)" rel="clear"><% _t('DataObjectManager.DESELECTALL','deselect all') %></a></div>
 				</li>
 			<% if Items %>
 			<% control Items %>

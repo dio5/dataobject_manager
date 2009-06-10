@@ -64,8 +64,10 @@
 						</div>
 						<% end_control %>
 						</div>
-						<div class="actions col">&nbsp;</div>
+					  <div class="actions col"><a href="javascript:void(0)" rel="clear"><% _t('DataObjectManager.DESELECTALL','deselect all') %></a></div>
 					</li>
+				<% else %>
+					  <div class="actions col"><a href="javascript:void(0)" rel="clear"><% _t('DataObjectManager.DESELECTALL','deselect all') %></a></div>				
 				<% end_if %>
 				<% if Items %>
 				<% control Items %>
