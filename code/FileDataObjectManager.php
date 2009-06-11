@@ -432,9 +432,18 @@ class FileDataObjectManager extends DataObjectManager
 			foreach($files as $file) {
 				$icon = $file instanceof Image ? $file->croppedImage(35,35)->URL : $file->Icon();
 				$title = strlen($file->Title) > 30 ? substr($file->Title, 0, 30)."..." : $file->Title;
+				$types = $this->getAllowedFileTypes();
+				if(is_array($types) && !empty($types))
+				  $allowed = in_array($file->Extension, $types);
+				else
+				  $allowed = true;
+				
+				$class = !$allowed ? "class='disabled'" : "";
+				$disabled = !$allowed ? "disabled='disabled'" : "";
+				
 				$fields->push(new LiteralField("li-$file->ID",
-					"<li>
-						<span class='import-checkbox'><input type='checkbox' name='imported_files[]' value='$file->ID' /></span>
+					"<li $class>
+						<span class='import-checkbox'><input $disabled type='checkbox' name='imported_files[]' value='$file->ID' /></span>
 						<span class='import-icon'><img src='$icon' alt='' /></span>
 						<span class='import-title'>".$title."</span>
 					</li>"
@@ -528,7 +537,7 @@ class FileDataObjectManager_Controller extends Controller
 				else if(in_array($ext, FLV::$allowed_file_types) && FileDataObjectManager::$upgrade_video)
 					$file = $file->newClassInstance("FLV");
 			}
-
+      $file->OwnerID = Member::currentUserID();
 			$file->write();
 			$obj->$idxfield = $file->ID;
 			$ownerID = $_POST['parentIDName'];
@@ -571,7 +580,7 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
              $img->ID = $file->ID; //image resize functions require an id
           }
        }         
-       return (is_object($img)) ? $img->CroppedImage(50,50)->URL : (is_object($file) ? $file->Icon() : '');         
+       return isset($img) ? $img->CroppedImage(50,50)->URL : $file->Icon();         
     }
     else return "{$this->item->$field}"; 
  	}

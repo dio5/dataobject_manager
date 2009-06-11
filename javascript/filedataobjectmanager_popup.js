@@ -9,7 +9,7 @@
 				else {
 					$('#import-holder').load($(this).val(), {},function() {
 						$('#action_saveUploadForm').hide();
-						$('#Form_ImportForm li').click(function(e) {
+						$('#Form_ImportForm li:not(.disabled)').click(function(e) {
 							if(e.target.nodeName != "INPUT") {
 								i = $(this).find('input'); 
 								c = i.attr('checked'); 

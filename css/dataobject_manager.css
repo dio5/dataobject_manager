@@ -40,7 +40,9 @@
 #Form_ImportForm ul li {list-style:none;border-bottom:1px solid #aaa;;height:40px;padding:4px 0;}
 #Form_ImportForm ul li:hover {background:#eee;}
 #Form_ImportForm ul li.current {background:#ddd;}
-
+#Form_ImportForm ul li.disabled img {opacity:0.5;}
+#Form_ImportForm ul li.disabled .import-title {color:#999;}
+#Form_ImportForm ul li.disabled:hover {background:none;}
 .import-checkbox {vertical-align:50%;}
 .import-title {vertical-align:80%;margin-left:10px;}
 
