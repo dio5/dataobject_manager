@@ -203,9 +203,9 @@ class DataObjectManager extends ComplexTableField
 		
 	}
 	
-	public function Link()
+	public function Link($action = null)
 	{
-		return parent::Link()."?".$this->getQueryString();
+		return parent::Link($action)."?".$this->getQueryString();
 	}
 	
 	public function BaseLink()
