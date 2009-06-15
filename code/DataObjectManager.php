@@ -72,7 +72,7 @@ class DataObjectManager extends ComplexTableField
 		$this->loadSort();
 		$this->loadSourceFilter();
 	}
-
+	
 	protected function loadSort()
 	{
 		if($this->ShowAll()) 
@@ -208,52 +208,52 @@ class DataObjectManager extends ComplexTableField
 		return parent::Link($action)."?".$this->getQueryString();
 	}
 	
-	public function BaseLink($action = null)
+	public function BaseLink()
 	{
-		return parent::Link($action);
+		return parent::Link();
 	}
 	
-	public function CurrentLink($action = null)
+	public function CurrentLink()
 	{
-		return $this->Link($action);
+		return $this->Link();
 	}	
 	
-	public function RelativeLink($params = array(), $action = null)
+	public function RelativeLink($params = array())
 	{
-		return parent::Link($action)."?".$this->getQueryString($params);
+		return parent::Link()."?".$this->getQueryString($params);
 	}	
-	public function FirstLink($action = null)
+	public function FirstLink()
 	{
-		return parent::FirstLink($action) ? parent::FirstLink($action)."&".$this->getQueryString() : false;
+		return parent::FirstLink() ? parent::FirstLink()."&".$this->getQueryString() : false;
 	}
 	
-	public function PrevLink($action = null)
+	public function PrevLink()
 	{
-		return parent::PrevLink($action) ? parent::PrevLink($action)."&".$this->getQueryString() : false;
+		return parent::PrevLink() ? parent::PrevLink()."&".$this->getQueryString() : false;
 	}
 	
-	public function NextLink($action = null)
+	public function NextLink()
 	{
-		return parent::NextLink($action) ? parent::NextLink($action)."&".$this->getQueryString() : false;
+		return parent::NextLink() ? parent::NextLink()."&".$this->getQueryString() : false;
 	}
 	
-	public function LastLink($action = null)
+	public function LastLink()
 	{
-		return parent::LastLink($action) ? parent::LastLink($action)."&".$this->getQueryString() : false;
+		return parent::LastLink() ? parent::LastLink()."&".$this->getQueryString() : false;
 	}
 	
-	public function ShowAllLink($action = null)
+	public function ShowAllLink()
 	{
-		return $this->RelativeLink(array('show_all' => '1'),$action);
+		return $this->RelativeLink(array('show_all' => '1'));
 	}
 	
-	public function PaginatedLink($action = null)
+	public function PaginatedLink()
 	{
-		return $this->RelativeLink(array('show_all' => '0'),$action);
+		return $this->RelativeLink(array('show_all' => '0'));
 	}
 
-	public function AddLink($action = null) {
-		return $this->BaseLink($action) . '/add';
+	public function AddLink() {
+		return $this->BaseLink() . '/add';
 	}
 	
 	
@@ -365,8 +365,8 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 		parent::__construct($item, $parent, $start);
 	}
 	
-	function Link($action = null) {
-		return $this->parent->BaseLink(Controller::join_links('item', $this->item->ID, $action));
+	function Link() {
+		return $this->parent->BaseLink() . '/item/' . $this->item->ID;
 	}
 	
 	function Fields() {
@@ -476,10 +476,10 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 	{
 		parent::__construct($ctf, $itemID);
 	}
-	
-	function Link($action = null) 
+
+	function Link() 
 	{
-		return $this->ctf->BaseLink(Controller::join_links('item', $this->itemID, $action));
+		return $this->ctf->BaseLink() . '/item/' . $this->itemID;
 	}
 
 	function saveComplexTableField($data, $form, $request) {
@@ -489,6 +489,9 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 
 		Director::redirectBack();
 	}
+	
+	
+
 
 }
 
