@@ -489,9 +489,6 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 
 		Director::redirectBack();
 	}
-	
-	
-
 
 }
 
