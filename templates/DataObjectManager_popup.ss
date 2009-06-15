@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<% base_tag %>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-type"/> 		
 	</head>
 	<body class="DataObjectManager-popup">
 		<div class="right $PopupClasses">
