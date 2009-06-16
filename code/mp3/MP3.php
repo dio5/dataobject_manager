@@ -3,7 +3,7 @@
 class MP3 extends File 
 {
 	static $allowed_file_types = array (
-		'mp3','aac','aiff','wav'
+		'mp3'
 	);
 
 	private static $player_count = 0;
