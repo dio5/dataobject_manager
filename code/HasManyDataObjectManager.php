@@ -38,6 +38,12 @@ class HasManyDataObjectManager extends DataObjectManager
 		elseif($this->controller instanceof ContentController) return $this->controller->data()->class;
 	}
 	
+	public function setParentClass($class)
+	{
+		parent::setParentClass($class);
+		$this->joinField = $this->getParentIdName($class, $this->sourceClass);
+	}
+	
 	function getQuery($limitClause = null) {
 		if($this->customQuery) {
 			$query = $this->customQuery;
@@ -138,7 +144,6 @@ class HasManyDataObjectManager_Item extends DataObjectManager_Item {
 	
 	function MarkingCheckbox() {
 		$name = $this->parent->Name() . '[]';
-		
 		$joinVal = $this->item->{$this->parent->joinField};
 		$parentID = $this->parent->getControllerID();
 		

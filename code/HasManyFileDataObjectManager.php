@@ -59,6 +59,13 @@ class HasManyFileDataObjectManager extends FileDataObjectManager
 		return clone $query;
 	}
 	
+	public function setParentClass($class)
+	{
+		parent::setParentClass($class);
+		$this->joinField = $this->getParentIdName($class, $this->sourceClass);
+	}
+	
+	
 	function sourceItems() {
 		if($this->sourceItems)
 			return $this->sourceItems;
