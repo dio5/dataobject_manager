@@ -9,6 +9,8 @@ class HasManyFileDataObjectManager extends FileDataObjectManager
 	public $template = 'RelationFileDataObjectManager';
 	public $itemClass = 'HasManyFileDataObjectManager_Item';
 	protected $relationAutoSetting = false;
+  protected $markingPermission;
+	
 
 	/**
 	 * Most of the code below was copied from HasManyComplexTableField.
@@ -37,6 +39,18 @@ class HasManyFileDataObjectManager extends FileDataObjectManager
 		if($this->controller instanceof DataObject) return $this->controller->class;
 		elseif($this->controller instanceof ContentController) return $this->controller->data()->class;
 	}
+	
+	public function setMarkingPermission($perm)
+	{
+	   $this->markingPermission = $perm;
+	}
+	
+	public function hasMarkingPermission()
+	{
+	   if($this->markingPermission)
+	     return Permission::check($this->markingPermission);
+	}
+	
 	
 	function getQuery($limitClause = null) {
 		if($this->customQuery) {
@@ -148,13 +162,14 @@ class HasManyFileDataObjectManager_Item extends FileDataObjectManager_Item {
 		
 		$joinVal = $this->item->{$this->parent->joinField};
 		$parentID = $this->parent->getControllerID();
+		$disabled = $this->parent->hasMarkingPermission() ? "" : "disabled='disabled'";
 		
 		if($this->parent->IsReadOnly || ($joinVal > 0 && $joinVal != $parentID))
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\"/>";
 		else if($joinVal == $parentID)
-			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\"/>";
+			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\" $disabled />";
 		else
-			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\"/>";
+			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" $disabled />";
 	}
 }
 

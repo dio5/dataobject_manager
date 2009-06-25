@@ -60,13 +60,14 @@ class HasOneDataObjectManager_Item extends DataObjectManager_Item {
 		$isOneToOne = $this->parent->isOneToOne;
 		$joinVal = $this->parent->getControllerJoinID();
 		$childID = $this->item->ID;
+		$disabled = $this->parent->hasMarkingPermission() ? "" : "disabled='disabled'";
 						
 		if($this->parent->IsReadOnly || ($isOneToOne && $joinVal != $childID && $this->parent->isChildSet($childID)))
 			return "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\"/>";
 		else if($joinVal == $childID)
-			return "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\"/>";
+			return "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\" $disabled />";
 		else
-			return "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"{$this->item->ID}\"/>";
+			return "<input class=\"radio\" type=\"radio\" name=\"$name\" value=\"{$this->item->ID}\" $disabled />";
 	}
 }
 

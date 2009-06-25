@@ -95,13 +95,14 @@ class ManyManyFileDataObjectManager_Item extends FileDataObjectManager_Item {
 	
 	function MarkingCheckbox() {
 		$name = $this->parent->Name() . '[]';
+		$disabled = $this->parent->hasMarkingPermission() ? "" : "disabled='disabled'";
 		
 		if($this->parent->IsReadOnly)
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\"/>";
 		else if($this->item->{$this->parent->joinField})
-			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\"/>";
+			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\" $disabled />";
 		else
-			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\"/>";
+			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" $disabled />";
 	}
 }
 

@@ -9,7 +9,7 @@ class HasManyDataObjectManager extends DataObjectManager
 	public $template = 'RelationDataObjectManager';
 	public $itemClass = 'HasManyDataObjectManager_Item';
 	protected $relationAutoSetting = false;
-
+  protected $markingPermission;
 	/**
 	 * Most of the code below was copied from HasManyComplexTableField.
 	 * Painful, but necessary, until PHP supports multiple inheritance.
@@ -36,6 +36,18 @@ class HasManyDataObjectManager extends DataObjectManager
 	function controllerClass() {
 		if($this->controller instanceof DataObject) return $this->controller->class;
 		elseif($this->controller instanceof ContentController) return $this->controller->data()->class;
+	}
+	
+	public function setMarkingPermission($perm)
+	{
+	   $this->markingPermission = $perm;
+	}
+	
+	public function hasMarkingPermission()
+	{
+	   if($this->markingPermission)
+	     return Permission::check($this->markingPermission);
+     return true;
 	}
 	
 	public function setParentClass($class)
@@ -146,13 +158,14 @@ class HasManyDataObjectManager_Item extends DataObjectManager_Item {
 		$name = $this->parent->Name() . '[]';
 		$joinVal = $this->item->{$this->parent->joinField};
 		$parentID = $this->parent->getControllerID();
+		$disabled = $this->parent->hasMarkingPermission() ? "" : "disabled='disabled'";
 		
 		if($this->parent->IsReadOnly || ($joinVal > 0 && $joinVal != $parentID))
 			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" disabled=\"disabled\"/>";
 		else if($joinVal == $parentID)
-			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\"/>";
+			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" checked=\"checked\" $disabled />";
 		else
-			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\"/>";
+			return "<input class=\"checkbox\" type=\"checkbox\" name=\"$name\" value=\"{$this->item->ID}\" $disabled />";
 	}
 }
 
