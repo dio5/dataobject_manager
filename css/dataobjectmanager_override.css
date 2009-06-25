@@ -1,0 +1,32 @@
+/** CMS overrides **/
+body {background:#eee !important;}
+#right {border:0;}
+ul.tabstrip {
+	border-bottom: 1px solid #aaa !important;
+	margin: 0 !important;
+}
+	ul.tabstrip li {
+		background: #eee !important;
+		border:1px solid #aaa;
+    border-bottom:1px solid #fff;
+		margin: 0 6px 0 4px !important;
+	}
+		ul.tabstrip li a {
+			background: none !important;
+		}
+			ul.tabstrip li.current,
+			ul.tabstrip li.ui-tabs-selected,
+			ul.tabstrip li.sel,
+			ul.tabstrip li.over {
+				background: #fff !important;
+			}
+				ul.tabstrip li.current a,
+				ul.tabstrip li.ui-tabs-selected a,
+				ul.tabstrip li.sel a,
+				ul.tabstrip li.over a {
+					background: none !important;
+				}
+
+.tab {
+	border: 0px solid #aaa !important;
+}
