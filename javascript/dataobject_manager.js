@@ -1,43 +1,48 @@
-$j = jQuery.noConflict();
+(function($) {
+var nested = $('.DataObjectManager').hasClass('isNested');
 
-
-
-$j.fn.DataObjectManager = function() {
+$.fn.DataObjectManager = function() {
 	this.each(function() {
-		$j.fn.DataObjectManager.init(this);
+		$.fn.DataObjectManager.init(this);
 	});
 };
 
-$j.fn.DataObjectManager.init = function(obj) {
-		var $container = $j(obj);
+$.fn.DataObjectManager.init = function(obj) {
+		var $container = $(obj);
 		var container_id = '#'+$container.attr('id');
 		
 		var facebox_close = function() {			
-			$j('#facebox').fadeOut(function() {
-				$j('#facebox .content').removeClass().addClass('content');
-				$j('#facebox_overlay').remove();
-				$j('#facebox .loading').remove();
+			$('#facebox').fadeOut(function() {
+				$('#facebox .content').removeClass().addClass('content');
+				$('#facebox_overlay').remove();
+				$('#facebox .loading').remove();
 				refresh($container, $container.attr('href'));		
 			})
 		};
 		
 		// Popup links
-		$container.find('a.popuplink').unbind('click').click(function(e) {
-			$j(document).unbind('close.facebox').bind('close.facebox', facebox_close);
-			$j.facebox('<iframe src="'+$j(this).attr('href')+'" frameborder="0" width="500" height="' + ($j.fn.DataObjectManager.getPageHeight()*.6) + '"></iframe>');
-			e.stopPropagation();
-			return false;
-		});
-		
+		if(nested) {
+      		
+		}
+		else {
+  		$container.find('a.popuplink').unbind('click').click(function(e) {
+  			$(document).unbind('close.facebox').bind('close.facebox', facebox_close);
+  			w = $(this).attr('rel') == 'hasNested' ? 850 : 500;
+  			width = new String(w);
+  			$.facebox('<iframe src="'+$(this).attr('href')+'" frameborder="0" width="'+width+'" height="' + ($.fn.DataObjectManager.getPageHeight()*.6) + '"></iframe>');
+  			e.stopPropagation();
+  			return false;
+  		});
+		}
 		// Delete
 
 		$container.find('a.deletelink').unbind('click').click(function(e) {
 			params = $('#SecurityID') ? {'forceajax' : '1', 'SecurityID' : $('#SecurityID').attr('value')} : {'forceajax' : '1'};
-			$target = $j(this);
-			$j.post(
+			$target = $(this);
+			$.post(
 				$target.attr('href'),
 				params,
-				function() {$($target).parents('li:first').fadeOut();$j(".ajax-loader").fadeOut("fast");}
+				function() {$($target).parents('li:first').fadeOut();$(".ajax-loader").fadeOut("fast");}
 			);
 			e.stopPropagation();
 			return false;
@@ -45,53 +50,53 @@ $j.fn.DataObjectManager.init = function(obj) {
 
 		// Pagination
 		$container.find('.Pagination a').unbind('click').click(function() {
-			refresh($container, $j(this).attr('href'));
+			refresh($container, $(this).attr('href'));
 			return false;
 		});
 		
 		// View
 		if($container.hasClass('FileDataObjectManager') && !$container.hasClass('ImageDataObjectManager')) {
 			$container.find('a.viewbutton').unbind('click').click(function() {
-				refresh($container, $j(this).attr('href'));
+				refresh($container, $(this).attr('href'));
 				return false;
 			});
 		}
 
 		// Sortable
 		$container.find('.sort-control input').unbind('click').click(function(e) {
-			refresh($container, $j(this).attr('value'));
-			$j(this).attr('disabled', true);
+			refresh($container, $(this).attr('value'));
+			$(this).attr('disabled', true);
 			e.stopPropagation();
 		});
 		$container.find("ul[class^='sortable-']").sortable({
 			update : function(e) {
-				$list = $j(this);
+				$list = $(this);
 				do_class = $list.attr('class').replace('sortable-','').replace('ui-sortable','');
-				$j.post('DataObjectManager_Controller/dosort/' + do_class, $list.sortable("serialize"));
+				$.post('DataObjectManager_Controller/dosort/' + do_class, $list.sortable("serialize"));
 				e.stopPropagation();
 			},
 			items : 'li:not(.head)',
 			containment : 'document',
 			tolerance : 'intersect',
-			handle : ($j('#list-holder').hasClass('grid') ? '.handle' : null)
+			handle : ($('#list-holder').hasClass('grid') ? '.handle' : null)
 		});
 		
 		// Column sort
 		if(!$container.hasClass('ImageDataObjectManager')) {
 			$container.find('li.head a').unbind('click').click(function() {
-				refresh($container, $j(this).attr('href'));
+				refresh($container, $(this).attr('href'));
 				return false;
 			});
 		}
 		
 		// Filter
 		$container.find('.dataobjectmanager-filter select').unbind('change').change(function(e) {
-			refresh($container, $j(this).attr('value'));
+			refresh($container, $(this).attr('value'));
 		});
 
 		// Page size
 		$container.find('.per-page-control select').unbind('change').change(function(e) {
-			refresh($container, $j(this).attr('value'));
+			refresh($container, $(this).attr('value'));
 		});
 
 		
@@ -105,14 +110,14 @@ $j.fn.DataObjectManager.init = function(obj) {
 		// Search
 		var request = false;
 		$container.find('#srch_fld').focus(function() {
-			if($j(this).attr('value') == "Search") $j(this).attr('value','').css({'color' : '#333'});
+			if($(this).attr('value') == "Search") $(this).attr('value','').css({'color' : '#333'});
 		}).unbind('blur').blur(function() {
-			if($j(this).attr('value') == '') $j(this).attr('value','Search').css({'color' : '#666'});
+			if($(this).attr('value') == '') $(this).attr('value','Search').css({'color' : '#666'});
 		}).unbind('keyup').keyup(function(e) {
 				if(request) window.clearTimeout(request);
-				$input = $j(this);
+				$input = $(this);
 				request = window.setTimeout(function() {
-					url = $j(container_id).attr('href').replace(/\[search\]=(.)*?&/, '[search]='+$input.attr('value')+'&');
+					url = $(container_id).attr('href').replace(/\[search\]=(.)*?&/, '[search]='+$input.attr('value')+'&');
 					refresh($container, url);
 				},200)
 			e.stopPropagation();
@@ -127,9 +132,7 @@ $j.fn.DataObjectManager.init = function(obj) {
 		  delay: 500,
 		  showURL: false,
 		  track: true,
-		  bodyHandler: function() {
-			  return $j(this).parents('li').find('span.tooltip-info').html();
-		  }
+		  bodyHandler: function() $
     });
     
     
@@ -139,70 +142,70 @@ $j.fn.DataObjectManager.init = function(obj) {
 			var MAX_IMG_SIZE = 300;
 			var START_IMG_SIZE = 100;
 			var new_image_size;
-			$j('.size-control').slider({
+			$('.size-control').slider({
 				
 				// Stupid thing doesn't work. Have to force it with CSS
 				//startValue : (START_IMG_SIZE - MIN_IMG_SIZE) / ((MAX_IMG_SIZE - MIN_IMG_SIZE) / 100),
 				slide : function(e, ui) {
 					new_image_size = MIN_IMG_SIZE + (ui.value * ((MAX_IMG_SIZE - MIN_IMG_SIZE)/100));
-					$j('.grid li img.image').css({'width': new_image_size+'px'});
-					$j('.grid li').css({'width': new_image_size+'px', 'height' : new_image_size +'px'});
+					$('.grid li img.image').css({'width': new_image_size+'px'});
+					$('.grid li').css({'width': new_image_size+'px', 'height' : new_image_size +'px'});
 				},
 				
 				stop : function(e, ui) {
 					new_image_size = MIN_IMG_SIZE + (ui.value * ((MAX_IMG_SIZE - MIN_IMG_SIZE)/100));				
-					url = $j(container_id).attr('href').replace(/\[imagesize\]=(.)*/, '[imagesize]='+Math.floor(new_image_size));
+					url = $(container_id).attr('href').replace(/\[imagesize\]=(.)*/, '[imagesize]='+Math.floor(new_image_size));
 					refresh($container, url);
 				}
 			});
 			
-			$j('.ui-slider-handle').css({'left' : $j('#size-control-wrap').attr('class').replace('position','')+'px'});    
+			$('.ui-slider-handle').css({'left' : $('#size-control-wrap').attr('class').replace('position','')+'px'});    
     
     }  
     // RelationDataObjectManager
     
     if($container.hasClass('RelationDataObjectManager')) {
-			var $checkedList = $j(container_id+'_CheckedList');
+			var $checkedList = $(container_id+'_CheckedList');
 			$container.find('.actions input, .file-label input').unbind('click').click(function(e){
-				if($j(this).attr('type') == "radio") {
-					$j(this).parents('li').siblings('li').removeClass('selected');
-					$j(this).parents('li').toggleClass('selected');
-					$checkedList.attr('value', ","+$j(this).val()+",");
+				if($(this).attr('type') == "radio") {
+					$(this).parents('li').siblings('li').removeClass('selected');
+					$(this).parents('li').toggleClass('selected');
+					$checkedList.attr('value', ","+$(this).val()+",");
 				}
 				else {
-					$j(this).parents('li').toggleClass('selected');
-					val = ($j(this).attr('checked')) ? $checkedList.val() + $j(this).val()+"," : $checkedList.val().replace(","+$j(this).val()+",",",");
+					$(this).parents('li').toggleClass('selected');
+					val = ($(this).attr('checked')) ? $checkedList.val() + $(this).val()+"," : $checkedList.val().replace(","+$(this).val()+",",",");
 					$checkedList.attr('value', val);
 				}
 				e.stopPropagation();
 			});
 	
 			$container.find('.actions input, .file-label input').each(function(i,e) {
-				if($checkedList.val().indexOf(","+$j(e).val()+",") != -1)
-					$j(e).attr('checked',true).parents('li').toggleClass('selected');
+				if($checkedList.val().indexOf(","+$(e).val()+",") != -1)
+					$(e).attr('checked',true).parents('li').toggleClass('selected');
 				else
-					$j(e).attr('checked',false);
+					$(e).attr('checked',false);
 					
 			});	
 			
 			$container.find('a[rel=clear]').unbind('click').click(function(e) {
 			 $container.find('.actions input, .file-label input').each(function(i,e) {
-			   $j(e).attr('checked', false).parents('li').removeClass('selected');
+			   $(e).attr('checked', false).parents('li').removeClass('selected');
 			   $checkedList.attr('value','');
 			 });
 			});	
     }
 		
     // Columns. God forbid there are more than 10.
-    cols = $j('.list #dataobject-list li.head .fields-wrap .col').length;
+    cols = $('.list #dataobject-list li.head .fields-wrap .col').length;
     if(cols > 10) {
-    	$j('.list #dataobject-list li .fields-wrap .col').css({'width' : ((Math.floor(100/cols)) - 0.1) + '%' });
+    	$('.list #dataobject-list li .fields-wrap .col').css({'width' : ((Math.floor(100/cols)) - 0.1) + '%' });
     }
 		
 
 };
 
-$j.fn.DataObjectManager.getPageHeight = function() {
+$.fn.DataObjectManager.getPageHeight = function() {
     var windowHeight
     if (self.innerHeight) {	// all except Explorer
       windowHeight = self.innerHeight;
@@ -217,9 +220,9 @@ $j.fn.DataObjectManager.getPageHeight = function() {
 function refresh($div, link)
 {
 	 // Kind of a hack. Pass the list of ids to the next refresh
-	 var listValue = ($div.hasClass('RelationDataObjectManager')) ? $j('#'+$div.attr('id')+'_CheckedList').val() : false;
+	 var listValue = ($div.hasClass('RelationDataObjectManager')) ? $('#'+$div.attr('id')+'_CheckedList').val() : false;
 	 	 
-	 $j.ajax({
+	 $.ajax({
 	   type: "GET",
 	   url: link,
 	   success: function(html){
@@ -229,23 +232,29 @@ function refresh($div, link)
 				$div.replaceWith(html);
 	
 			if(listValue) {
-				 $j('#'+$div.attr('id')+'_CheckedList').attr('value',listValue);
+				 $('#'+$div.attr('id')+'_CheckedList').attr('value',listValue);
 			}
-			$j('#'+$div.attr('id')).DataObjectManager();
+			$('#'+$div.attr('id')).DataObjectManager();
 		}
 	 });
 }
 
-$j().ajaxSend(function(r,s){  
- $j(".ajax-loader").show();  
+$().ajaxSend(function(r,s){  
+ $(".ajax-loader").show();  
 });  
    
-$j().ajaxStop(function(r,s){  
-  $j(".ajax-loader").fadeOut("fast");  
+$().ajaxStop(function(r,s){  
+  $(".ajax-loader").fadeOut("fast");  
 });  
+if(!nested) {
+  Behaviour.register({
+  	'.DataObjectManager' : {
+  		initialize : function() {$(this).DataObjectManager();}
+  	}
+  });
+}
+else {
+  $(function() {$('.DataObjectManager').DataObjectManager();});
+}
 
-Behaviour.register({
-	'.DataObjectManager' : {
-		initialize : function() {$j(this).DataObjectManager();}
-	}
-});
+})(jQuery);
