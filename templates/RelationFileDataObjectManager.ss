@@ -101,7 +101,7 @@
 					</li>
 				<% end_control %>
 				<% else %>
-						<li><i><% _t('DataObjectManager.NOITEMSFOUND', 'No items found') %></i></li>
+						<li><em><% sprintf(_t('DataObjectManager.NOITEMSFOUND', 'No %s found'), $PluralTitle) %></em></li>
 				<% end_if %>
 				
 			</ul>

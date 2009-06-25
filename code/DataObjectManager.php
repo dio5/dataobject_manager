@@ -3,6 +3,9 @@
 class DataObjectManager extends ComplexTableField
 {
 	
+	protected static $allow_assets_override = true;
+	protected static $allow_css_override = false;
+	
 	protected $template = "DataObjectManager";
 	protected $per_page = "10";
 	protected $showAll = "0";
@@ -36,6 +39,15 @@ class DataObjectManager extends ComplexTableField
 	public $popupClass = "DataObjectManager_Popup";
 	public $templatePopup = "DataObjectManager_popup";
 	
+	public static function allow_assets_override($bool)
+	{
+    self::$allow_assets_override = $bool;
+	}
+	
+	public static function allow_css_override($bool)
+	{
+	   self::$allow_css_override = $bool;
+	}
 	
 	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
 	{
@@ -43,6 +55,7 @@ class DataObjectManager extends ComplexTableField
 			die("<strong>"._t('DataObjectManager.ERROR','Error')."</strong>: "._t('DataObjectManager.SILVERSTRIPEVERSION','DataObjectManager requires Silverstripe version 2.3 or higher.'));
 
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
+
 		Requirements::block(THIRDPARTY_DIR . "/greybox/AmiJS.js");
 		Requirements::block(THIRDPARTY_DIR . "prototype.js");
 		Requirements::block(THIRDPARTY_DIR . "/greybox/greybox.js");
@@ -53,6 +66,8 @@ class DataObjectManager extends ComplexTableField
 		Requirements::block(SAPPHIRE_DIR . "/css/ComplexTableField.css");
 		Requirements::css('dataobject_manager/css/dataobject_manager.css');
 		Requirements::css('dataobject_manager/css/facebox.css');
+		if(self::$allow_css_override)
+  		Requirements::css('dataobject_manager/css/dataobjectmanager_override.css');
 		Requirements::javascript('dataobject_manager/javascript/facebox.js');	
 		Requirements::javascript('dataobject_manager/javascript/jquery-ui.1.5.3.js');
 		Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
@@ -71,6 +86,11 @@ class DataObjectManager extends ComplexTableField
 		$this->setPageSize($this->per_page);
 		$this->loadSort();
 		$this->loadSourceFilter();
+	}
+	
+	public function setSourceFilter($filter)
+	{
+	   $this->sourceFilter = $filter;
 	}
 	
 	protected function loadSort()

@@ -53,7 +53,7 @@
 .dataobjectmanager-actions a span {background: transparent url('../images/bg_button_span.gif') no-repeat;display: block;line-height: 22px;padding: 2px 0 5px 10px;font-size:12px;height:17px;} 
 .dataobjectmanager-actions a:active {background: transparent url('../images/bg_button_a.gif') no-repeat scroll right -24px;;display: block;float: left;height: 24px;margin-right: 6px;padding-right: 13px;text-decoration: none;color: #333;font-size:13px;font-weight:bold;}
 .dataobjectmanager-actions a:active span {background: transparent url('../images/bg_button_span.gif') no-repeat left -24px;display: block;line-height: 22px;padding: 2px 0 5px 10px;font-size:12px;height:17px;} 
-
+.AssetAdmin .dataobjectmanager-actions {margin-top:20px;height:25px;}
 .dataobjectmanager-actions a img {vertical-align:-3px;margin-right:3px;}
 .dataobjectmanager-search {width:160px;position:absolute;right:6px;top:7px;}
 .dataobjectmanager-search .sbox_l  {background: white url('../images/srch_l.gif') no-repeat top left;float: left;width: 19px; height: 19px;}

@@ -17,6 +17,7 @@ class FileDataObjectManager extends DataObjectManager
 	protected $uploadLimit = "20";
 	protected $allowUploadFolderSelection = false;
 	protected $enableUploadDebugging = false;
+	public $hasDataObject = true;
 	public $importClass = "File";
 
 	protected $permissions = array(
@@ -40,9 +41,8 @@ class FileDataObjectManager extends DataObjectManager
 	
 	
 	
-	public function __construct($controller, $name, $sourceClass, $fileFieldName, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
+	public function __construct($controller, $name, $sourceClass, $fileFieldName = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
 	{
-		
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 		
 		if(!class_exists("SWFUploadField"))
@@ -53,11 +53,19 @@ class FileDataObjectManager extends DataObjectManager
 				$this->view = $_REQUEST['ctf'][$this->Name()]['view'];
 		}
 		$SNG = singleton($this->sourceClass());
-		$this->dataObjectFieldName = $name;
-		$this->fileFieldName = $fileFieldName;
-		$this->fileClassName = $SNG->has_one($this->fileFieldName);
-		if(!$this->fileClassName)
-			die("<strong>FileDataObjectManager::__construct():</strong>"._t('FileDataObjectManager.FILERELATION','Could not determine file relationship'));
+		if($this->sourceClass() == "File" || is_subclass_of($this->sourceClass(), "File")) {
+			$this->hasDataObject = false;
+			$this->fileFieldName = $name;
+			$this->fileClassName = $this->sourceClass();
+			$this->dataObjectFieldName = null;
+		}
+		else {
+			$this->dataObjectFieldName = $name;
+			$this->fileFieldName = $fileFieldName;
+			$this->fileClassName = $SNG->has_one($this->fileFieldName);
+			if(!$this->fileClassName)
+				die("<strong>FileDataObjectManager::__construct():</strong>"._t('FileDataObjectManager.FILERELATION','Could not determine file relationship'));
+		}
 		
 		$this->controllerClassName = $controller->class;
 		if($key = array_search($this->controllerClassName, $SNG->stat('has_one')))
@@ -93,6 +101,7 @@ class FileDataObjectManager extends DataObjectManager
 	{
 		return $this->pluralTitle ? $this->pluralTitle : $this->AddTitle()."s";
 	}
+	
 		
 	public function GridLink()
 	{
@@ -271,8 +280,8 @@ class FileDataObjectManager extends DataObjectManager
 				'fileClassName' => $this->fileClassName,
 				'parentIDName' => $this->getParentIdName( $this->getParentClass(), $this->sourceClass() ),
 				'controllerID' => $this->controllerID,
-				'OverrideUploadFolder' => $this->getUploadFolder()
-				
+				'OverrideUploadFolder' => $this->getUploadFolder(),
+				'hasDataObject' => $this->hasDataObject ? 1 : 0
 			));
 			
 			if($this->allowUploadFolderSelection)
@@ -341,8 +350,27 @@ class FileDataObjectManager extends DataObjectManager
 		}	
 	}
 	
+	protected function closePopup()
+	{
+			Requirements::clear();
+			Requirements::customScript("
+					var container = parent.jQuery('#".$this->id()."');
+					parent.jQuery('#facebox').fadeOut(function() {
+					parent.jQuery('#facebox .content').removeClass().addClass('content');
+					parent.jQuery('#facebox_overlay').remove();
+					parent.jQuery('#facebox .loading').remove();
+					parent.refresh(container, container.attr('href'));
+			});");
+			return $this->customise(array(
+				'DetailForm' => 'Closing...'
+			))->renderWith($this->templatePopup);	
+	}
+	
 	public function EditUploadedForm()
 	{
+		if(!$this->hasDataObject)
+			return $this->closePopup();
+			
 		$childData = $this->getChildDataObj();
 		$validator = $this->getValidatorFor($childData);
 		$fields = $this->getFieldsFor($childData);
@@ -391,18 +419,7 @@ class FileDataObjectManager extends DataObjectManager
 			))->renderWith($this->templatePopup);
 		}
 		else {
-			Requirements::clear();
-			Requirements::customScript("
-					var container = parent.jQuery('#".$this->id()."');
-					parent.jQuery('#facebox').fadeOut(function() {
-					parent.jQuery('#facebox .content').removeClass().addClass('content');
-					parent.jQuery('#facebox_overlay').remove();
-					parent.jQuery('#facebox .loading').remove();
-					parent.refresh(container, container.attr('href'));
-			});");
-			return $this->customise(array(
-				'DetailForm' => 'Closing...'
-			))->renderWith($this->templatePopup);
+			return $this->closePopup();
 		}
 	}
 	
@@ -470,14 +487,26 @@ class FileDataObjectManager extends DataObjectManager
 					$file->ClassName = $this->fileClassName;
 					$file->write();
 				}
-				$do_class = $data['dataObjectClassName'];
-				$idxfield = $data['fileFieldName']."ID";
 				$owner_id = $data['parentIDName'];
-				$obj = new $do_class();
-				$obj->$idxfield = $file_id;
-				$obj->$owner_id = $data['controllerID'];
-				$obj->write();
-				$_POST['uploaded_files'][] = $obj->ID;
+				if($this->hasDataObject) {
+					$do_class = $data['dataObjectClassName'];
+					$idxfield = $data['fileFieldName']."ID";
+					$obj = new $do_class();
+					$obj->$idxfield = $file_id;
+					$obj->$owner_id = $data['controllerID'];
+					$obj->write();
+					$_POST['uploaded_files'][] = $obj->ID;
+				}
+				else {
+					if($file = DataObject::get_by_id("File", $file_id)) {
+						$id_field = $this->controllerFieldName."ID";
+
+						if($file->hasField($owner_id)) {
+							$file->$owner_id = $this->controllerID;
+							$file->write();
+						}
+					}
+				}
 			}
 
 			return $this->customise(array(
@@ -502,8 +531,7 @@ class FileDataObjectManager_Controller extends Controller
 	{
 		if(isset($_FILES['swfupload_file']) && !empty($_FILES['swfupload_file'])) {
 			$do_class = $_POST['dataObjectClassName'];
-
-			$obj = new $do_class();
+			$hasDataObject = $_POST['hasDataObject'];
 			$idxfield = $_POST['fileFieldName']."ID";
 			$file_class = $_POST['fileClassName'];
 			$file = new $file_class();
@@ -528,7 +556,7 @@ class FileDataObjectManager_Controller extends Controller
 				$file->setField("ParentID",$folder->ID);
 
 			// Provide an "upgrade" to File subclasses
-			if($file->class == "File") {
+			if($file->class == "File" && $hasDataObject) {
 				$ext = strtolower($file->Extension);
 				if(in_array($ext, MP3::$allowed_file_types) && FileDataObjectManager::$upgrade_audio)
 					$file = $file->newClassInstance("MP3");
@@ -538,13 +566,21 @@ class FileDataObjectManager_Controller extends Controller
 					$file = $file->newClassInstance("FLV");
 			}
       $file->OwnerID = Member::currentUserID();
-			$file->write();
-			$obj->$idxfield = $file->ID;
-			$ownerID = $_POST['parentIDName'];
-			$obj->$ownerID = $_POST['controllerID'];
-
-			$obj->write();
-			echo $obj->ID;
+			if($hasDataObject) {
+				$file->write();
+				$obj = new $do_class();			
+				$obj->$idxfield = $file->ID;
+				$ownerID = $_POST['parentIDName'];
+				$obj->$ownerID = $_POST['controllerID'];
+				$obj->write();
+				echo $obj->ID;
+			}
+			else {
+				$ownerID = $_POST['parentIDName'];
+				$file->$ownerID = $_POST['controllerID'];
+				$file->write();
+				echo $file->ID;
+			}
 		}
 		else {
 			echo ' ';
@@ -567,8 +603,13 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
 	
 	public function FileIcon()
 	{
-    $field = $this->parent->fileFieldName."ID";
-    $file = DataObject::get_by_id($this->parent->fileClassName, $this->item->$field);
+    if($this->parent->hasDataObject) {
+	    $field = $this->parent->fileFieldName."ID";
+	    $file = DataObject::get_by_id($this->parent->fileClassName, $this->item->$field);
+    }
+    else 
+	    $file = $this->item;
+
     if($file && $file->ID) {
        if($file instanceof Image)
           $img = $file;
@@ -581,6 +622,7 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
           }
        }         
        return isset($img) ? $img->CroppedImage(50,50)->URL : $file->Icon();         
+
     }
     else return "{$this->item->$field}"; 
  	}
@@ -592,6 +634,8 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
 			$field = $this->parent->gridLabelField;
 			return $this->$field;
 		}
+		else if(!$this->hasDataObject)
+			$label = $this->item->Title;
 		else if($file = DataObject::get_by_id($this->parent->fileClassName, $this->item->$idField))
 			$label = $file->Title;
 		else
