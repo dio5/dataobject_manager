@@ -87,21 +87,10 @@ class FileDataObjectManager extends DataObjectManager
 		return parent::getQueryString($params)."&ctf[{$this->Name()}][view]={$view}";
 	}
 	
-	public function setPluralTitle($title)
-	{
-		$this->pluralTitle = $title;
-	}
-	
 	public function setGridLabelField($fieldName)
 	{
 		$this->gridLabelField = $fieldName;
 	}
-	
-	public function PluralTitle()
-	{
-		return $this->pluralTitle ? $this->pluralTitle : $this->AddTitle()."s";
-	}
-	
 		
 	public function GridLink()
 	{

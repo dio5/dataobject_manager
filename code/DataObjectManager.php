@@ -21,6 +21,8 @@ class DataObjectManager extends ComplexTableField
 	public $itemClass = "DataObjectManager_Item";
 	public $addTitle;
 	public $singleTitle;
+	public $hasNested = false;
+	public $isNested = false;
 	
 
 	public $actions = array(
@@ -64,6 +66,8 @@ class DataObjectManager extends ComplexTableField
 
 		Requirements::block(THIRDPARTY_DIR . "/greybox/greybox.css");
 		Requirements::block(SAPPHIRE_DIR . "/css/ComplexTableField.css");
+		Requirements::block(SAPPHIRE_DIR . "/css/TableListField.css");
+
 		Requirements::css('dataobject_manager/css/dataobject_manager.css');
 		Requirements::css('dataobject_manager/css/facebox.css');
 		if(self::$allow_css_override)
@@ -86,6 +90,17 @@ class DataObjectManager extends ComplexTableField
 		$this->setPageSize($this->per_page);
 		$this->loadSort();
 		$this->loadSourceFilter();
+		
+		// Check for nested DOMs
+		$fields = $this->getRawDetailFields(singleton($this->sourceClass()));
+		foreach($fields as $field) {
+		  if($field instanceof DataObjectManager) {
+		    $this->hasNested = true;
+		    $field->isNested = true;
+		  }
+		}
+		$this->detailFormFields = $fields;
+		
 	}
 	
 	public function setSourceFilter($filter)
@@ -93,6 +108,16 @@ class DataObjectManager extends ComplexTableField
 	   $this->sourceFilter = $filter;
 	}
 	
+	public function setPluralTitle($title)
+	{
+		$this->pluralTitle = $title;
+	}
+
+	public function PluralTitle()
+	{
+		return $this->pluralTitle ? $this->pluralTitle : $this->AddTitle()."s";
+	}
+		
 	protected function loadSort()
 	{
 		if($this->ShowAll()) 
@@ -188,8 +213,8 @@ class DataObjectManager extends ComplexTableField
 
 	}
 	
-	
-	function getCustomFieldsFor($childData) {
+  protected function getRawDetailFields($childData)
+  {
 		if(is_a($this->detailFormFields,"Fieldset")) 
 			$fields = $this->detailFormFields;
 		else {
@@ -199,7 +224,11 @@ class DataObjectManager extends ComplexTableField
 			
 			$fields = $childData->$functioncall();
 		}
-		
+    return $fields;  
+  }
+	
+	public function getCustomFieldsFor($childData) {
+		$fields = $this->getRawDetailFields($childData);
 		foreach($fields as $field) {
 			if($field->class == "CalendarDateField")
 				$fields->replaceField($field->Name(), new DatePickerField($field->Name(), $field->Title(), $field->attrValue()));
@@ -376,6 +405,16 @@ class DataObjectManager extends ComplexTableField
 	{
 		$this->filter_empty_string = $str;
 	}
+	
+	public function NestedType()
+	{
+	   if($this->hasNested)
+	     return "hasNested";
+	   else if($this->isNested)
+	     return "isNested";
+	   else
+	     return "";
+	}
 
 }
 
@@ -458,6 +497,7 @@ class DataObjectManager_Popup extends Form {
 			});
 		");
 		
+		
 		$actions = new FieldSet();	
 		if(!$readonly) {
 			$actions->push(
@@ -468,7 +508,11 @@ class DataObjectManager_Popup extends Form {
 		}
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
-		
+		if($this->controller->hasNested) {
+		  Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
+      Requirements::javascript('dataobject_manager/javascript/jquery-ui.1.7.js');
+  		Requirements::javascript('dataobject_manager/javascript/tooltip.js');    
+    }
 		$this->unsetValidator();
 	}
 

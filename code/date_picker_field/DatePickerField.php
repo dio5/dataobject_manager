@@ -76,7 +76,7 @@ HTML;
 		$val = $this->attrValue();
 		Requirements::javascript("jsparty/jquery/jquery.js");
 
-		Requirements::javascript("dataobject_manager/javascript/jquery-ui.1.6.js");
+		Requirements::javascript("dataobject_manager/javascript/jquery-ui.1.7.js");
 		Requirements::javascript("dataobject_manager/code/date_picker_field/datepicker.js");
 
 		Requirements::css("dataobject_manager/css/ui/ui.core.css");
