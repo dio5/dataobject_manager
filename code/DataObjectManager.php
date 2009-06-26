@@ -216,6 +216,12 @@ class DataObjectManager extends ComplexTableField
 
 	}
 	
+	function sourceID() { 
+		$idField = $this->form->dataFieldByName('ID'); 
+		return ($idField && is_numeric($idField->Value())) ? $idField->Value() : (isset($_REQUEST['ctf']['ID']) ? $_REQUEST['ctf']['ID'] : null); 
+ 	} 
+	
+	
   protected function getRawDetailFields($childData)
   {
 		if(is_a($this->detailFormFields,"Fieldset")) 

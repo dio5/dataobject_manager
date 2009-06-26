@@ -16,6 +16,7 @@ class AssetManagerFolder extends DataObjectDecorator
     ));
     $a->setSourceFilter("Classname != 'Folder' AND ParentID = ".$this->owner->ID);
     $a->setParentClass("Folder");
+    $a->setAddTitle(sprintf(_t('AssetManager.ADDFILESTO','files to "%s"'),$this->owner->Title));
     return $fields;
   }
 }

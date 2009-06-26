@@ -1,6 +1,5 @@
 (function($) {
 var nested = $('.DataObjectManager').hasClass('isNested');
-
 $.fn.DataObjectManager = function() {
 	this.each(function() {
 		$.fn.DataObjectManager.init(this);
