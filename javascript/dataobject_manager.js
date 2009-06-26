@@ -1,4 +1,5 @@
 (function($) {
+
 var nested = $('.DataObjectManager').hasClass('isNested');
 $.fn.DataObjectManager = function() {
 	this.each(function() {
@@ -131,7 +132,9 @@ $.fn.DataObjectManager.init = function(obj) {
 		  delay: 500,
 		  showURL: false,
 		  track: true,
-		  bodyHandler: function() $
+		  bodyHandler: function() {
+			  return $j(this).parents('li').find('span.tooltip-info').html();
+		  }
     });
     
     

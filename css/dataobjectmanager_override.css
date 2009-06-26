@@ -1,6 +1,6 @@
 /** CMS overrides **/
-body {background:#eee !important;}
-#right {border:0;}
+body {background:#fff !important;}
+#right {border:0;background:#fff !important;}
 ul.tabstrip {
 	border-bottom: 1px solid #aaa !important;
 	margin: 0 !important;
@@ -32,7 +32,7 @@ ul.tabstrip {
 .tab {
 	border:0 !important;
 	padding-left:10px !important;
-	background:#efefef !important;
+	background:#fafafa !important;
 }
 
 .dataobject-list li {background:#fff;}
