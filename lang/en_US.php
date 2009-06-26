@@ -39,5 +39,5 @@ $lang['en_US']['DataObjectManager_popup.ss']['PREVIOUS'] = 'Previous';
 $lang['en_US']['FileDataObjectManager']['GRIDVIEW'] = 'Grid view';
 $lang['en_US']['FileDataObjectManager']['LISTVIEW'] = 'List view';
 $lang['en_US']['FileDataObjectManager']['SWFUPLOAD'] = 'DataObjectManager requires the SWFUpload module.';
-$lang['en_US']['AssetManager']['ADDFILESTO'] = 'files to %s';
+$lang['en_US']['AssetManager']['ADDFILESTO'] = 'files to "%s"';
 ?>
