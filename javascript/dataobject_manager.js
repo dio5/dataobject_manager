@@ -216,27 +216,6 @@ $.fn.DataObjectManager.getPageHeight = function() {
     return windowHeight;
 };
 
-function refresh($div, link)
-{
-	 // Kind of a hack. Pass the list of ids to the next refresh
-	 var listValue = ($div.hasClass('RelationDataObjectManager')) ? $('#'+$div.attr('id')+'_CheckedList').val() : false;
-	 	 
-	 $.ajax({
-	   type: "GET",
-	   url: link,
-	   success: function(html){
-	   		if(!$div.next().length && !$div.prev().length)
-	   			$div.parent().html(html);
-	   		else
-				$div.replaceWith(html);
-	
-			if(listValue) {
-				 $('#'+$div.attr('id')+'_CheckedList').attr('value',listValue);
-			}
-			$('#'+$div.attr('id')).DataObjectManager();
-		}
-	 });
-}
 
 $().ajaxSend(function(r,s){  
  $(".ajax-loader").show();  
@@ -257,3 +236,26 @@ else {
 }
 
 })(jQuery);
+
+
+function refresh($div, link)
+{
+	 // Kind of a hack. Pass the list of ids to the next refresh
+	 var listValue = ($div.hasClass('RelationDataObjectManager')) ? jQuery('#'+$div.attr('id')+'_CheckedList').val() : false;
+	 	 
+	 jQuery.ajax({
+	   type: "GET",
+	   url: link,
+	   success: function(html){
+	   		if(!$div.next().length && !$div.prev().length)
+	   			$div.parent().html(html);
+	   		else
+				$div.replaceWith(html);
+	
+			if(listValue) {
+				 jQuery('#'+$div.attr('id')+'_CheckedList').attr('value',listValue);
+			}
+			jQuery('#'+$div.attr('id')).DataObjectManager();
+		}
+	 });
+}

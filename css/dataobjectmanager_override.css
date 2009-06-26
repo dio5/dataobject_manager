@@ -6,7 +6,7 @@ ul.tabstrip {
 	margin: 0 !important;
 }
 	ul.tabstrip li {
-		background: #eee !important;
+		background: #fff !important;
 		border:1px solid #aaa;
 		margin: 0 0 0 0 !important;
 	}
@@ -19,8 +19,8 @@ ul.tabstrip {
 			ul.tabstrip li.ui-tabs-selected,
 			ul.tabstrip li.sel,
 			ul.tabstrip li.over {
-				background: #fff !important;
-        border-bottom:1px solid #fff;		
+				background: #eee !important;
+        border-bottom:1px solid #eee;		
 			}
 				ul.tabstrip li.current a,
 				ul.tabstrip li.ui-tabs-selected a,
@@ -30,6 +30,9 @@ ul.tabstrip {
 				}
 
 .tab {
-	border-left: 1px solid #aaa !important;
+	border:0 !important;
 	padding-left:10px !important;
+	background:#efefef !important;
 }
+
+.dataobject-list li {background:#fff;}

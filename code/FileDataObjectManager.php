@@ -348,6 +348,7 @@ class FileDataObjectManager extends DataObjectManager
 					parent.jQuery('#facebox .content').removeClass().addClass('content');
 					parent.jQuery('#facebox_overlay').remove();
 					parent.jQuery('#facebox .loading').remove();
+parent.console.log(parent.nested);
 					parent.refresh(container, container.attr('href'));
 			});");
 			return $this->customise(array(

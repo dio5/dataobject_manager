@@ -43,8 +43,10 @@ class DataObjectManager extends ComplexTableField
 	
 	public static function allow_assets_override($bool)
 	{
-    if($bool)
+    if($bool) {
       DataObject::add_extension("Folder","AssetManagerFolder");
+      SortableDataObject::add_sortable_class("File");
+    }
     else
       DataObject::remove_extension("Folder","AssetManagerFolder");
 	}
