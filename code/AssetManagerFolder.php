@@ -8,10 +8,7 @@ class AssetManagerFolder extends DataObjectDecorator
     $fields->removeFieldFromTab("Root.Files","Files");
     $fields->removeFieldFromTab("Root.Files","deletemarked");
     $fields->removeByName("Upload");
-    $fields->addFieldToTab("Root.Files", $a = new AssetManager(
-      $this->owner,
-      "Files"
-    ));
+    $fields->addFieldToTab("Root.Files", $a = new AssetManager($this->owner,"Files"));
     $a->setUploadFolder($this->owner->Filename);
     $a->setColumnWidths(array(
       'Title' => 30,

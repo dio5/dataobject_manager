@@ -43,7 +43,10 @@ class DataObjectManager extends ComplexTableField
 	
 	public static function allow_assets_override($bool)
 	{
-    self::$allow_assets_override = $bool;
+    if($bool)
+      DataObject::add_extension("Folder","AssetManagerFolder");
+    else
+      DataObject::remove_extension("Folder","AssetManagerFolder");
 	}
 	
 	public static function allow_css_override($bool)
