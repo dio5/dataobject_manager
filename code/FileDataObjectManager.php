@@ -360,42 +360,45 @@ parent.console.log(parent.nested);
 	{
 		if(!$this->hasDataObject)
 			return $this->closePopup();
-			
+
 		$childData = $this->getChildDataObj();
 		$validator = $this->getValidatorFor($childData);
 		$fields = $this->getFieldsFor($childData);
 		$fields->removeByName($this->fileFieldName);
-			$total = isset($_POST['totalsize']) ? $_POST['totalsize'] : sizeof($_POST['uploaded_files']);
-			$index = isset($_POST['index']) ? $_POST['index'] + 1 : 1;
-			$fields->push(new HiddenField('totalsize','',$total));
-			$fields->push(new HiddenField('index','',$index));
-			if(isset($_POST['uploaded_files']) && is_array($_POST['uploaded_files'])) {
-				$remaining_files = $_POST['uploaded_files'];
-				$current = $remaining_files[0];
-				$fields->push(new HiddenField('current','',$current));
-				unset($remaining_files[0]);
+		$total = isset($_POST['totalsize']) ? $_POST['totalsize'] : sizeof($_POST['uploaded_files']);
+		$index = isset($_POST['index']) ? $_POST['index'] + 1 : 1;
+		$fields->push(new HiddenField('totalsize','',$total));
+		$fields->push(new HiddenField('index','',$index));
+		if(isset($_POST['uploaded_files']) && is_array($_POST['uploaded_files'])) {
+			$remaining_files = $_POST['uploaded_files'];
+			$current = $remaining_files[0];
+			$dataObject = DataObject::get_by_id($this->sourceClass(), $current);
+			$fileObject = $dataObject->obj($this->fileFieldName);
+			$fields->push(new HiddenField('current','',$current));
+			unset($remaining_files[0]);
+			if(!$fields->loaded) {
 				foreach($remaining_files as $id)
 						$fields->push(new LiteralField("u-$id","<input type='hidden' name='uploaded_files[]' value='$id' />"));
-			
 				$first = $fields->First()->Name();
-				$fields->insertBefore(new HeaderField($title = "Editing file $index of $total", $headingLevel = 2), $first);
-				$dataObject = DataObject::get_by_id($this->sourceClass(), $current);
-				$fileObject = $dataObject->obj($this->fileFieldName);
-				
-				$fields->insertBefore($this->getPreviewFieldFor($fileObject), $first); 
+				$fields->insertBefore(new HeaderField("Header","Editing file $index of $total",2), $first);				
+				$fields->insertBefore($this->getPreviewFieldFor($fileObject), $first);
 			}
-			$form = Object::create(
-				$this->popupClass,
-				$this,
-				'EditUploadedForm',
-				$fields,
-				$validator,
-				false,
-				$childData
-			);
-			$form->setActions(new FieldSet(new FormAction("saveEditUploadedForm", $index == $total ? "Finish" : "Next")));
-			if(isset($dataObject) && $dataObject) $form->loadDataFrom($dataObject);
-			return $form;
+		}
+
+		$form = Object::create(
+			$this->popupClass,
+			$this,
+			'EditUploadedForm',
+			$fields,
+			$validator,
+			false,
+			$childData
+		);
+		$form->setActions(new FieldSet(new FormAction("saveEditUploadedForm", $index == $total ? "Finish" : "Next")));
+		if(isset($dataObject) && $dataObject) 
+			$form->loadDataFrom($dataObject);
+		$fields->loaded = true;		
+		return $form;
 	}
 	
 	function saveEditUploadedForm($data, $form)

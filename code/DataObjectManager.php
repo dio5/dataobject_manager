@@ -97,14 +97,14 @@ class DataObjectManager extends ComplexTableField
 		$this->loadSourceFilter();
 		
 		// Check for nested DOMs
-		$fields = $this->getRawDetailFields(singleton($this->sourceClass()));
+		/*$fields = $this->getRawDetailFields(singleton($this->sourceClass()));
 		foreach($fields as $field) {
 		  if($field instanceof DataObjectManager) {
 		    $this->hasNested = true;
 		    $field->isNested = true;
 		  }
 		}
-		$this->detailFormFields = $fields;
+		$this->detailFormFields = $fields;*/
 		
 	}
 	

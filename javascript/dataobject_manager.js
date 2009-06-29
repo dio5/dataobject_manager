@@ -133,7 +133,7 @@ $.fn.DataObjectManager.init = function(obj) {
 		  showURL: false,
 		  track: true,
 		  bodyHandler: function() {
-			  return $j(this).parents('li').find('span.tooltip-info').html();
+			  return $(this).parents('li').find('span.tooltip-info').html();
 		  }
     });
     

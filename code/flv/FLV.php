@@ -19,9 +19,10 @@ class FLV extends File
 	public static $default_popup_width = 840;
 	public static $default_popup_height = 525;
 
-	public static $thumbnail_seconds = 1;
+	public static $thumbnail_seconds = 10;
 	public static $audio_sampling_rate = 22050;
 	public static $audio_bit_rate = 32;
+	public static $play_button_overlay = true;
 	
 	public static function set_ffmpeg_root($path)
 	{
@@ -268,7 +269,8 @@ class FLV extends File
 			'PopupHeight' => $popup_height,
 			'Title' => $this->Title,
 			'Link' => $this->FLVLink(),
-			'Thumbnail' => $this->VideoThumbnail()->CroppedImage($thumb_width, $thumb_height)
+			'Thumbnail' => $this->VideoThumbnail()->CroppedImage($thumb_width, $thumb_height),
+			'PlayButton' => self::$play_button_overlay
 		))->renderWith(array('FLVpopup'));
 		
 	}

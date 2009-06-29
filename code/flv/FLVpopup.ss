@@ -2,5 +2,9 @@
 <% require javascript(jsparty/jquery/jquery.js) %>
 <% require javascript(dataobject_manager/code/flv/shadowbox/shadowbox.js) %>
 <% require javascript(dataobject_manager/code/flv/shadowbox_init.js) %>
+<% require css(dataobject_manager/code/flv/css/flv.css) %>
 
-<a rel="shadowbox;width={$PopupWidth};height={$PopupHeight}" title="$Title" href="$Link">$Thumbnail</a>		
+<a rel="shadowbox;width={$PopupWidth};height={$PopupHeight}" title="$Title" href="$Link" class="flv-popup">
+	<% if PlayButton %><span>Play</span><% end_if %>
+	$Thumbnail
+</a>		
