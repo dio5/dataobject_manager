@@ -76,8 +76,8 @@ class FileDataObjectManager extends DataObjectManager
 		
 		// Check for allowed file types
 		$SNG = singleton($this->fileClassName);
-		if(property_exists($SNG,"allowed_file_types"))
-			$this->setAllowedFileTypes($SNG->stat('allowed_file_types'));
+		if($types = $SNG->stat('allowedfff_file_types'))
+			$this->setAllowedFileTypes($types);
 
 	}
 
