@@ -87,14 +87,6 @@ class HasManyDataObjectManager extends DataObjectManager
 		else
 			$limitClause = "0, $this->pageSize";
 		
-		$dataQuery = $this->getQuery($limitClause);
-		$records = $dataQuery->execute();
-		$items = new DataObjectSet();
-		foreach($records as $record) {
-			if(! get_class($record))
-				$record = new DataObject($record);
-			$items->push($record);
-		}
 		
 		$dataQuery = $this->getQuery();
 		$records = $dataQuery->execute();
