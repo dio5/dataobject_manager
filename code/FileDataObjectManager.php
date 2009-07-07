@@ -548,7 +548,7 @@ class FileDataObjectManager_Controller extends Controller
 				$file->setField("ParentID",$folder->ID);
 
 			// Provide an "upgrade" to File subclasses
-			if($file->class == "File" && $hasDataObject) {
+			if($file->class == "File") {
 				$ext = strtolower($file->Extension);
 				if(in_array($ext, MP3::$allowed_file_types) && FileDataObjectManager::$upgrade_audio)
 					$file = $file->newClassInstance("MP3");

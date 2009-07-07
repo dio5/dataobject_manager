@@ -267,6 +267,8 @@ class FLV extends File
 		return $this->customise(array(
 			'PopupWidth' => $popup_width,
 			'PopupHeight' => $popup_height,
+			'ThumbWidth' => $thumb_width,
+			'ThumbHeight' => $thumb_height,
 			'Title' => $this->Title,
 			'Link' => $this->FLVLink(),
 			'Thumbnail' => $this->VideoThumbnail()->CroppedImage($thumb_width, $thumb_height),
