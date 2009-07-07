@@ -333,12 +333,16 @@ class DataObjectManager extends ComplexTableField
 		return SortableDataObject::is_sortable_class($this->sourceClass());
 	}
 	
-	public function setFilter($field, $label, $map)
+	public function setFilter($field, $label, $map, $default = null)
 	{
 		if(is_array($map)) {
 			$this->filter_map = $map;
 			$this->filtered_field = $field;
 			$this->filter_label = $label;
+		}
+		if($default) {
+		  $this->filter = $this->filtered_field.'_'.$default;
+		  $this->loadSourceFilter();
 		}
 	}
 
