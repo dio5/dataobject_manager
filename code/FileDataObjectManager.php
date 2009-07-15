@@ -73,7 +73,6 @@ class FileDataObjectManager extends DataObjectManager
 		else
 			$this->controllerFieldName = $this->controllerClassName;
 		$this->controllerID = $controller->ID;
-		
 		// Check for allowed file types
 		if($types = Object::get_static($this->fileClassName,'allowed_file_types'))
 			$this->setAllowedFileTypes($types);

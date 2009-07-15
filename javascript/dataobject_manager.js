@@ -22,7 +22,15 @@ $.fn.DataObjectManager.init = function(obj) {
 		
 		// Popup links
 		if(nested) {
-      		
+  		$container.find('a.popuplink').unbind('click').click(function(e) {
+  		  $link = $(this);
+        $container.slideUp("normal",function() {
+          $container.after(
+            $('<iframe src="'+$link.attr('href')+'" frameborder="0" width="850" height="400"></iframe>')
+          ).slideDown();          
+        });
+        return false;
+      });      		
 		}
 		else {
   		$container.find('a.popuplink').unbind('click').click(function(e) {

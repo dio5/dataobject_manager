@@ -95,17 +95,13 @@ class DataObjectManager extends ComplexTableField
 		$this->setPageSize($this->per_page);
 		$this->loadSort();
 		$this->loadSourceFilter();
-		
-		// Check for nested DOMs
-		/*$fields = $this->getRawDetailFields(singleton($this->sourceClass()));
+
+		$fields = $this->getRawDetailFields(singleton($this->sourceClass()));
 		foreach($fields as $field) {
-		  if($field instanceof DataObjectManager) {
+		  if($field instanceof DataObjectManager && !($field->controller instanceof SiteTree))
 		    $this->hasNested = true;
-		    $field->isNested = true;
-		  }
 		}
-		$this->detailFormFields = $fields;*/
-		
+    $this->isNested = !($this->controller instanceof SiteTree);
 	}
 	
 	public function setSourceFilter($filter)
@@ -259,9 +255,25 @@ class DataObjectManager extends ComplexTableField
 		$saveAction->addExtraClass('save');
 		$form->setActions($actions);
 		return $form;
-
-		
 	}
+
+  public function getNestedControllerFieldName()
+  {
+    if($this->isNested) {
+      $SNG = singleton($this->controller->class);
+      foreach($SNG->has_one() as $fieldName => $className) {
+        if($has_many = singleton($className)->has_many()) {
+          foreach($has_many as $name => $class) {
+            if($class == $this->controller->class)
+              return $name;
+          }
+        }
+      }
+      return false;
+    }
+    return false;  
+  }
+	
 	
 	public function Link($action = null)
 	{
@@ -270,7 +282,13 @@ class DataObjectManager extends ComplexTableField
 	
 	public function BaseLink()
 	{
-		return parent::Link();
+
+		/*if($this->isNested) {
+  		$name = $this->getNestedControllerFieldName();
+   		$fieldName = ($this->isNested && $name) ? $name.'-'.$this->name : $this->name;
+    }*/
+ 		//return Controller::join_links($this->form->FormAction(), 'field/'.$this->sourceClass());
+ 		return parent::Link();
 	}
 	
 	public function CurrentLink()
