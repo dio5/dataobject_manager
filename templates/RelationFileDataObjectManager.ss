@@ -2,7 +2,7 @@
 	<div class="ajax-loader"></div>
 	<div class="dataobjectmanager-actions <% if HasFilter %>filter<% end_if %>">
 		<% if Can(add) %>
-			<a class="popuplink" href="$UploadLink" alt="upload">
+			<a class="popup-button" href="$UploadLink" alt="upload">
 				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% _t('DataObjectManager.ADD','Add') %> $ButtonAddTitle</span>
 			</a>	
 		<% end_if %>
@@ -81,15 +81,15 @@
 							</div>
 							<div class="actions col">
 								$MarkingCheckbox
-								<a class="popuplink editlink" href="$EditLink"><img src="dataobject_manager/images/page_white_edit.png" height="12px" alt="edit" /></a>
+								<a class="popup-button editlink" href="$EditLink"><img src="dataobject_manager/images/page_white_edit.png" height="12px" alt="edit" /></a>
 								<a class="deletelink" href="$DeleteLink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a>
 							</div>
 						<!-- GRID VIEW -->
 						<% else %>
 							<div class="pad">
 								<% if Top.ShowAll %><span class="handle"><img src="dataobject_manager/images/move_icon.jpg" /></span><% end_if %>
-								<div class="file-icon"><a href="$EditLink" class="popuplink editlink tooltip"><img src="$FileIcon" alt="" /></a></div>
-								<div class="file-label"><a href="$EditLink" class="popuplink editlink tooltip">$FileLabel</a><br />$MarkingCheckbox</div>
+								<div class="file-icon"><a href="$EditLink" class="popup-button editlink tooltip"><img src="$FileIcon" alt="" /></a></div>
+								<div class="file-label"><a href="$EditLink" class="popup-button editlink tooltip">$FileLabel</a><br />$MarkingCheckbox</div>
 								<div class="delete"><a href="$DeleteLink" class="deletelink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a></div>
 								<span class="tooltip-info" style="display:none">
 									<% control Fields %>

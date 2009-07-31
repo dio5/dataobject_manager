@@ -22,7 +22,7 @@ $.fn.DataObjectManager.init = function(obj) {
 		
 		// Popup links
 		if(nested) {
-  		$container.find('a.popuplink').unbind('click').click(function(e) {
+  		$container.find('a.popup-button').unbind('click').click(function(e) {
   		  $link = $(this);
         $container.slideUp("normal",function() {
           $container.after(
@@ -33,7 +33,7 @@ $.fn.DataObjectManager.init = function(obj) {
       });      		
 		}
 		else {
-  		$container.find('a.popuplink').unbind('click').click(function(e) {
+  		$container.find('a.popup-button').unbind('click').click(function(e) {
   			$(document).unbind('close.facebox').bind('close.facebox', facebox_close);
   			w = $(this).attr('rel') == 'hasNested' ? 850 : 500;
   			width = new String(w);

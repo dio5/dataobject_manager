@@ -63,16 +63,6 @@ class DataObjectManager extends ComplexTableField
 
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 
-		Requirements::block(THIRDPARTY_DIR . "/greybox/AmiJS.js");
-		Requirements::block(THIRDPARTY_DIR . "prototype.js");
-		Requirements::block(THIRDPARTY_DIR . "/greybox/greybox.js");
-		Requirements::block(SAPPHIRE_DIR . "/javascript/ComplexTableField.js");
-		Requirements::block(SAPPHIRE_DIR . "/javascript/TableListField.js");
-
-		Requirements::block(THIRDPARTY_DIR . "/greybox/greybox.css");
-		Requirements::block(SAPPHIRE_DIR . "/css/ComplexTableField.css");
-		Requirements::block(SAPPHIRE_DIR . "/css/TableListField.css");
-
 		Requirements::css('dataobject_manager/css/dataobject_manager.css');
 		Requirements::css('dataobject_manager/css/facebox.css');
 		if(self::$allow_css_override)

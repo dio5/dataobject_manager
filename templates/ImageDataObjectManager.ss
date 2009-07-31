@@ -2,7 +2,7 @@
 	<div class="ajax-loader"></div>
 	<div class="dataobjectmanager-actions <% if HasFilter %>filter<% end_if %>">
 		<% if Can(upload) %>
-			<a class="popuplink" href="$UploadLink" alt="upload">
+			<a class="popup-button" href="$UploadLink" alt="upload">
 				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% sprintf(_t('DataObjectManager.ADDITEM', 'Add %s', PR_MEDIUM, 'Add [name]'),$AddTitle) %></span>
 			</a>	
 		<% end_if %>
@@ -66,7 +66,7 @@
 					<li id="record-$Parent.id-$ID" style="width:{$ImageSize}px; height:{$ImageSize}px;">
 								<div class="pad">
 									<% if Top.ShowAll %><span class="handle"><img src="dataobject_manager/images/move_icon.jpg" /></span><% end_if %>
-									<div class="file-icon"><a href="$EditLink" class="popuplink editlink tooltip"><img class="image" src="$FileIcon" alt="" style="width:{$ImageSize}px;" /></a></div>
+									<div class="file-icon"><a href="$EditLink" class="popup-button editlink tooltip"><img class="image" src="$FileIcon" alt="" style="width:{$ImageSize}px;" /></a></div>
 									<div class="delete"><a title="<% _t('DataObjectManager.DELETE','Delete') %>" href="$DeleteLink" class="deletelink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a></div>
 									<span class="tooltip-info" style="display:none">
 										<% control Fields %>

@@ -2,7 +2,7 @@
 	<div class="ajax-loader"></div>
 	<div class="dataobjectmanager-actions <% if HasFilter %>filter<% end_if %>">
 		<% if Can(add) %>
-			<a class="popuplink" href="$AddLink" alt="upload">
+			<a class="popup-button" href="$AddLink" alt="upload">
 				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% sprintf(_t('DataObjectManager.ADDITEM','Add %s',PR_MEDIUM,'Add [name]'),$AddTitle) %></span>
 			</a>	
 		<% end_if %>
@@ -73,7 +73,7 @@
 						</div>
 						<div class="actions col">
 								$MarkingCheckbox
-								<a class="popuplink editlink" href="$EditLink"><img src="dataobject_manager/images/page_white_edit.png" height="12px" alt="edit" /></a>
+								<a class="popup-button editlink" href="$EditLink"><img src="dataobject_manager/images/page_white_edit.png" height="12px" alt="edit" /></a>
 								<a class="deletelink" href="$DeleteLink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a>
 						</div>
 				</li>
