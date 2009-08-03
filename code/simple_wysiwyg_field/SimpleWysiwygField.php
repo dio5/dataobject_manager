@@ -36,7 +36,7 @@ class SimpleWysiwygField extends TextareaField
       $r = $row+1;
       $r = $r == 1 ? "" : ",$r";
       foreach($buttons as $button)
-        $js .= $button == "|" ? ".separator('basic'$r)" : ($button == "." ? ".separator('dots'$r)" : ".button('$button'$r)");
+        $js .= $button == "|" ? ".separator('dots'$r)" : ".button('$button'$r)";
     }
     $js .= "
       .init();
