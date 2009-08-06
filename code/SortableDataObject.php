@@ -4,11 +4,19 @@ class SortableDataObject extends DataObjectDecorator
 {
 	
 	static $sortable_classes = array();
+	static $sort_dir = "ASC";
+	
+	public static function set_sort_dir($dir)
+	{
+		self::$sort_dir = $dir;
+	}
+	
 	
 	public static function add_sortable_class($className)
 	{
 		DataObject::add_extension($className,'SortableDataObject');
-		singleton($className)->set_stat('default_sort','SortOrder ASC');		
+		$dir = self::$sort_dir;
+		singleton($className)->set_stat("default_sort","SortOrder $dir");		
 		self::$sortable_classes[] = $className;
 	}
 	
