@@ -21,17 +21,31 @@ $.fn.DataObjectManager.init = function(obj) {
 		};
 		
 		// Popup links
+		
+		// For Nested DOMs
 		if(nested) {
+      $container.after(
+         $('<div id="iframe_'+$container.attr('id')+'" class=""iframe_wrap" style="display:none;"><div class="iframe_close"><a href="javascript:void(0)" >close</a></div><iframe src="" frameborder="0" width="800" height="400"></iframe></div>')
+      );
+      $('.iframe_close a').unbind('click').click(function(e) {
+        $parent = $(this).parent().parent();
+        $parent.slideUp("normal", function() {
+    			refresh($container, $container.attr('href'));
+    			$container.slideDown();        
+        });
+        return false;
+      });
+      $iframeWrap = $('#iframe_'+$container.attr('id'));
   		$container.find('a.popup-button').unbind('click').click(function(e) {
   		  $link = $(this);
+        $iframeWrap.find('iframe').attr('src',$link.attr('href'));
         $container.slideUp("normal",function() {
-          $container.after(
-            $('<iframe src="'+$link.attr('href')+'" frameborder="0" width="850" height="400"></iframe>')
-          ).slideDown();          
+          setTimeout(function(){$iframeWrap.show().slideDown("slow");},1500);
         });
         return false;
       });      		
 		}
+		// For normal DOMs
 		else {
   		$container.find('a.popup-button').unbind('click').click(function(e) {
   			$(document).unbind('close.facebox').bind('close.facebox', facebox_close);

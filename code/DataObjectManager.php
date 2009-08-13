@@ -204,7 +204,9 @@ class DataObjectManager extends ComplexTableField
 
 	}
 	
-	function sourceID() { 
+	function sourceID() {
+		if($this->isNested)
+			return $this->controller->ID;				
 		$idField = $this->form->dataFieldByName('ID'); 
 		return ($idField && is_numeric($idField->Value())) ? $idField->Value() : (isset($_REQUEST['ctf']['ID']) ? $_REQUEST['ctf']['ID'] : null); 
  	} 
@@ -481,8 +483,8 @@ class DataObjectManager_Controller extends Controller
 			}
 		}
 	}
-
 }
+
 
 
 class DataObjectManager_Popup extends Form {
@@ -492,6 +494,8 @@ class DataObjectManager_Popup extends Form {
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
 		$this->dataObject = $dataObject;
 		Requirements::clear();
+		Requirements::javascript('dataobject_manager/javascript/jquery.1.3.js');
+
 		Requirements::block('/jsparty/behaviour.js');
 		Requirements::block('sapphire/javascript/Validator.js');
 		Requirements::block('jsparty/prototype.js');
@@ -499,18 +503,18 @@ class DataObjectManager_Popup extends Form {
 		Requirements::block('jsparty/jquery/jquery.js');
 		Requirements::clear('jsparty/behavior.js');
 
-		Requirements::block('sapphire/javascript/i18n.js');
+		//Requirements::block('sapphire/javascript/i18n.js');
 		Requirements::block('assets/base.js');
 		Requirements::block('sapphire/javascript/lang/en_US.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
 		Requirements::css(CMS_DIR . '/css/typography.css');
 		Requirements::css(CMS_DIR . '/css/cms_right.css');
-		Requirements::css('dataobject_manager/css/dataobject_manager.css');
+    Requirements::css('dataobject_manager/css/dataobject_manager.css');
+
  		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
 			$this->dataObject->getRequirementsForPopup();
 		}
 		
-		Requirements::javascript('dataobject_manager/javascript/jquery.1.3.js');
 		
 		// File iframe fields force horizontal scrollbars in the popup. Not cool.
 		// Override the close popup method.
@@ -531,12 +535,20 @@ class DataObjectManager_Popup extends Form {
 		}
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
-		if($this->controller->hasNested) {
+		$this->unsetValidator();
+		
+	  if($this->hasNestedDOM()) {
+    	Requirements::block('sapphire/javascript/ComplexTableField.js');
+    	Requirements::block('sapphire/javascript/TableListField.js');
+    	Requirements::block('jsparty/greybox/greybox.js');
+    	Requirements::block('jsparty/greybox/AmiJS.js');
+			Requirements::block('jsparty/greybox/greybox.css');
+			Requirements::block('sapphire/css/TableListField.css');
+			Requirements::block('sapphire/css/ComplexTableField.css');
 		  Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
       Requirements::javascript('dataobject_manager/javascript/jquery-ui.1.7.js');
   		Requirements::javascript('dataobject_manager/javascript/tooltip.js');    
-    }
-		$this->unsetValidator();
+  	}
 	}
 
 	function FieldHolder() {
@@ -551,6 +563,13 @@ class DataObjectManager_Popup extends Form {
 		}
 		
 		return false;
+	}
+	
+	public function hasNestedDOM()
+	{
+  	 foreach($this->Fields() as $field)
+      if($field instanceof DataObjectManager) return true;
+  	 return false;
 	}
 	
 }
@@ -572,18 +591,18 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 	function saveComplexTableField($data, $form, $request) {
 		$form->saveInto($this->dataObj());
 		$this->dataObj()->write();
+		// Save the many many relationship if it's available
+		if(isset($data['ctf']['manyManyRelation'])) {
+			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);
+			$relationName = $data['ctf']['manyManyRelation'];
+			$componentSet = $parentRecord->getManyManyComponents($relationName);
+			$componentSet->add($dataObject);
+		}
+		
 		$form->sessionMessage(sprintf(_t('DataObjectManager.SAVED','Saved %s successfully'),$this->ctf->SingleTitle()), 'good');
 
 		Director::redirectBack();
 	}
-	
-	
-
-
 }
 
 
-
-
-
-?>

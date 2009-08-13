@@ -15,7 +15,7 @@
   // Allow DataObjectManager to override some of the core CSS in the CMS (work in progress)
   DataObjectManager::allow_css_override(false);
   
-  Object::add_extension('Form','DataObjectManagerForm');
+  /*Object::add_extension('Form','DataObjectManagerForm');
   $handlers = Object::get_static('Form','url_handlers');
   $handlers['field/$FieldName!'] = 'handleDOMField';
   Object::add_static_var('Form','url_handlers', $handlers, true);
@@ -24,7 +24,7 @@
     'handleField',
     'handleAction',
     'handleDOMField'
-  ), true);
+  ), true);*/
   
   
   /** SimpleWysiwygField: a lightweight alternative to TinyMCE. Mainly used for DOM Popups.
