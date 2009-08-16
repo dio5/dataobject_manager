@@ -215,11 +215,17 @@ class FileDataObjectManager extends DataObjectManager
 	public function upload()
 	{
 		if(!$this->can('add')) return;
-		
-		return $this->customise(array(
-			'DetailForm' => $this->UploadForm(),
-		))->renderWith($this->templatePopup);
-		
+		$form = $this->UploadForm();
+		if(is_string($form))
+			return $this->customise(array(
+				'String' => true,
+				'NestedController' => $this->isNested,
+				'DetailForm' => $this->UploadForm(),
+			))->renderWith($this->templatePopup);
+		else
+			return $this->customise(array(
+				'DetailForm' => $this->UploadForm(),
+			))->renderWith($this->templatePopup);		
 	}
 	
 	public function UploadLink()
@@ -340,16 +346,20 @@ class FileDataObjectManager extends DataObjectManager
 	protected function closePopup()
 	{
 			Requirements::clear();
+			if($this->isNested)
+				Requirements::customScript("parent.jQuery('#iframe_".$this->id()." a').click();");
+			else {
 			Requirements::customScript("
 					var container = parent.jQuery('#".$this->id()."');
 					parent.jQuery('#facebox').fadeOut(function() {
-					parent.jQuery('#facebox .content').removeClass().addClass('content');
-					parent.jQuery('#facebox_overlay').remove();
-					parent.jQuery('#facebox .loading').remove();
-parent.console.log(parent.nested);
-					parent.refresh(container, container.attr('href'));
-			});");
+						parent.jQuery('#facebox .content').removeClass().addClass('content');
+						parent.jQuery('#facebox_overlay').remove();
+						parent.jQuery('#facebox .loading').remove();
+						parent.refresh(container, container.attr('href'));
+					});");
+			}
 			return $this->customise(array(
+				'String' => true,
 				'DetailForm' => 'Closing...'
 			))->renderWith($this->templatePopup);	
 	}

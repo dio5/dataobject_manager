@@ -91,7 +91,7 @@ class DataObjectManager extends ComplexTableField
 		  if($field instanceof DataObjectManager && !($field->controller instanceof SiteTree))
 		    $this->hasNested = true;
 		}
-    $this->isNested = !($this->controller instanceof SiteTree);
+    $this->isNested = !$this->controller instanceof SiteTree && Controller::curr() == "CMSMain";
 	}
 	
 	public function setSourceFilter($filter)
@@ -163,6 +163,13 @@ class DataObjectManager extends ComplexTableField
 		$search   = isset($params['search'])? $params['search'] 	: 	$this->search;
 		return "ctf[{$this->Name()}][per_page]={$per_page}&ctf[{$this->Name()}][showall]={$show_all}&ctf[{$this->Name()}][sort]={$sort}&ctf[{$this->Name()}][sort_dir]={$sort_dir}&ctf[{$this->Name()}][search]={$search}&ctf[{$this->Name()}][filter]={$filter}";
 	}
+	
+	function FieldHolder()
+	{
+		if($this->isNested && !$this->controller->ID)
+			return $this->renderWith('DataObjectManager_holder');
+		return parent::FieldHolder();
+	}
 
 	
 	public function Headings()
@@ -196,7 +203,7 @@ class DataObjectManager extends ComplexTableField
 		$childData->write();
 		$form->sessionMessage(sprintf(_t('DataObjectManager.ADDEDNEW','Added new %s successfully'),$this->SingleTitle()), 'good');
 
-		if($form->getFileField()) {
+		if($form->getFileFields() || $form->getNestedDOMs()) {
 			$form->clearMessage();
 			Director::redirect($this->BaseLink().'/item/'.$childData->ID.'/edit');
 		}
@@ -239,33 +246,20 @@ class DataObjectManager extends ComplexTableField
 	{
 		$form = parent::AddForm($childID);
 		$actions = new FieldSet();	
-		$text = ($field = $form->getFileField()) ? sprintf(_t('DataObjectManager.SAVEANDADD','Save and add %s'), $field->Title()) : _t('DataObjectManager.SAVE','Save');
-
+		$titles = array();
+		if($files = $form->getFileFields()) {
+			foreach($files as $field)	$titles[] = $field->Title();
+		}
+		if($doms = $form->getNestedDOMs())
+			foreach($doms as $field) $titles[] = $field->PluralTitle(); 
+		$text = empty($titles) ? _t('DataObjectManager.SAVE','Save') : sprintf(_t('DataObjectManager.SAVEANDADD','Save and add %s'), DOMUtil::readable_list($titles));
 		$actions->push(
 			$saveAction = new FormAction("saveComplexTableField", $text)
 		);	
 		$saveAction->addExtraClass('save');
 		$form->setActions($actions);
 		return $form;
-	}
-
-  public function getNestedControllerFieldName()
-  {
-    if($this->isNested) {
-      $SNG = singleton($this->controller->class);
-      foreach($SNG->has_one() as $fieldName => $className) {
-        if($has_many = singleton($className)->has_many()) {
-          foreach($has_many as $name => $class) {
-            if($class == $this->controller->class)
-              return $name;
-          }
-        }
-      }
-      return false;
-    }
-    return false;  
-  }
-	
+	}	
 	
 	public function Link($action = null)
 	{
@@ -274,12 +268,6 @@ class DataObjectManager extends ComplexTableField
 	
 	public function BaseLink()
 	{
-
-		/*if($this->isNested) {
-  		$name = $this->getNestedControllerFieldName();
-   		$fieldName = ($this->isNested && $name) ? $name.'-'.$this->name : $this->name;
-    }*/
- 		//return Controller::join_links($this->form->FormAction(), 'field/'.$this->sourceClass());
  		return parent::Link();
 	}
 	
@@ -490,6 +478,7 @@ class DataObjectManager_Controller extends Controller
 class DataObjectManager_Popup extends Form {
 	protected $sourceClass;
 	protected $dataObject;
+	public $NestedController = false;
 
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
 		$this->dataObject = $dataObject;
@@ -514,15 +503,7 @@ class DataObjectManager_Popup extends Form {
  		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
 			$this->dataObject->getRequirementsForPopup();
 		}
-		
-		
-		// File iframe fields force horizontal scrollbars in the popup. Not cool.
-		// Override the close popup method.
-		Requirements::customScript("
-			jQuery(function() {
-				jQuery('iframe').css({'width':'433px'});				
-			});
-		");
+		Requirements::javascript('dataobject_manager/javascript/dataobjectmanager_popup.js');
 		
 		
 		$actions = new FieldSet();	
@@ -537,7 +518,7 @@ class DataObjectManager_Popup extends Form {
 		parent::__construct($controller, $name, $fields, $actions, $validator);
 		$this->unsetValidator();
 		
-	  if($this->hasNestedDOM()) {
+	  if($this->getNestedDOMs()) {
     	Requirements::block('sapphire/javascript/ComplexTableField.js');
     	Requirements::block('sapphire/javascript/TableListField.js');
     	Requirements::block('jsparty/greybox/greybox.js');
@@ -549,28 +530,33 @@ class DataObjectManager_Popup extends Form {
       Requirements::javascript('dataobject_manager/javascript/jquery-ui.1.7.js');
   		Requirements::javascript('dataobject_manager/javascript/tooltip.js');    
   	}
+    $this->NestedController = $this->controller->isNested;
 	}
 
 	function FieldHolder() {
 		return $this->renderWith('ComplexTableField_Form');
 	}
 	
-	public function getFileField()
+	public function getFileFields()
 	{
+		$file_fields = array();
 		foreach($this->Fields() as $field) {
 			if($field instanceof FileIFrameField || $field instanceof ImageField)
-				return $field;
+				$file_fields[] = $field;
 		}
-		
-		return false;
+		return !empty($file_fields)? $file_fields : false;	
 	}
 	
-	public function hasNestedDOM()
+	public function getNestedDOMs()
 	{
-  	 foreach($this->Fields() as $field)
-      if($field instanceof DataObjectManager) return true;
-  	 return false;
+		$dom_fields = array();
+		foreach($this->Fields() as $field) {
+			if($field instanceof DataObjectManager)
+				$dom_fields[] = $field;
+		}
+		return !empty($dom_fields)? $dom_fields : false;		
 	}
+	
 	
 }
 
@@ -578,9 +564,12 @@ class DataObjectManager_Popup extends Form {
 
 class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest 
 {
+	public $isNested = false;
+	
 	function __construct($ctf, $itemID) 
 	{
 		parent::__construct($ctf, $itemID);
+		$this->isNested = $this->ctf->isNested;
 	}
 
 	function Link() 
@@ -602,6 +591,29 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 		$form->sessionMessage(sprintf(_t('DataObjectManager.SAVED','Saved %s successfully'),$this->ctf->SingleTitle()), 'good');
 
 		Director::redirectBack();
+	}
+}
+
+class DOMUtil
+{
+	function readable_list($array)
+	{
+    if(!is_array($array))
+        return '';
+    $and = _t('DataObjectManager.AND','and');
+    switch(count($array))
+    {
+    case 0:
+        return '';
+    case 1:
+        // This may not be a normal numerically-indexed array.
+        return reset($array);
+    case 2:
+        return reset($array)." $and ".end($array);
+    default:
+        $last = array_pop($array);
+        return implode(', ', $array).", $and $last";
+    }
 	}
 }
 

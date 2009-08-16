@@ -22,7 +22,7 @@
 .ui-sortable li {cursor:move;}
 
 .grid .dataobject-list {padding:10px 0;}
-.grid .dataobject-list li {text-align:center;width:20%;float:left;height:100px;background:none;border:0;padding:6px 0;position:relative;}
+.grid .dataobject-list li {text-align:center;width:20%;float:left;height:100px;background:none;border:0;padding:6px 0;position:relative;list-style:none;}
 .grid .dataobject-list li span.handle {position:absolute;top:3px;left:3px;}
 .grid .dataobject-list li a:hover {background:none;}
 .grid .dataobject-list li div {float:none;font-size:11px;}
@@ -137,6 +137,16 @@
 .DataObjectManager-popup .message.good {color: #4F8A10;background-color: #DFF2BF;background-image:url('../images/success.png');}
 .DataObjectManager-popup input#action_saveUploadForm {display:none;}
 
+/** Nested DOM **/
+
+.DataObjectManager-popup.nestedController .Actions input {cursor:pointer;background:transparent;color:#4F8A10;border:0;text-transform:lowercase;margin:0;padding:0;}
+.DataObjectManager-popup.nestedController .Actions #nested-close {text-decoration:none;color:#ce2027;text-transform:lowercase;font-size:12px;}
+.DataObjectManager-popup.nestedController .message {border:0;margin: 10px 0px;padding:0;}
+.DataObjectManager-popup.nestedController .message.good {color: #4F8A10;background:transparent;}
+a.nested-close {display:block;text-indent:-9999em;width:30px;height:30px;background: url('/dataobject_manager/images/closebox.png') no-repeat top left;position:absolute;top:-15px;right:-15px;}
+.iframe_wrap {width:450px;margin:0 auto;border:5px solid #ccc;background:#fff;position:relative;}
+.DataObjectManager-popup div.dataobject-list ul {margin-left:0;padding-left:0;}
+
 /* accommodate input field for relation dataobjectmangaer */
 .RelationDataObjectManager .list .dataobject-list li .fields-wrap {width:85%;}
 .RelationDataObjectManager .list .dataobject-list div.actions.col {width:14%;}
@@ -148,3 +158,6 @@
 /* Target IE7 only */
 html>body .DataObjectManager {*width:96%;}
 /* end */
+
+
+

@@ -4,7 +4,13 @@
 		<% base_tag %>
     <meta content="text/html; charset=utf-8" http-equiv="Content-type"/> 		
 	</head>
-	<body class="DataObjectManager-popup">
+	<body class="DataObjectManager-popup loading 
+		<% if String %>
+			<% if NestedController %>nestedController<% end_if %>
+		<% else %>
+			<% if DetailForm.NestedController %>nestedController<% end_if %>
+		<% end_if %>
+	">
 		<div class="right $PopupClasses">
 			$DetailForm
 		</div>

@@ -25,25 +25,35 @@ $.fn.DataObjectManager.init = function(obj) {
 		// For Nested DOMs
 		if(nested) {
       $container.after(
-         $('<div id="iframe_'+$container.attr('id')+'" class=""iframe_wrap" style="display:none;"><div class="iframe_close"><a href="javascript:void(0)" >close</a></div><iframe src="" frameborder="0" width="800" height="400"></iframe></div>')
+         $('<div id="iframe_'+$container.attr('id')+'" class="iframe_wrap" style="display:none;"><a href="javascript:void(0)" class="nested-close">close</a><iframe src="" frameborder="0" width="450" height="1"></iframe></div>')
       );
-      $('.iframe_close a').unbind('click').click(function(e) {
-        $parent = $(this).parent().parent();
-        $parent.slideUp("normal", function() {
-    			refresh($container, $container.attr('href'));
-    			$container.slideDown();        
+      var $iframeWrap = $('#iframe_'+$container.attr('id'));
+  		$container.find('a.popup-button').unbind('click').click(function(e) {
+  		  $link = $(this);
+				var $iframe = $iframeWrap.find('iframe');
+        $iframe.attr('src',$link.attr('href'));
+        $container.css({'opacity':.3});
+        up = $container.height()-40;
+        $iframeWrap.show().css({
+        	'position':'absolute',
+        	'z-index':'999',
+        	'left':'50%',
+        	'margin-left':'-215px'
+        }).animate({'top':'-='+up+'px'});
+        $iframe.load(function() {
+        console.log('loaded');
+	        iframe_height = $iframe.contents().find('body').height();
+	        console.log(iframe_height);
+	        $iframe.attr('height',iframe_height+28);
         });
         return false;
       });
-      $iframeWrap = $('#iframe_'+$container.attr('id'));
-  		$container.find('a.popup-button').unbind('click').click(function(e) {
-  		  $link = $(this);
-        $iframeWrap.find('iframe').attr('src',$link.attr('href'));
-        $container.slideUp("normal",function() {
-          setTimeout(function(){$iframeWrap.show().slideDown("slow");},1500);
-        });
-        return false;
-      });      		
+      $('#iframe_'+$container.attr('id')).find('.nested-close').click(function() {
+      	$iframeWrap.hide();
+      	$iframeWrap.find('iframe').attr('src','');
+      	refresh($container,$container.attr('href'));
+      	return false;
+      });   		
 		}
 		// For normal DOMs
 		else {
@@ -249,7 +259,7 @@ $().ajaxSend(function(r,s){
 $().ajaxStop(function(r,s){  
   $(".ajax-loader").fadeOut("fast");  
 });  
-if(!nested) {
+if(!nested && $(this).attr('id')) {
   Behaviour.register({
   	'.DataObjectManager' : {
   		initialize : function() {$(this).DataObjectManager();}
