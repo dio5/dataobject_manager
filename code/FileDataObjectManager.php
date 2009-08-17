@@ -222,10 +222,13 @@ class FileDataObjectManager extends DataObjectManager
 				'NestedController' => $this->isNested,
 				'DetailForm' => $this->UploadForm(),
 			))->renderWith($this->templatePopup);
-		else
+		else {
+			$form = $this->UploadForm();
 			return $this->customise(array(
-				'DetailForm' => $this->UploadForm(),
+			  'String' => is_string($form),
+				'DetailForm' => $form
 			))->renderWith($this->templatePopup);		
+		}
 	}
 	
 	public function UploadLink()
@@ -261,7 +264,7 @@ class FileDataObjectManager extends DataObjectManager
 	public function UploadForm()
 	{
 		// Sync up the DB
-		singleton('Folder')->syncChildren();
+//		singleton('Folder')->syncChildren();
 		$className = $this->sourceClass();
 		$childData = new $className();
 		$validator = $this->getValidatorFor($childData);
@@ -314,8 +317,10 @@ class FileDataObjectManager extends DataObjectManager
 	public function saveUploadForm()
 	{
 		if(isset($_POST['uploaded_files']) && is_array($_POST['uploaded_files'])) {
+      $form = $this->EditUploadedForm();
 			return $this->customise(array(
-				'DetailForm' => $this->EditUploadedForm()
+			  'String' => is_string($form),
+				'DetailForm' => $form
 			))->renderWith($this->templatePopup);
 		}
 	}
@@ -415,8 +420,10 @@ class FileDataObjectManager extends DataObjectManager
 		$form->saveInto($obj);
 		$obj->write();
 		if(isset($data['uploaded_files']) && is_array($data['uploaded_files'])) {
+      $form = $this->EditUploadedForm();
 			return $this->customise(array(
-				'DetailForm' => $this->EditUploadedForm()
+        'String' => is_string($form),
+				'DetailForm' => $form
 			))->renderWith($this->templatePopup);
 		}
 		else {
