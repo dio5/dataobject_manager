@@ -24,27 +24,26 @@ $.fn.DataObjectManager.init = function(obj) {
 		
 		// For Nested DOMs
 		if(nested) {
-      $container.after(
-         $('<div id="iframe_'+$container.attr('id')+'" class="iframe_wrap" style="display:none;"><a href="javascript:void(0)" class="nested-close">close</a><iframe src="" frameborder="0" width="450" height="1"></iframe></div>')
+      $('body').append(
+         $('<div id="iframe_'+$container.attr('id')+'" class="iframe_wrap" style="display:none;"><a href="javascript:void(0)" class="nested-close">close</a><iframe src="" scrolling="no" frameborder="0" width="450" height="1"></iframe></div>')
       );
       var $iframeWrap = $('#iframe_'+$container.attr('id'));
   		$container.find('a.popup-button').unbind('click').click(function(e) {
   		  $link = $(this);
 				var $iframe = $iframeWrap.find('iframe');
         $iframe.attr('src',$link.attr('href'));
-        $container.css({'opacity':.3});
-        up = $container.height()-40;
+        //$('body').css({'opacity':.3});
+        top = $.fn.DataObjectManager.getPageScroll()[1] + ($.fn.DataObjectManager.getPageHeight() / 10);
         $iframeWrap.show().css({
         	'position':'absolute',
         	'z-index':'999',
         	'left':'50%',
+        	'top' : top,
         	'margin-left':'-215px'
-        }).animate({'top':'-='+up+'px'});
+        });
         $iframe.load(function() {
-        console.log('loaded');
-	        iframe_height = $iframe.contents().find('body').height();
-	        console.log(iframe_height);
-	        $iframe.attr('height',iframe_height+28);
+	        iframe_height = $iframe.contents().find('body').height()+28;
+	        $iframe.attr('height',iframe_height);
         });
         return false;
       });
@@ -249,6 +248,21 @@ $.fn.DataObjectManager.getPageHeight = function() {
       windowHeight = document.body.clientHeight;
     }	
     return windowHeight;
+};
+
+$.fn.DataObjectManager.getPageScroll = function() {
+    var xScroll, yScroll;
+    if (self.pageYOffset) {
+      yScroll = self.pageYOffset;
+      xScroll = self.pageXOffset;
+    } else if (document.documentElement && document.documentElement.scrollTop) {	 // Explorer 6 Strict
+      yScroll = document.documentElement.scrollTop;
+      xScroll = document.documentElement.scrollLeft;
+    } else if (document.body) {// all other Explorers
+      yScroll = document.body.scrollTop;
+      xScroll = document.body.scrollLeft;	
+    }
+    return new Array(xScroll,yScroll) 
 };
 
 

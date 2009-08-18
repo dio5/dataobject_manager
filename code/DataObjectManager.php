@@ -166,7 +166,7 @@ class DataObjectManager extends ComplexTableField
 	
 	function FieldHolder()
 	{
-		if($this->isNested && !$this->controller->ID)
+		if(!$this->controller->ID)
 			return $this->renderWith('DataObjectManager_holder');
 		return parent::FieldHolder();
 	}
@@ -205,8 +205,8 @@ class DataObjectManager extends ComplexTableField
 
 		if($form->getFileFields() || $form->getNestedDOMs()) {
 			$form->clearMessage();
-			Director::redirect($this->BaseLink().'/item/'.$childData->ID.'/edit');
-		}
+      Director::redirect(Controller::join_links($this->BaseLink(),'/item/'.$childData->ID.'/edit'));		
+    }
 		else Director::redirectBack();
 
 	}
@@ -263,7 +263,7 @@ class DataObjectManager extends ComplexTableField
 	
 	public function Link($action = null)
 	{
-		return parent::Link($action)."?".$this->getQueryString();
+    return Controller::join_links(parent::Link($action),'?'.$this->getQueryString());
 	}
 	
 	public function BaseLink()
@@ -278,7 +278,7 @@ class DataObjectManager extends ComplexTableField
 	
 	public function RelativeLink($params = array())
 	{
-		return parent::Link()."?".$this->getQueryString($params);
+    return Controller::join_links(parent::Link(),'?'.$this->getQueryString($params));
 	}	
 	public function FirstLink()
 	{
@@ -311,7 +311,7 @@ class DataObjectManager extends ComplexTableField
 	}
 
 	public function AddLink() {
-		return $this->BaseLink() . '/add';
+    return Controller::join_links($this->BaseLink(), '/add');
 	}
 	
 	
@@ -438,7 +438,7 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 	}
 	
 	function Link() {
-		return $this->parent->BaseLink() . '/item/' . $this->item->ID;
+    return Controller::join_links($this->parent->BaseLink(), '/item/' . $this->item->ID);
 	}
 	
 	function Fields() {
@@ -574,8 +574,8 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 
 	function Link() 
 	{
-		return $this->ctf->BaseLink() . '/item/' . $this->itemID;
-	}
+    return Controller::join_links($this->ctf->BaseLink() , '/item/' . $this->itemID);	
+  }
 
 	function saveComplexTableField($data, $form, $request) {
 		$form->saveInto($this->dataObj());
