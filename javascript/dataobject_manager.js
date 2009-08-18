@@ -273,7 +273,7 @@ $().ajaxSend(function(r,s){
 $().ajaxStop(function(r,s){  
   $(".ajax-loader").fadeOut("fast");  
 });  
-if(!nested && $(this).attr('id')) {
+if(!nested && $('.DataObjectManager').length) {
   Behaviour.register({
   	'.DataObjectManager' : {
   		initialize : function() {$(this).DataObjectManager();}
