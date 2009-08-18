@@ -25,7 +25,7 @@ $.fn.DataObjectManager.init = function(obj) {
 		// For Nested DOMs
 		if(nested) {
       $('body').append(
-         $('<div id="iframe_'+$container.attr('id')+'" class="iframe_wrap" style="display:none;"><a href="javascript:void(0)" class="nested-close">close</a><iframe src="" scrolling="no" frameborder="0" width="450" height="1"></iframe></div>')
+         $('<div id="iframe_'+$container.attr('id')+'" class="iframe_wrap" style="display:none;"><a href="javascript:void(0)" class="nested-close">close</a><iframe src="" frameborder="0" width="450" height="1"></iframe></div>')
       );
       var $iframeWrap = $('#iframe_'+$container.attr('id'));
   		$container.find('a.popup-button').unbind('click').click(function(e) {
