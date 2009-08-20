@@ -1,6 +1,5 @@
 (function($) {
 
-var nested = $('.DataObjectManager').hasClass('isNested');
 $.fn.DataObjectManager = function() {
 	this.each(function() {
 		$.fn.DataObjectManager.init(this);
@@ -10,6 +9,7 @@ $.fn.DataObjectManager = function() {
 $.fn.DataObjectManager.init = function(obj) {
 		var $container = $(obj);
 		var container_id = '#'+$container.attr('id');
+		var nested = $('.DataObjectManager').hasClass('isNested');
 		
 		var facebox_close = function() {			
 			$('#facebox').fadeOut(function() {
@@ -272,17 +272,11 @@ $().ajaxSend(function(r,s){
    
 $().ajaxStop(function(r,s){  
   $(".ajax-loader").fadeOut("fast");  
-});  
-if(!nested && $('.DataObjectManager').length) {
-  Behaviour.register({
-  	'.DataObjectManager' : {
-  		initialize : function() {$(this).DataObjectManager();}
-  	}
-  });
-}
-else {
-  $(function() {$('.DataObjectManager').DataObjectManager();});
-}
+}); 
+ 
+$('.DataObjectManager').livequery(function(){
+   $(this).DataObjectManager();                           
+});
 
 })(jQuery);
 
