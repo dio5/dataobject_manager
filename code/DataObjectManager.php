@@ -166,7 +166,7 @@ class DataObjectManager extends ComplexTableField
 	
 	function FieldHolder()
 	{
-		if(!$this->controller->ID)
+		if(!$this->controller->ID && $this->isNested)
 			return $this->renderWith('DataObjectManager_holder');
 		return parent::FieldHolder();
 	}
