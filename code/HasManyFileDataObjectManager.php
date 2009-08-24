@@ -49,6 +49,7 @@ class HasManyFileDataObjectManager extends FileDataObjectManager
 	{
 	   if($this->markingPermission)
 	     return Permission::check($this->markingPermission);
+	   return true;
 	}
 	
 	
