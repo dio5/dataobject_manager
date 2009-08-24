@@ -4,7 +4,9 @@
 		<% if Can(add) %>
 			<a class="popup-button" href="$UploadLink" alt="upload">
 				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% _t('DataObjectManager.ADD','Add') %> $ButtonAddTitle</span>
-			</a>	
+			</a>
+			<% else %>
+			$PluralTitle	
 		<% end_if %>
 	</div>
 	<div class="dataobjectmanager-filter">
@@ -78,16 +80,16 @@
 							<% end_control %>
 							</div>
 							<div class="actions col">
-								<a class="popup-button editlink" href="$EditLink"><img src="dataobject_manager/images/page_white_edit.png" height="12px" alt="edit" /></a>
-								<a class="deletelink" href="$DeleteLink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a>
+								<% if Can(edit) %><a class="popup-button editlink" href="$EditLink"><img src="dataobject_manager/images/page_white_edit.png" height="12px" alt="edit" /></a><% end_if %>
+								<% if Can(delete) %><a class="deletelink" href="$DeleteLink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a><% end_if %>
 							</div>
 						<!-- GRID VIEW -->
 						<% else %>
 							<div class="pad">
 								<% if Top.ShowAll %><span class="handle"><img src="dataobject_manager/images/move_icon.jpg" /></span><% end_if %>
-								<div class="file-icon"><a href="$EditLink" class="popup-button editlink tooltip"><img src="$FileIcon" alt="" /></a></div>
-								<div class="file-label"><a href="$EditLink" class="popup-button editlink tooltip">$FileLabel</a></div>
-								<div class="delete"><a href="$DeleteLink" class="deletelink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a></div>
+								<div class="file-icon"><a href="<% if Can(edit) %>$EditLink<% else %>#<% end_if %>" class="popup-button editlink tooltip"><img src="$FileIcon" alt="" /></a></div>
+								<div class="file-label"><a href="<% if Can(edit) %>$EditLink<% else %>#<% end_if %>" class="popup-button editlink tooltip">$FileLabel</a></div>
+								<% if Can(delete) %><div class="delete"><a href="$DeleteLink" class="deletelink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a></div><% end_if %>
 								<span class="tooltip-info" style="display:none">
 									<% control Fields %>
 										<strong>$Name</strong>: $Value<% if Last %><% else %><br /><% end_if %>

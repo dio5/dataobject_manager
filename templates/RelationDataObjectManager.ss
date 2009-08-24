@@ -4,7 +4,9 @@
 		<% if Can(add) %>
 			<a class="popup-button" href="$AddLink" alt="upload">
 				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% sprintf(_t('DataObjectManager.ADDITEM','Add %s',PR_MEDIUM,'Add [name]'),$AddTitle) %></span>
-			</a>	
+			</a>
+		<% else %>
+		$PluralTitle
 		<% end_if %>
 	</div>
 	<% if HasFilter %>
@@ -73,8 +75,8 @@
 						</div>
 						<div class="actions col">
 								$MarkingCheckbox
-								<a class="popup-button editlink" href="$EditLink"><img src="dataobject_manager/images/page_white_edit.png" height="12px" alt="edit" /></a>
-								<a class="deletelink" href="$DeleteLink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a>
+								<% if Can(edit) %><a class="popup-button editlink" href="$EditLink"><img src="dataobject_manager/images/page_white_edit.png" height="12px" alt="edit" /></a><% end_if %>
+								<% if Can(delete) %><a class="deletelink" href="$DeleteLink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a><% end_if %>
 						</div>
 				</li>
 			<% end_control %>
