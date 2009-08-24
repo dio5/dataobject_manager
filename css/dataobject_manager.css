@@ -118,7 +118,7 @@
 .DataObjectManager-popup ul#file_list li div.progressWrapper {width: 357px;display:block;float:none;padding:0 4px;border-width:0 1px 0 0;}
 .DataObjectManager-popup ul#file_list li {margin:0;padding:0;}
 .DataObjectManager-popup ul#file_list {margin:10px 0;padding:0;}
-.DataObjectManager-popup #import-holder ul {padding:0;}
+.DataObjectManager-popup #import-holder ul {padding:0;height:180px;overflow:auto;}
 .DataObjectManager-popup ul#file_list li a:hover {background:none;}
 .DataObjectManager-popup div.fileiframe.field {width:433px;}
 .DataObjectManager-popup .queue-remove-btn a {font-size:10px;text-decoration:none;}
