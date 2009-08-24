@@ -1,11 +1,5 @@
 <?php
 
-// (!) What is this doing here?
-// In an effort to reduce the amount of javascript in the popup, the legacy CTF requirements
-// have been cleared, which really trips up the CalendarDateField.
-// This class renders a jQuery compliant (and much nicer looking) datepicker.
-// The DataObjectManager::getCustomFields() function sniffs out the date field and replaces it.
-
 class DatePickerField extends DateField 
 {
 	
@@ -74,18 +68,7 @@ HTML;
 	function Field() {
 		$id = $this->id();
 		$val = $this->attrValue();
-		Requirements::javascript("jsparty/jquery/jquery.js");
-
-		Requirements::javascript("dataobject_manager/javascript/jquery-ui.1.7.js");
-		Requirements::javascript("dataobject_manager/code/date_picker_field/datepicker.js");
-
-		Requirements::css("dataobject_manager/css/ui/ui.core.css");
-		Requirements::css("dataobject_manager/css/ui/ui.datepicker.css");
-		Requirements::css("dataobject_manager/css/ui/ui.theme.css");
-
-		Requirements::customScript(
-			"\$('#$id').datepicker({dateFormat : '".self::$dateFormat."', buttonImage : '/sapphire/images/calendar-icon.gif', buttonImageOnly : true});"
-		);
+    Requirements::customScript("alert('hi');");
 		$field = parent::Field();
 				
 		$innerHTML = self::HTMLField( $id, $this->name, $val );
@@ -96,5 +79,15 @@ HTML;
 					</div>
 		";	
 		}
+		
 }
+
+class DatePickerField_Controller extends Controller
+{
+	function dateformat()
+	{
+	  echo DatePickerField::$dateFormat;
+	}
+}
+
 ?>
