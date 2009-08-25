@@ -1,5 +1,5 @@
     Shadowbox.init({
     	language : "en",
-    	players : ["flv"]
+    	players : ["flv","swf"]
     });
 

@@ -5,7 +5,8 @@ class FLV extends File
 	public static $allowed_file_types = array(
 		'flv','avi','mov','mpeg','mpg'
 	);
-
+  
+  private static $has_ffmpeg = null;
 	private $allow_full_screen = true;	
 	private static $ffmpeg_root = "";
 	private static $termination_code;
@@ -23,6 +24,8 @@ class FLV extends File
 	public static $audio_sampling_rate = 22050;
 	public static $audio_bit_rate = 32;
 	public static $play_button_overlay = true;
+	// .gif is also available to support the IE6 world, or specify your own.
+	public static $default_video_icon_path = "dataobject_manager/code/flv/images/default_video.png";
 	
 	public static function set_ffmpeg_root($path)
 	{
@@ -30,9 +33,11 @@ class FLV extends File
 		self::$ffmpeg_root = $path;
 	}
 	
-	
-	public static function echo_ffmpeg_test()
+	public static function has_ffmpeg()
 	{
+		// Cache this so we don't have to run a shell command every time.
+		if(self::$has_ffmpeg !== null) return self::$has_ffmpeg;
+		
 		$success = false;
 		if(extension_loaded('ffmpeg'))
 			$success = true;
@@ -40,8 +45,15 @@ class FLV extends File
 			$output = self::ffmpeg("");
 			if(self::$termination_code == 1) $success = true;
 		}
-
-		echo $success ? "<span style='color:green'>FFMPEG is installed on your server and working properly. Code: ".self::$termination_code."</span>" : 
+		self::$has_ffmpeg = $success;
+    return self::$has_ffmpeg;	
+	}
+	
+	
+	public static function echo_ffmpeg_test()
+	{
+		
+		echo self::has_ffmpeg() ? "<span style='color:green'>FFMPEG is installed on your server and working properly. Code: ".self::$termination_code."</span>" : 
 						"<span class='color:red'>FFMPEG does not appear to be installed on your server. Code: ".self::$termination_code."</span>";
 	}
 	
@@ -109,6 +121,13 @@ class FLV extends File
       @fclose($f);
     }
 	}
+	
+	private function default_thumbnail()
+	{
+	   $img = new Image_Cached(self::$default_video_icon_path);
+	   $img->ID = $this->ID;
+	   return $img;
+	}
 		
 	private function SWFLink()
 	{
@@ -170,11 +189,8 @@ class FLV extends File
 	
 	public function getThumbnail()
 	{
-	 if($img = DataObject::get_one("Image","Title = 'flv_thumb_{$this->ID}'")) {
-	   if(Director::fileExists($img->Filename)) 
-	     return $img;
-	   return false;
-	 }
+	 if($img = DataObject::get_one("Image","Title = 'flv_thumb_{$this->ID}'"))
+	   return Director::fileExists($img->Filename) ? $img : false;
 	 return false;
 	}
 	
@@ -251,16 +267,43 @@ class FLV extends File
 	
 	public function VideoThumbnail()
 	{
-	  if(!$img = $this->getThumbnail()) {
+	  if(self::has_ffmpeg() && !$img = $this->getThumbnail())
 	    $this->createThumbnail();
-	    $img = $this->getThumbnail();
-	  }
-	  return $img;
+    $img = $this->getThumbnail();
+	  return $img ? $img : $this->default_thumbnail();
 	  
 	}
 	
-	public function VideoPopup($thumb_width = null, $thumb_height = null, $popup_width = null, $popup_height = null)
+	/**
+	 * SSViewer doesn't accept more than two arguments for template
+	 * functions. Here's a hack. If an arg is, e.g. 200x400 it will
+	 * split that into width/height for thumb for first arg, and popup
+	 * for second arg.
+	 *
+	 * Examples: 
+	 * $VideoPopup(450,200) : Returns a video popup with thumbnail 
+	 *                        450 width, 200 height. Popup is default dimensions
+	 *
+	 * $VideoPopup(450x200,800x600) : Returns a video popup with thumbnail
+	 *                                450 width, 200 height. Popup is 800 width, 600 height.
+	 *
+	 * $VideoPopup(450x200) : Same as first example.
+	 *
+	 */ 
+	public function VideoPopup($arg1 = null, $arg2 = null)
 	{
+		$popup_width = null;
+		$popup_height = null;
+		if($arg1 !== null && stristr($arg1,"x"))
+		  list($thumb_width,$thumb_height) = explode("x",$arg1);
+		else
+		  $thumb_width = $arg1;
+		
+		if($arg2 !== null && stristr($arg2,"x"))
+		  list($popup_width,$popup_height) = explode("x",$arg2);
+		else
+		  $thumb_height = $arg2;
+		  
 		if($popup_width === null) $popup_width = self::$default_popup_width;
 		if($popup_height === null) $popup_height = self::$default_popup_height;
 		
@@ -276,9 +319,6 @@ class FLV extends File
 		))->renderWith(array('FLVpopup'));
 		
 	}
-	
-
-	
 }
 
 
