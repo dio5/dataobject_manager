@@ -68,7 +68,6 @@ HTML;
 	function Field() {
 		$id = $this->id();
 		$val = $this->attrValue();
-    Requirements::customScript("alert('hi');");
 		$field = parent::Field();
 				
 		$innerHTML = self::HTMLField( $id, $this->name, $val );
