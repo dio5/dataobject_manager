@@ -14,7 +14,7 @@ class AssetManager extends FileDataObjectManager
       );
     }
     
-    $fields = singleton("File")->getCMSFields();
+    $fields = singleton($sourceClass)->getCMSFields();
     $fields->removeByName("OwnerID");
     $fields->removeByName("Parent");
     $fields->removeByName("Filename");
