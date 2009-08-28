@@ -26,6 +26,14 @@ class AssetManager extends FileDataObjectManager
     
     parent::__construct($controller, $name, $sourceClass, null, $headings, $fields, "Classname != 'Folder'");
   }
+  
+	function FieldHolder()
+	{
+		if(!$this->controller->ID)
+			return "";
+		return parent::FieldHolder();
+	}
+  
 
 }
 
