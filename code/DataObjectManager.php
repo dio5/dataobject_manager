@@ -7,6 +7,7 @@ class DataObjectManager extends ComplexTableField
 	protected static $allow_css_override = false;
 	
 	protected $template = "DataObjectManager";
+	protected $start = "0";
 	protected $per_page = "10";
 	protected $showAll = "0";
 	protected $search = "";
@@ -75,6 +76,7 @@ class DataObjectManager extends ComplexTableField
 		$this->filter_empty_string = '-- '._t('DataObjectManager.NOFILTER','No filter').' --';
 
 		if(isset($_REQUEST['ctf'][$this->Name()])) {
+			$this->start = $_REQUEST['ctf'][$this->Name()]['start'];
 			$this->per_page = $_REQUEST['ctf'][$this->Name()]['per_page'];
 			$this->showAll = $_REQUEST['ctf'][$this->Name()]['showall'];
 			$this->search = $_REQUEST['ctf'][$this->Name()]['search'];
@@ -138,7 +140,7 @@ class DataObjectManager extends ComplexTableField
 			$search = array();
 	        $SNG = singleton($this->sourceClass); 			
 			foreach(parent::Headings() as $field) {
-				if($SNG->hasField($field->Name))	
+				if($SNG->hasDatabaseField($field->Name))	
 					$search[] = "UPPER($field->Name) LIKE '%".strtoupper($this->search)."%'";
 			}
 			$search_string = "(".implode(" OR ", $search).")";
@@ -155,13 +157,14 @@ class DataObjectManager extends ComplexTableField
 
 	protected function getQueryString($params = array())
 	{ 
+		$start    = isset($params['start'])? $params['start']       : 	$this->start;
 		$per_page = isset($params['per_page'])? $params['per_page'] : 	$this->per_page;
 		$show_all = isset($params['show_all'])? $params['show_all'] : 	$this->showAll;
-		$sort 	  = isset($params['sort'])? $params['sort'] 		: 	$this->sort;
+		$sort 	  = isset($params['sort'])? $params['sort'] 		    : 	$this->sort;
 		$sort_dir = isset($params['sort_dir'])? $params['sort_dir'] : 	$this->sort_dir;
-		$filter   = isset($params['filter'])? $params['filter'] 	: 	$this->filter;
-		$search   = isset($params['search'])? $params['search'] 	: 	$this->search;
-		return "ctf[{$this->Name()}][per_page]={$per_page}&ctf[{$this->Name()}][showall]={$show_all}&ctf[{$this->Name()}][sort]={$sort}&ctf[{$this->Name()}][sort_dir]={$sort_dir}&ctf[{$this->Name()}][search]={$search}&ctf[{$this->Name()}][filter]={$filter}";
+		$filter   = isset($params['filter'])? $params['filter'] 	  : 	$this->filter;
+		$search   = isset($params['search'])? $params['search'] 	  : 	$this->search;
+		return "ctf[{$this->Name()}][start]={$start}&ctf[{$this->Name()}][per_page]={$per_page}&ctf[{$this->Name()}][showall]={$show_all}&ctf[{$this->Name()}][sort]={$sort}&ctf[{$this->Name()}][sort_dir]={$sort_dir}&ctf[{$this->Name()}][search]={$search}&ctf[{$this->Name()}][filter]={$filter}";
 	}
 	
 	function FieldHolder()
@@ -282,22 +285,27 @@ class DataObjectManager extends ComplexTableField
 	}	
 	public function FirstLink()
 	{
-		return parent::FirstLink() ? parent::FirstLink()."&".$this->getQueryString() : false;
+		return parent::FirstLink() ? $this->RelativeLink(array('start' => '0')) : false;
 	}
 	
 	public function PrevLink()
 	{
-		return parent::PrevLink() ? parent::PrevLink()."&".$this->getQueryString() : false;
+		$start = ($this->start - $this->pageSize < 0)  ? 0 : $this->start - $this->pageSize;
+		return parent::PrevLink() ? $this->RelativeLink(array('start' => $start)) : false;
 	}
 	
 	public function NextLink()
 	{
-		return parent::NextLink() ? parent::NextLink()."&".$this->getQueryString() : false;
+		$currentStart = isset($_REQUEST['ctf'][$this->Name()]['start']) ? $_REQUEST['ctf'][$this->Name()]['start'] : 0;
+		$start = ($currentStart + $this->pageSize < $this->TotalCount()) ? $currentStart + $this->pageSize : $this->TotalCount() % $this->pageSize > 0;
+		return parent::NextLink() ? $this->RelativeLink(array('start' => $start)) : false;
 	}
 	
 	public function LastLink()
 	{
-		return parent::LastLink() ? parent::LastLink()."&".$this->getQueryString() : false;
+		$pageSize = ($this->TotalCount() % $this->pageSize > 0) ? $this->TotalCount() % $this->pageSize : $this->pageSize;
+		$start = $this->TotalCount() - $pageSize;
+		return parent::LastLink() ? $this->RelativeLink(array('start' => $start)) : false;
 	}
 	
 	public function ShowAllLink()

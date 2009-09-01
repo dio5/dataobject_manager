@@ -150,7 +150,8 @@ $.fn.DataObjectManager.init = function(obj) {
 				request = window.setTimeout(function() {
 					url = $(container_id).attr('href').replace(/\[search\]=(.)*?&/, '[search]='+$input.attr('value')+'&');
 					refresh($container, url);
-				},200)
+					
+				},500)
 			e.stopPropagation();
 		});
 		
@@ -294,7 +295,7 @@ function refresh($div, link)
 	   			$div.parent().html(html);
 	   		else
 				$div.replaceWith(html);
-	
+        	
 			if(listValue) {
 				 jQuery('#'+$div.attr('id')+'_CheckedList').attr('value',listValue);
 			}
