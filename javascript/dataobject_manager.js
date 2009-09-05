@@ -274,7 +274,6 @@ $().ajaxSend(function(r,s){
 $().ajaxStop(function(r,s){  
   $(".ajax-loader").fadeOut("fast");  
 }); 
- 
 $('.DataObjectManager').livequery(function(){
    $(this).DataObjectManager();                           
 });
