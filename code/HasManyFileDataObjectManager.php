@@ -95,7 +95,7 @@ class HasManyFileDataObjectManager extends FileDataObjectManager
 		$records = $dataQuery->execute();
 		$items = new DataObjectSet();
 		foreach($records as $record) {
-			if(! get_class($record)) {
+			if(! is_object($record)) {
 				$class = $this->sourceClass;
 				$record = new $class($record);
 			}
@@ -106,7 +106,7 @@ class HasManyFileDataObjectManager extends FileDataObjectManager
 		$records = $dataQuery->execute();
 		$unpagedItems = new DataObjectSet();
 		foreach($records as $record) {
-			if(! get_class($record))
+			if(! is_object($record))
 				$record = new DataObject($record);
 			$unpagedItems->push($record);
 		}
