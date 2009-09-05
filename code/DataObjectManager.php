@@ -534,6 +534,7 @@ class DataObjectManager_Popup extends Form {
 			Requirements::block('jsparty/greybox/greybox.css');
 			Requirements::block('sapphire/css/TableListField.css');
 			Requirements::block('sapphire/css/ComplexTableField.css');
+		  Requirements::javascript('jsparty/jquery/plugins/livequery/jquery.livequery.js');
 		  Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
       Requirements::javascript('dataobject_manager/javascript/jquery-ui.1.7.js');
   		Requirements::javascript('dataobject_manager/javascript/tooltip.js');    
