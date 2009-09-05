@@ -69,7 +69,7 @@ class DataObjectManager extends ComplexTableField
 		if(self::$allow_css_override)
   		Requirements::css('dataobject_manager/css/dataobjectmanager_override.css');
 		Requirements::javascript('dataobject_manager/javascript/facebox.js');	
-		//Requirements::javascript('dataobject_manager/javascript/jquery-ui.1.5.3.js');
+		Requirements::javascript('dataobject_manager/javascript/jquery-ui-1.6.js');
 		Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
 		Requirements::javascript('dataobject_manager/javascript/tooltip.js');
 		
@@ -491,14 +491,13 @@ class DataObjectManager_Popup extends Form {
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
 		$this->dataObject = $dataObject;
 		Requirements::clear();
-		Requirements::javascript('dataobject_manager/javascript/jquery.1.3.js');
+		Requirements::javascript('jsparty/jquery/jquery.js');
 
 		Requirements::block('/jsparty/behaviour.js');
 		Requirements::block('sapphire/javascript/Validator.js');
 		Requirements::block('jsparty/prototype.js');
-		Requirements::block('jsparty/behavior.js');
-		Requirements::block('jsparty/jquery/jquery.js');
 		Requirements::clear('jsparty/behavior.js');
+		Requirements::block('jsparty/behavior.js');
 
 		//Requirements::block('sapphire/javascript/i18n.js');
 		Requirements::block('assets/base.js');
@@ -536,7 +535,7 @@ class DataObjectManager_Popup extends Form {
 			Requirements::block('sapphire/css/ComplexTableField.css');
 		  Requirements::javascript('jsparty/jquery/plugins/livequery/jquery.livequery.js');
 		  Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
-      Requirements::javascript('dataobject_manager/javascript/jquery-ui.1.7.js');
+			Requirements::javascript('dataobject_manager/javascript/jquery-ui-1.6.js');
   		Requirements::javascript('dataobject_manager/javascript/tooltip.js');    
   	}
     $this->NestedController = $this->controller->isNested;
