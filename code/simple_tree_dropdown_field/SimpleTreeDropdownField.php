@@ -16,7 +16,7 @@ class SimpleTreeDropdownField extends DropdownField
 			foreach($children as $child) {
 				$indent="";
 				for($i=0;$i<$level;$i++) $indent .= "&nbsp;&nbsp;";
-				$options[$child->ID] = empty($child->Title) ? "<em>$indent Untitled</em>" : $indent.$child->Title;
+				$options[$child->ID] = empty($child->Title) ? "<em>$indent Untitled</em>" : $indent.$child->MenuTitle;
 				$options += $this->getHierarchy($child->ID, $level+1);
 			}
 		}
