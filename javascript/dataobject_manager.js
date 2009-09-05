@@ -40,10 +40,11 @@ $.fn.DataObjectManager.init = function(obj) {
         	'left':'50%',
         	'top' : top,
         	'margin-left':'-215px'
-        });
+        }).addClass('loading');
         $iframe.load(function() {
 	        iframe_height = $iframe.contents().find('body').height()+28;
 	        $iframe.attr('height',iframe_height);
+	        $iframeWrap.removeClass('loading');
         });
         return false;
       });
@@ -52,7 +53,8 @@ $.fn.DataObjectManager.init = function(obj) {
       	$iframeWrap.find('iframe').attr('src','');
       	refresh($container,$container.attr('href'));
       	return false;
-      });   		
+      });
+ 			$container.addClass("loaded");   		
 		}
 		// For normal DOMs
 		else {
