@@ -535,7 +535,7 @@ class DataObjectManager_Popup extends Form {
 			Requirements::block('sapphire/css/ComplexTableField.css');
 		  Requirements::javascript('jsparty/jquery/plugins/livequery/jquery.livequery.js');
 		  Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
-			Requirements::javascript('dataobject_manager/javascript/jquery-ui-1.6.js');
+    	Requirements::javascript('dataobject_manager/javascript/jquery-ui-1.6.js');  
   		Requirements::javascript('dataobject_manager/javascript/tooltip.js');    
   	}
     $this->NestedController = $this->controller->isNested;
