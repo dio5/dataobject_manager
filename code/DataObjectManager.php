@@ -57,11 +57,32 @@ class DataObjectManager extends ComplexTableField
 	   self::$allow_css_override = $bool;
 	}
 	
-	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
+	function __construct($controller, $name = null, $sourceClass = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
 	{
 		if(!class_exists("ComplexTableField_ItemRequest"))
 			die("<strong>"._t('DataObjectManager.ERROR','Error')."</strong>: "._t('DataObjectManager.SILVERSTRIPEVERSION','DataObjectManager requires Silverstripe version 2.3 or higher.'));
-
+    
+    // If no name is given, search the has_many for the first relation.
+    if($name === null && $sourceClass === null) {
+      if($has_manys = $controller->stat('has_many')) {
+        foreach($has_manys as $relation => $value) {
+          $name = $relation;
+          $sourceClass = $value;
+        }
+      }
+    }
+    $SNG = singleton($sourceClass);
+    if($fieldList === null) {
+      if($fields = $SNG->stat('summary_fields')) {
+        $fieldList = $fields;
+      }
+      else if($db = $SNG->db()) {
+        $fieldList = array();
+        foreach($db as $field => $type) {
+          $fieldList[$field] = DOMUtil::readable_class($field);
+        }
+      }
+    }
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 
 		Requirements::css('dataobject_manager/css/dataobject_manager.css');
@@ -251,7 +272,7 @@ class DataObjectManager extends ComplexTableField
 		$actions = new FieldSet();	
 		$titles = array();
 		if($files = $form->getFileFields()) {
-			foreach($files as $field)	$titles[] = $field->Title();
+			foreach($files as $field)	$titles[] = DOMUtil::readable_class($field->Title());
 		}
 		if($doms = $form->getNestedDOMs())
 			foreach($doms as $field) $titles[] = $field->PluralTitle(); 
@@ -387,12 +408,12 @@ class DataObjectManager extends ComplexTableField
 	
 	public function AddTitle()
 	{
-		return $this->addTitle ? $this->addTitle : $this->Title();
+		return $this->addTitle ? $this->addTitle : DOMUtil::readable_class($this->Title());
 	}
 	
 	public function SingleTitle()
 	{
-		return $this->singleTitle ? $this->singleTitle : $this->AddTitle();
+		return $this->singleTitle ? $this->singleTitle : DOMUtil::readable_class($this->AddTitle());
 	}
 	
 	public function setAddTitle($title)
@@ -604,7 +625,7 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 
 class DOMUtil
 {
-	function readable_list($array)
+	public static function readable_list($array)
 	{
     if(!is_array($array))
         return '';
@@ -622,6 +643,11 @@ class DOMUtil
         $last = array_pop($array);
         return implode(', ', $array).", $and $last";
     }
+	}
+	
+	public static function readable_class($string)
+	{
+    return ucwords(trim(strtolower(ereg_replace('([A-Z])',' \\1',$string))));	
 	}
 }
 
