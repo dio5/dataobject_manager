@@ -305,12 +305,15 @@ class FileDataObjectManager extends DataObjectManager
 		);
 		$action = $this->Can('upload') ? new FieldSet(new FormAction('saveUploadForm', 'Upload')) : new FieldSet();
 		$form->setActions($action);
-		$header = new HeaderField($title = _t('DataObjectManager.IMPORTFROMFOLDER', 'Import from an existing folder'), $headingLevel = 3);
-		$holder = 	new LiteralField("holder","<div class='ajax-loader'></div><div id='import-holder'></div>");
-		if(!isset($_POST['uploaded_files']))
-			return $form->forTemplate() . $header->Field() . $this->ImportDropdown()->Field() . $holder->Field();
-		else
-			return $form;
+		if($this->Can('import')) {
+			$header = new HeaderField($title = _t('DataObjectManager.IMPORTFROMFOLDER', 'Import from an existing folder'), $headingLevel = 3);
+			$holder = 	new LiteralField("holder","<div class='ajax-loader'></div><div id='import-holder'></div>");
+			if(!isset($_POST['uploaded_files']))
+				return $form->forTemplate() . $header->Field() . $this->ImportDropdown()->Field() . $holder->Field();
+			else
+				return $form;
+		}
+		return $form;
 		
 	}
 	
