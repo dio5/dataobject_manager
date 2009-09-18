@@ -2,6 +2,7 @@
 
 class AssetManagerFolder extends DataObjectDecorator
 {
+  static $permissions = array('add','edit','upload','delete','import');
   
   public function updateCMSFields(Fieldset $fields)
   {
@@ -16,6 +17,7 @@ class AssetManagerFolder extends DataObjectDecorator
     ));
     $a->setSourceFilter("Classname != 'Folder' AND ParentID = ".$this->owner->ID);
     $a->setParentClass("Folder");
+    $a->setPermissions(self::$permissions);
     if($this->owner->Title)
       $a->setAddTitle(sprintf(_t('AssetManager.ADDFILESTO','files to "%s"'),$this->owner->Title));
     else 

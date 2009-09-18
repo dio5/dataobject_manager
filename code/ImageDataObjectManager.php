@@ -62,12 +62,15 @@ class ImageDataObjectManager_Item extends FileDataObjectManager_Item
 
 	public function FileIcon()
 	{
-		$file = $this->obj($this->parent->fileFieldName);
-		if($this->parent->imageSize <= 50) $size = 50;
-		elseif($this->parent->imageSize <= 100) $size = 100;
-		elseif($this->parent->imageSize <= 200) $size = 200;
-		else $size = 300;
-		return ($file instanceof Image && $cropped = $file->CroppedImage($size, $size)) ? $cropped->URL : $file->Icon();
+		$file = ($this->parent->hasDataObject) ? $this->obj($this->parent->fileFieldName) : $this->item;
+		if($file) {
+			if($this->parent->imageSize <= 50) $size = 50;
+			elseif($this->parent->imageSize <= 100) $size = 100;
+			elseif($this->parent->imageSize <= 200) $size = 200;
+			else $size = 300;
+			return ($file instanceof Image && $cropped = $file->CroppedImage($size, $size)) ? $cropped->URL : $file->Icon();
+		}
+		return false;
 	}
 	
 	public function ImageSize()
