@@ -98,9 +98,13 @@ class ImageDataObjectManager_ItemRequest extends DataObjectManager_ItemRequest
 	}
 	
 	function DetailForm($childID = null)
-	{
-		$fileField = $this->ctf->fileFieldName;
-		$imgObj = $this->dataObj()->$fileField();
+	{	
+		if($this->ctf->hasDataObject) {
+			$fileField = $this->ctf->fileFieldName;
+			$imgObj = $this->dataObj()->$fileField();
+		}
+		else
+			$imgObj = $this->dataObj();
 		$form = parent::DetailForm($childID);
 		$form->Fields()->insertBefore($this->ctf->getPreviewFieldFor($imgObj, 200), $form->Fields()->First()->Name());
 		return $form;
