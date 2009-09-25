@@ -19,6 +19,8 @@ class DataObjectManager extends ComplexTableField
 	protected $filter_label = "Filter results";
 	protected $filter_empty_string = "";
 	protected $column_widths = array();
+	protected $per_page_map = array('10','20','30','40','50');
+	protected $use_view_all = true;
 	public $itemClass = "DataObjectManager_Item";
 	public $addTitle;
 	public $singleTitle;
@@ -57,7 +59,7 @@ class DataObjectManager extends ComplexTableField
 	   self::$allow_css_override = $bool;
 	}
 	
-	function __construct($controller, $name = null, $sourceClass = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
+	function __construct($controller, $name = null, $sourceClass = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "Created DESC", $sourceJoin = "") 
 	{
 		if(!class_exists("ComplexTableField_ItemRequest"))
 			die("<strong>"._t('DataObjectManager.ERROR','Error')."</strong>: "._t('DataObjectManager.SILVERSTRIPEVERSION','DataObjectManager requires Silverstripe version 2.3 or higher.'));
@@ -79,7 +81,8 @@ class DataObjectManager extends ComplexTableField
       else if($db = $SNG->db()) {
         $fieldList = array();
         foreach($db as $field => $type) {
-          $fieldList[$field] = DOMUtil::readable_class($field);
+          if($field != "SortOrder")
+            $fieldList[$field] = DOMUtil::readable_class($field);
         }
       }
     }
@@ -120,6 +123,16 @@ class DataObjectManager extends ComplexTableField
 	public function setSourceFilter($filter)
 	{
 	   $this->sourceFilter = $filter;
+	}
+	
+	public function setUseViewAll($bool)
+	{
+	   $this->use_view_all = $bool;
+	}
+	
+	public function setPerPageMap($values)
+	{
+	   $this->per_page_map = $values;
 	}
 	
 	public function setPluralTitle($title)
@@ -392,7 +405,9 @@ class DataObjectManager extends ComplexTableField
 	public function PerPageDropdown()
 	{
 		$map = array();
-		for($i=10;$i<=50;$i+=10) $map[$this->RelativeLink(array('per_page' => $i))] = $i;
+		foreach($this->per_page_map as $num) $map[$this->RelativeLink(array('per_page' => $num))] = $num;
+		if($this->use_view_all)
+		  $map[$this->RelativeLink(array('per_page' => '9999'))] = _t('DataObjectManager.ALL','All');
 		$value = !empty($this->per_page) ? $this->RelativeLink(array('per_page' => $this->per_page)) : null;
 		return new FieldGroup(
 			new LabelField('show', _t('DataObjectManager.PERPAGESHOW','Show').' '),
@@ -512,8 +527,7 @@ class DataObjectManager_Popup extends Form {
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
 		$this->dataObject = $dataObject;
 		Requirements::clear();
-		Requirements::javascript('jsparty/jquery/jquery.js');
-
+    Requirements::javascript($this->BaseHref() . 'jsparty/jquery/jquery.js');
 		Requirements::block('/jsparty/behaviour.js');
 		Requirements::block('sapphire/javascript/Validator.js');
 		Requirements::block('jsparty/prototype.js');
