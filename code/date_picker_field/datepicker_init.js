@@ -7,5 +7,10 @@ var date_picker_format;
         $(this).datepicker({dateFormat : date_picker_format, buttonImage : '/sapphire/images/calendar-icon.gif', buttonImageOnly : true});
       });
     });
+		$('a[rel=clear-btn]').livequery(function() {
+			$(this).click(function(){
+				$(this).prev('input').val('');
+			});
+		});    
   });
 })(jQuery)

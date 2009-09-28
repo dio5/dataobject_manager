@@ -458,7 +458,17 @@ class FileDataObjectManager extends DataObjectManager
 			$fields->push(new HiddenField('folder_id','',$folder_id));
 			$fields->push(new LiteralField("ul","<ul>"));
 			foreach($files as $file) {
-				$icon = $file instanceof Image ? $file->croppedImage(35,35)->URL : $file->Icon();
+				if($file instanceof Image) {
+				  if($img = $file->CroppedImage(35,35))
+				    $icon = $img->URL;
+				  else
+				    $icon = "";
+				}
+				elseif($file instanceof File)
+				  $icon = $file->Icon();
+				else
+				  $icon = "";
+				
 				$title = strlen($file->Title) > 30 ? substr($file->Title, 0, 30)."..." : $file->Title;
 				$types = $this->getAllowedFileTypes();
 				if(is_array($types) && !empty($types))
