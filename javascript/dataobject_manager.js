@@ -147,11 +147,24 @@ $.fn.DataObjectManager.init = function(obj) {
 		}).unbind('blur').blur(function() {
 			if($(this).attr('value') == '') $(this).attr('value','Search').css({'color' : '#666'});
 		}).unbind('keyup').keyup(function(e) {
+        
+        if ((e.keyCode == 9) || (e.keyCode == 13) || // tab, enter 
+           (e.keyCode == 16) || (e.keyCode == 17) || // shift, ctl 
+           (e.keyCode >= 18 && e.keyCode <= 20) || // alt, pause/break, caps lock
+           (e.keyCode == 27) || // esc 
+           (e.keyCode >= 33 && e.keyCode <= 35) || // page up, page down, end 
+           (e.keyCode >= 36 && e.keyCode <= 38) || // home, left, up 
+            (e.keyCode == 40) || // down 
+           (e.keyCode >= 36 && e.keyCode <= 40) || // home, left, up, right, down
+           (e.keyCode >= 44 && e.keyCode <= 45) || // print screen, insert 
+           (e.keyCode == 229) // Korean XP fires 2 keyup events, the key and 229 
+        ) return; 
+				
 				if(request) window.clearTimeout(request);
 				$input = $(this);
 				request = window.setTimeout(function() {
 					url = $(container_id).attr('href').replace(/\[search\]=(.)*?&/, '[search]='+$input.attr('value')+'&');
-					refresh($container, url);
+          refresh($container, url, '#srch_fld'); 
 					
 				},500)
 			e.stopPropagation();
@@ -283,7 +296,7 @@ $('.DataObjectManager').livequery(function(){
 })(jQuery);
 
 
-function refresh($div, link)
+function refresh($div, link, focus)
 {
 	 // Kind of a hack. Pass the list of ids to the next refresh
 	 var listValue = ($div.hasClass('RelationDataObjectManager')) ? jQuery('#'+$div.attr('id')+'_CheckedList').val() : false;
@@ -300,7 +313,12 @@ function refresh($div, link)
 			if(listValue) {
 				 jQuery('#'+$div.attr('id')+'_CheckedList').attr('value',listValue);
 			}
-			jQuery('#'+$div.attr('id')).DataObjectManager();
+     var $container = jQuery('#'+$div.attr('id')); 
+     $container.DataObjectManager(); 
+     if (typeof focus == 'string') { 
+       $container.find(focus).focus(); 
+     } 			
+			//jQuery('#'+$div.attr('id')).DataObjectManager();
 		}
 	 });
 }
