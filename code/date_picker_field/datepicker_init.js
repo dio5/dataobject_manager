@@ -1,4 +1,5 @@
 var date_picker_format;
+alert(jQuery.datepicker);
 (function($) {
   $(function() {
     $.get('DatePickerField_Controller/dateformat/',function(data) {
