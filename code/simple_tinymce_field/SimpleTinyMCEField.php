@@ -213,9 +213,9 @@ class SimpleTinyMCEField extends TextareaField
 
   function Field()
   {
-    Requirements::javascript("jsparty/jquery/jquery.js");
-    Requirements::javascript("dataobject_manager/code/simple_tinymce_field/javascript/tiny_mce/jquery.tinymce.js");
-    Requirements::javascript("dataobject_manager/code/simple_tinymce_field/javascript/tiny_mce/tiny_mce.js");
+    Requirements::javascript($this->BaseHref() . "jsparty/jquery/jquery.js");
+    Requirements::javascript($this->BaseHref() . "dataobject_manager/code/simple_tinymce_field/javascript/tiny_mce/jquery.tinymce.js");
+    Requirements::javascript($this->BaseHref() . "dataobject_manager/code/simple_tinymce_field/javascript/tiny_mce/tiny_mce.js");
     Requirements::customScript($this->buildJS());
     return parent::Field();
   }

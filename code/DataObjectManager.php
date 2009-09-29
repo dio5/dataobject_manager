@@ -92,10 +92,10 @@ class DataObjectManager extends ComplexTableField
 		Requirements::css('dataobject_manager/css/facebox.css');
 		if(self::$allow_css_override)
   		Requirements::css('dataobject_manager/css/dataobjectmanager_override.css');
-		Requirements::javascript('dataobject_manager/javascript/facebox.js');	
-		Requirements::javascript('dataobject_manager/javascript/jquery-ui-1.6.js');
-		Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
-		Requirements::javascript('dataobject_manager/javascript/tooltip.js');
+		Requirements::javascript($this->BaseHref().'dataobject_manager/javascript/facebox.js');	
+		Requirements::javascript($this->BaseHref().'dataobject_manager/javascript/jquery-ui-1.6.js');
+		Requirements::javascript($this->BaseHref().'dataobject_manager/javascript/dataobject_manager.js');
+		Requirements::javascript($this->BaseHref().'dataobject_manager/javascript/tooltip.js');
 		
 		$this->filter_empty_string = '-- '._t('DataObjectManager.NOFILTER','No filter').' --';
 
@@ -545,7 +545,7 @@ class DataObjectManager_Popup extends Form {
  		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
 			$this->dataObject->getRequirementsForPopup();
 		}
-		Requirements::javascript('dataobject_manager/javascript/dataobjectmanager_popup.js');
+		Requirements::javascript($this->BaseHref() . 'dataobject_manager/javascript/dataobjectmanager_popup.js');
 		
 		
 		$actions = new FieldSet();	
@@ -568,10 +568,10 @@ class DataObjectManager_Popup extends Form {
 			Requirements::block('jsparty/greybox/greybox.css');
 			Requirements::block('sapphire/css/TableListField.css');
 			Requirements::block('sapphire/css/ComplexTableField.css');
-			Requirements::javascript(THIRDPARTY_DIR . '/jquery/plugins/livequery/jquery.livequery.js');
-		  Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
-    	Requirements::javascript('dataobject_manager/javascript/jquery-ui-1.6.js');  
-  		Requirements::javascript('dataobject_manager/javascript/tooltip.js');    
+			Requirements::javascript($this->BaseHref() . 'jsparty/jquery/plugins/livequery/jquery.livequery.js');
+		  Requirements::javascript($this->BaseHref() . 'dataobject_manager/javascript/dataobject_manager.js');
+    	Requirements::javascript($this->BaseHref() . 'dataobject_manager/javascript/jquery-ui-1.6.js');  
+  		Requirements::javascript($this->BaseHref() . 'dataobject_manager/javascript/tooltip.js');    
   	}
     $this->NestedController = $this->controller->isNested;
 	}
