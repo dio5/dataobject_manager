@@ -16,7 +16,7 @@ class ImageDataObjectManager extends FileDataObjectManager
 	
 	public $imageSize = 100;
 
-	public function __construct($controller, $name, $sourceClass, $fileFieldName, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
+	public function __construct($controller, $name = null, $sourceClass = null, $fileFieldName = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
 	{
 		parent::__construct($controller, $name, $sourceClass, $fileFieldName, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin); 
 		Requirements::css('dataobject_manager/css/ui/ui.all.css');

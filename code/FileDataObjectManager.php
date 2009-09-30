@@ -41,18 +41,30 @@ class FileDataObjectManager extends DataObjectManager
 	
 	
 	
-	public function __construct($controller, $name, $sourceClass, $fileFieldName = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
+	public function __construct($controller, $name = null, $sourceClass = null, $fileFieldName = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
 	{
-		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
-		
 		if(!class_exists("SWFUploadField"))
 			die("<strong>"._t('DataObjectManager.ERROR','Error')."</strong>: "._t('FileDataObjectManager.SWFUPLOAD','DataObjectManager requires the SWFUpload module.'));
+
+		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
+	  
+	  // Intelligent constructory for fileFieldName
+		$SNG = singleton($this->sourceClass());
+	  if($fileFieldName === null) {
+        if($has_ones = $SNG->stat('has_one')) {
+          foreach($has_ones as $relation => $value) {
+            if(is_subclass_of($value,"File")) {
+              $fileFieldName = $relation;
+              $fileClassName = $value;
+              break;
+            }
+          }
+        }
+    }
 			
-		
 		if(isset($_REQUEST['ctf'][$this->Name()])) {		
 				$this->view = $_REQUEST['ctf'][$this->Name()]['view'];
 		}
-		$SNG = singleton($this->sourceClass());
 		if($this->sourceClass() == "File" || is_subclass_of($this->sourceClass(), "File")) {
 			$this->hasDataObject = false;
 			$this->fileFieldName = $name;

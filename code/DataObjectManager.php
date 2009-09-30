@@ -70,6 +70,7 @@ class DataObjectManager extends ComplexTableField
         foreach($has_manys as $relation => $value) {
           $name = $relation;
           $sourceClass = $value;
+          break;
         }
       }
     }
