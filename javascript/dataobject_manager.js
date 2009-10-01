@@ -69,7 +69,7 @@ $.fn.DataObjectManager.init = function(obj) {
 		}
 		// Delete
 
-		$container.find('a.deletelink').unbind('click').click(function(e) {
+		$container.find('a.delete-link').unbind('click').click(function(e) {
 			params = $('#SecurityID') ? {'forceajax' : '1', 'SecurityID' : $('#SecurityID').attr('value')} : {'forceajax' : '1'};
 			$target = $(this);
 			$.post(

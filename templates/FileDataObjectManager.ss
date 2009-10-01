@@ -81,7 +81,7 @@
 							</div>
 							<div class="actions col">
 								<% if Can(edit) %><a class="popup-button editlink" href="$EditLink"><img src="dataobject_manager/images/page_white_edit.png" height="12px" alt="edit" /></a><% end_if %>
-								<% if Can(delete) %><a class="deletelink" href="$DeleteLink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a><% end_if %>
+								<% if Can(delete) %><a class="delete-link" href="$DeleteLink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a><% end_if %>
 							</div>
 						<!-- GRID VIEW -->
 						<% else %>
@@ -89,7 +89,7 @@
 								<% if Top.ShowAll %><span class="handle"><img src="dataobject_manager/images/move_icon.jpg" /></span><% end_if %>
 								<div class="file-icon"><a href="<% if Can(edit) %>$EditLink<% else %>#<% end_if %>" class="popup-button editlink tooltip"><img src="$FileIcon" alt="" /></a></div>
 								<div class="file-label"><a href="<% if Can(edit) %>$EditLink<% else %>#<% end_if %>" class="popup-button editlink tooltip">$FileLabel</a></div>
-								<% if Can(delete) %><div class="delete"><a href="$DeleteLink" class="deletelink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a></div><% end_if %>
+								<% if Can(delete) %><div class="delete"><a href="$DeleteLink" class="delete-link"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a></div><% end_if %>
 								<span class="tooltip-info" style="display:none">
 									<% control Fields %>
 										<strong>$Name</strong>: $Value<% if Last %><% else %><br /><% end_if %>

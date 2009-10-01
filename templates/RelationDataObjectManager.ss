@@ -76,7 +76,7 @@
 						<div class="actions col">
 								$MarkingCheckbox
 								<% if Can(edit) %><a class="popup-button editlink" href="$EditLink"><img src="dataobject_manager/images/page_white_edit.png" height="12px" alt="edit" /></a><% end_if %>
-								<% if Can(delete) %><a class="deletelink" href="$DeleteLink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a><% end_if %>
+								<% if Can(delete) %><a class="delete-link" href="$DeleteLink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a><% end_if %>
 						</div>
 				</li>
 			<% end_control %>
