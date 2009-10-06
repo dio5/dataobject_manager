@@ -497,6 +497,20 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 		return $fields;		
 	}
 	
+	public function CanViewOrEdit()
+	{
+		return $this->parent->Can('view') || $this->parent->Can('edit');
+	}
+	
+	public function ViewOrEdit()
+	{
+		if($this->CanViewOrEdit())
+			return $this->parent->Can('edit') ? "edit" : "view";
+		return false;
+	}
+	
+	
+	
 }
 
 class DataObjectManager_Controller extends Controller
@@ -636,6 +650,26 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 
 		Director::redirectBack();
 	}
+	
+	function DetailForm($childID = null)
+	{
+		$form = parent::DetailForm($childID);
+		if(!$this->ctf->Can('edit')) {
+			$form->makeReadonly();
+			$form->setActions(null);
+		}
+		return $form;
+	}
+	
+	function edit() {
+		if(!$this->ctf->Can('view') && !$this->ctf->Can('edit'))
+			return false;
+
+		$this->methodName = "edit";
+
+		echo $this->renderWith($this->ctf->templatePopup);
+	}
+	
 }
 
 class DOMUtil

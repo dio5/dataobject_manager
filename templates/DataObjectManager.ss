@@ -74,7 +74,7 @@
 						<% end_control %>
 						</div>
 						<div class="actions col">
-								<% if Can(edit) %><a class="popup-button editlink" rel="$Top.NestedType" href="$EditLink"><img src="dataobject_manager/images/page_white_edit.png" height="12px" alt="edit" /></a><% end_if %>
+								<% if CanViewOrEdit %><a class="popup-button editlink" rel="$Top.NestedType" href="$EditLink"><img src="dataobject_manager/images/page_white_{$ViewOrEdit}.png" height="12px" alt="$ViewOrEdit" /></a><% end_if %>
 								<% if Can(delete) %><a class="delete-link" href="$DeleteLink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a><% end_if %>
 						</div>
 				</li>
