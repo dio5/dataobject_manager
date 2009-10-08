@@ -43,6 +43,8 @@
 #Form_ImportForm ul li.disabled img {opacity:0.5;}
 #Form_ImportForm ul li.disabled .import-title {color:#999;}
 #Form_ImportForm ul li.disabled:hover {background:none;}
+#Form_ImportForm .select {margin:10px 0;}
+#Form_ImportForm span {font-weight:bold;}
 .import-checkbox {vertical-align:50%;}
 .import-title {vertical-align:80%;margin-left:10px;}
 
@@ -143,9 +145,8 @@
 .DataObjectManager-popup.nestedController .Actions #nested-close {text-decoration:none;color:#ce2027;text-transform:lowercase;font-size:12px;}
 .DataObjectManager-popup.nestedController .message {border:0;margin: 10px 0px;padding:0;}
 .DataObjectManager-popup.nestedController .message.good {color: #4F8A10;background:transparent;}
-a.nested-close {display:block;text-indent:-9999em;width:30px;height:30px;background: url('../images/closebox.png') no-repeat top left;position:absolute;top:-15px;right:-15px;}
-.iframe_wrap {width:450px;margin:0 auto;border:5px solid #ccc;background:#fff;position:relative;height:auto;}
-.iframe_wrap.loading {background:#fff url(../images/ajax-loader-lg.gif) no-repeat center;height:60px;}
+a.nested-close {display:block;text-indent:-9999em;width:30px;height:30px;background: url('/dataobject_manager/images/closebox.png') no-repeat top left;position:absolute;top:-15px;right:-15px;}
+.iframe_wrap {width:450px;margin:0 auto;border:5px solid #ccc;background:#fff;position:relative;}
 .DataObjectManager-popup div.dataobject-list ul {margin-left:0;padding-left:0;}
 
 /* accommodate input field for relation dataobjectmangaer */
@@ -159,9 +160,6 @@ a.nested-close {display:block;text-indent:-9999em;width:30px;height:30px;backgro
 /* Target IE7 only */
 html>body .DataObjectManager {*width:96%;}
 /* end */
-
-.DataObjectManager.isNested .ajax-loader {display:block;}
-.DataObjectManager.isNested.loaded .ajax-loader {display:none;}
 
 
 
