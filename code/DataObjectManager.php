@@ -543,6 +543,7 @@ class DataObjectManager_Popup extends Form {
 		$this->dataObject = $dataObject;
 		Requirements::clear();
     Requirements::javascript($this->BaseHref() . 'jsparty/jquery/jquery.js');
+		Requirements::javascript($this->BaseHref() . "jsparty/jquery/plugins/livequery/jquery.livequery.js");    
 		Requirements::block('/jsparty/behaviour.js');
 		Requirements::block('sapphire/javascript/Validator.js');
 		Requirements::block('jsparty/prototype.js');
@@ -696,6 +697,11 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 	{
     if(!$this->itemList || $this->currentIndex == 0) return false;
     return Controller::join_links($this->ctf->BaseLink() , '/item/' . $this->getPrevID().'/edit');		
+	}
+	
+	function HasPagination()
+	{
+	 return $this->NextRecordLink() || $this->PrevRecordLink();
 	}
 	
 }

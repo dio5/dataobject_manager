@@ -152,6 +152,7 @@
 .DataObjectManager-popup.nestedController .message.good {color: #4F8A10;background:transparent;}
 a.nested-close {display:block;text-indent:-9999em;width:30px;height:30px;background: url('/dataobject_manager/images/closebox.png') no-repeat top left;position:absolute;top:-15px;right:-15px;}
 .iframe_wrap {width:450px;margin:0 auto;border:5px solid #ccc;background:#fff;position:relative;}
+.iframe_wrap.loading {height:60px;background:url(../images/ajax-loader-lg.gif) no-repeat center;}
 .DataObjectManager-popup div.dataobject-list ul {margin-left:0;padding-left:0;}
 
 /* accommodate input field for relation dataobjectmangaer */

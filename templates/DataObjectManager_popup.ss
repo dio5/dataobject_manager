@@ -15,6 +15,7 @@
 			$DetailForm
 		</div>
 		
+		<% if HasPagination %>
 		<div id="pagination">
 			<% if PrevRecordLink %>
 				<div class="prev"><a href="$PrevRecordLink" title=<% _t('PREVIOUS','Previous') %>">&laquo;<% _t('PREVIOUS','Previous') %></a></div>
@@ -23,5 +24,6 @@
 				<div class="next"><a href="$NextRecordLink" title=<% _t('NEXT','Next') %>"><% _t('NEXT','Next') %>&raquo;</a></div>
 			<% end_if %>
 		</div>
+		<% end_if %>
 	</body>
 </html>

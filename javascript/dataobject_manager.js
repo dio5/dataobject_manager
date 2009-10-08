@@ -48,10 +48,11 @@ $.fn.DataObjectManager.init = function(obj) {
         });
         return false;
       });
-      $('#iframe_'+$container.attr('id')).find('.nested-close').click(function() {
+      $('#iframe_'+$container.attr('id')).find('.nested-close').unbind('click').click(function(e) {
       	$iframeWrap.hide();
       	$iframeWrap.find('iframe').attr('src','');
       	refresh($container,$container.attr('href'));
+      	e.stopPropagation();
       	return false;
       });
  			$container.addClass("loaded");   		
