@@ -623,11 +623,17 @@ class DataObjectManager_Popup extends Form {
 class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest 
 {
 	public $isNested = false;
+	protected $itemList;
+	protected $currentIndex;
 	
 	function __construct($ctf, $itemID) 
 	{
 		parent::__construct($ctf, $itemID);
 		$this->isNested = $this->ctf->isNested;
+		if($this->ctf->Items()) {
+  	  $this->itemList = $this->ctf->Items()->column();
+  	  $this->currentIndex = array_search($this->itemID,$this->itemList);
+    }
 	}
 
 	function Link() 
@@ -668,6 +674,28 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 		$this->methodName = "edit";
 
 		echo $this->renderWith($this->ctf->templatePopup);
+	}
+		
+	protected function getPrevID()
+	{
+	  return $this->itemList[$this->currentIndex - 1];
+	}
+	
+	protected function getNextID()
+	{
+	  return $this->itemList[$this->currentIndex + 1];
+	}
+		
+	function NextRecordLink()
+	{
+    if(!$this->itemList || $this->currentIndex == sizeof($this->itemList)-1) return false;
+    return Controller::join_links($this->ctf->BaseLink() , '/item/' . $this->getNextID().'/edit');		 
+	}
+	
+	function PrevRecordLink()
+	{
+    if(!$this->itemList || $this->currentIndex == 0) return false;
+    return Controller::join_links($this->ctf->BaseLink() , '/item/' . $this->getPrevID().'/edit');		
 	}
 	
 }

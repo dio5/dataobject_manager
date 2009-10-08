@@ -139,6 +139,11 @@
 .DataObjectManager-popup .message.good {color: #4F8A10;background-color: #DFF2BF;background-image:url('../images/success.png');}
 .DataObjectManager-popup input#action_saveUploadForm {display:none;}
 
+.DataObjectManager-popup #pagination {border:1px solid #ddd;padding:2px;overflow:hidden; margin:10px 0 0 0;clear:both;}
+.DataObjectManager-popup #pagination a {border:solid 0px #DEDEDE;font-size:11px;color:#888888;display:block;float:left;font-weight:bold;margin-right:2px;padding:3px 4px;text-decoration:none;}
+.DataObjectManager-popup #pagination a:hover{background:#ccc;color:#fff;}
+.DataObjectManager-popup #pagination .next {float:right;}
+
 /** Nested DOM **/
 
 .DataObjectManager-popup.nestedController .Actions input {cursor:pointer;background:transparent;color:#4F8A10;border:0;text-transform:lowercase;margin:0;padding:0;}
@@ -160,7 +165,6 @@ a.nested-close {display:block;text-indent:-9999em;width:30px;height:30px;backgro
 /* Target IE7 only */
 html>body .DataObjectManager {*width:96%;}
 /* end */
-
 
 
 

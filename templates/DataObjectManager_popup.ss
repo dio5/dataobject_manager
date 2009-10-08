@@ -14,34 +14,14 @@
 		<div class="right $PopupClasses">
 			$DetailForm
 		</div>
-
-		<% if ShowPagination %>
-			<table id="ComplexTableField_Pagination">
-				<tr>
-					<% if Paginator.PrevLink %>
-						<td id="ComplexTableField_Pagination_Previous">
-							<a href="$Paginator.PrevLink"><img src="cms/images/pagination/record-prev.png" /><% _t('PREVIOUS', 'Previous') %></a>
-						</td>
-					<% end_if %>
-					<% if xdsfdsf %>
-					<% else %>
-						<td>
-							<% control Paginator.Pages %>
-								<% if active %>
-									<a href="$link">$number</a>
-								<% else %>
-									<span>$number</span>
-								<% end_if %>
-							<% end_control %>
-						</td>
-					<% end_if %>
-					<% if Paginator.NextLink %>
-						<td id="ComplexTableField_Pagination_Next">
-							<a href="$Paginator.NextLink"><% _t('NEXT', 'Next') %><img src="cms/images/pagination/record-next.png" /></a>
-						</td>
-					<% end_if %>
-				</tr>
-			</table>
-		<% end_if %>
+		
+		<div id="pagination">
+			<% if PrevRecordLink %>
+				<div class="prev"><a href="$PrevRecordLink" title=<% _t('PREVIOUS','Previous') %>">&laquo;<% _t('PREVIOUS','Previous') %></a></div>
+			<% end_if %>
+			<% if NextRecordLink %>
+				<div class="next"><a href="$NextRecordLink" title=<% _t('NEXT','Next') %>"><% _t('NEXT','Next') %>&raquo;</a></div>
+			<% end_if %>
+		</div>
 	</body>
 </html>
