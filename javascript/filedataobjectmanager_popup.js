@@ -18,6 +18,14 @@
 							$(this).toggleClass('current');
 							e.stopPropagation();
 						});
+						$('a[rel=all]').click(function() {
+							$('#Form_ImportForm li:not(.disabled)').click();
+							return false;
+						});
+						$('a[rel=none]').click(function() {
+							$('#Form_ImportForm li input').attr('checked',false);
+							return false;
+						});
 					});
 				}				 
 			}).find('option:contains((0 files))').attr('disabled',true);
