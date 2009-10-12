@@ -14,7 +14,6 @@
 		<div class="right $PopupClasses">
 			$DetailForm
 		</div>
-		
 		<% if HasPagination %>
 		<div id="pagination">
 			<% if PrevRecordLink %>
