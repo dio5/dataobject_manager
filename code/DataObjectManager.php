@@ -118,7 +118,7 @@ class DataObjectManager extends ComplexTableField
 		  if($field instanceof DataObjectManager && !($field->controller instanceof SiteTree))
 		    $this->hasNested = true;
 		}
-    $this->isNested = !$this->controller instanceof SiteTree && Controller::curr() == "CMSMain";
+    $this->isNested = !$this->controller instanceof SiteTree && Controller::curr()->class == "CMSMain";
 	}
 	
 	public function setSourceFilter($filter)
