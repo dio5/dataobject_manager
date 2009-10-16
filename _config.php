@@ -22,7 +22,7 @@
 	LeftAndMain::require_css("dataobject_manager/css/ui/ui.core.css");
 	LeftAndMain::require_css("dataobject_manager/css/ui/ui.datepicker.css");
 	LeftAndMain::require_css("dataobject_manager/css/ui/ui.theme.css");
-   
+
   SimpleWysiwygField::set_default_configuration(array(
     array('cut','copy','paste','|','bold','italic','underline','|','left','center','right'),
     array('ol','ul','|','hyperlink','unlink','image','|','formats')

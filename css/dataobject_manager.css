@@ -1,6 +1,7 @@
 .DataObjectManager {position:relative;}
 
-.dataobject-list {padding:0;overflow:hidden;}
+.dataobject-list {padding:0;overflow:hidden;margin:0;}
+.dataobject-list ul {margin:0;}
 .dataobject-list li:hover {background:#feffe0;}
 .dataobject-list li.selected {background:#eee;}
 .dataobject-list li:hover div.actions.col a {visibility:visible;}
@@ -89,7 +90,6 @@
 
 .sort-control {width:200px;position:absolute;left:6px;top:8px;}
 .sort-control label {position:absolute; left:15px;top:2px;font-size:10px !important;}
-
 .per-page-control {position:absolute;right:10px;top:5px;}
 .ajax-loader {width:16px;height:16px;background:url(../images/ajax-loader.gif);display:none;position:absolute;left:50%;margin-left:-8px;top:15px;}
 
@@ -154,7 +154,7 @@ a.nested-close {display:block;text-indent:-9999em;width:30px;height:30px;backgro
 .iframe_wrap {width:450px;margin:0 auto;border:5px solid #ccc;background:#fff;position:relative;}
 .iframe_wrap.loading {height:60px;background:url(../images/ajax-loader-lg.gif) no-repeat center;}
 .DataObjectManager-popup div.dataobject-list ul {margin-left:0;padding-left:0;}
-
+.isNested .sort-control label {left:20px;top:4px;}
 /* accommodate input field for relation dataobjectmangaer */
 .RelationDataObjectManager .list .dataobject-list li .fields-wrap {width:85%;}
 .RelationDataObjectManager .list .dataobject-list div.actions.col {width:14%;}

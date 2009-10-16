@@ -93,10 +93,10 @@ class DataObjectManager extends ComplexTableField
 		Requirements::css('dataobject_manager/css/facebox.css');
 		if(self::$allow_css_override)
   		Requirements::css('dataobject_manager/css/dataobjectmanager_override.css');
-		Requirements::javascript($this->BaseHref().'dataobject_manager/javascript/facebox.js');	
-		Requirements::javascript($this->BaseHref().'dataobject_manager/javascript/jquery-ui-1.6.js');
-		Requirements::javascript($this->BaseHref().'dataobject_manager/javascript/dataobject_manager.js');
-		Requirements::javascript($this->BaseHref().'dataobject_manager/javascript/tooltip.js');
+		Requirements::javascript('dataobject_manager/javascript/facebox.js');	
+		Requirements::javascript('dataobject_manager/javascript/jquery-ui-1.6.js');
+		Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
+		Requirements::javascript('dataobject_manager/javascript/tooltip.js');
 		
 		$this->filter_empty_string = '-- '._t('DataObjectManager.NOFILTER','No filter').' --';
 
@@ -118,7 +118,6 @@ class DataObjectManager extends ComplexTableField
 		  if($field instanceof DataObjectManager && !($field->controller instanceof SiteTree))
 		    $this->hasNested = true;
 		}
-    $this->isNested = !$this->controller instanceof SiteTree && Controller::curr()->class == "CMSMain";
 	}
 	
 	public function setSourceFilter($filter)
@@ -610,8 +609,10 @@ class DataObjectManager_Popup extends Form {
 	{
 		$dom_fields = array();
 		foreach($this->Fields() as $field) {
-			if($field instanceof DataObjectManager)
+			if($field instanceof DataObjectManager) {
+			  $field->isNested = true;
 				$dom_fields[] = $field;
+		  }
 		}
 		return !empty($dom_fields)? $dom_fields : false;		
 	}
