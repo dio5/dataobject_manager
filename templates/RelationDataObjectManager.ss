@@ -6,7 +6,7 @@
 				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% sprintf(_t('DataObjectManager.ADDITEM','Add %s',PR_MEDIUM,'Add [name]'),$AddTitle) %></span>
 			</a>
 		<% else %>
-		$PluralTitle
+			<h3>$PluralTitle</h3>
 		<% end_if %>
 	</div>
 	<% if HasFilter %>

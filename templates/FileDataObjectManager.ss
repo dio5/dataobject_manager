@@ -6,7 +6,7 @@
 				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% _t('DataObjectManager.ADD','Add') %> $ButtonAddTitle</span>
 			</a>
 			<% else %>
-			$PluralTitle	
+				<h3>$PluralTitle</h3>
 		<% end_if %>
 	</div>
 	<div class="dataobjectmanager-filter">
