@@ -1,8 +1,8 @@
-<div id="$id" class="RequestHandler FormField DataObjectManager FileDataObjectManager ImageDataObjectManager field" href="$CurrentLink">
+<div id="$id" class="RequestHandler FormField DataObjectManager FileDataObjectManager ImageDataObjectManager $NestedType field" href="$CurrentLink">
 	<div class="ajax-loader"></div>
 	<div class="dataobjectmanager-actions <% if HasFilter %>filter<% end_if %>">
 		<% if Can(upload) %>
-			<a class="popup-button" href="$UploadLink" alt="upload">
+			<a class="popup-button" rel="$NestedType" href="$UploadLink" alt="add">
 				<span class="uploadlink"><img src="dataobject_manager/images/add.png" alt="" /><% sprintf(_t('DataObjectManager.ADDITEM', 'Add %s', PR_MEDIUM, 'Add [name]'),$AddTitle) %></span>
 			</a>
 		<% else %>

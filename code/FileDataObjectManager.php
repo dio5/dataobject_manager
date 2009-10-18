@@ -542,9 +542,10 @@ class FileDataObjectManager extends DataObjectManager
 					}
 				}
 			}
-
+			$form = $this->EditUploadedForm();
 			return $this->customise(array(
-				'DetailForm' => $this->EditUploadedForm()
+				'String' => is_string($form),
+				'DetailForm' => $form
 			))->renderWith($this->templatePopup);		
 
 		}
