@@ -8,7 +8,7 @@ class ImageDataObjectManager extends FileDataObjectManager
 
 
 	public $view = "grid";
-	protected $limitFileTypes = array ('jpg','jpeg');
+	protected $limitFileTypes = array ('jpg','jpeg','gif','png');
 	public $template = "ImageDataObjectManager";
 	public $itemClass = "ImageDataObjectManager_Item";
 	public $popupClass = "ImageDataObjectManager_Popup";
