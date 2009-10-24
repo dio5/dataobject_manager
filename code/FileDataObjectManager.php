@@ -245,7 +245,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public function UploadLink()
 	{
-		return $this->BaseLink().'/upload';
+		return Controller::join_links($this->BaseLink(),'/upload');
 	}
 	
 	protected function getUploadFields()
@@ -513,8 +513,22 @@ class FileDataObjectManager extends DataObjectManager
 	{
 		if(isset($data['imported_files']) && is_array($data['imported_files'])) {
 			$_POST['uploaded_files'] = array();
+				// If the user has set a custom upload folder, cut a new copy of the file when importing
+			$custom_folder = $this->getUploadFolder() != "Uploads" ? Folder::findOrMake($this->getCleanUploadFolder()) : false;
 			foreach($data['imported_files'] as $file_id) {
 				$file = DataObject::get_by_id("File",$file_id);
+				if($custom_folder && $file->ParentID != $custom_folder->ID) {
+					$new_path = Director::baseFolder().'/'.$custom_folder->Filename.$file->Name;	
+					copy($file->getFullPath(),$new_path);
+					$new_file = new File();
+					$new_file->setFilename($custom_folder->Filename.$file->Name);
+					$new_file->setName($file->Name);
+					$new_file->setParentID($custom_folder->ID);
+					$new_file->write();
+					$file = $new_file;
+					$file_id = $new_file->ID;
+				}
+
 				// If something other than File has been specified as the linked file class,
 				// we need to "upgrade" the imported file to the correct class.
 				if($this->fileClassName != "File" && $file->ClassName != $this->fileClassName) {
@@ -558,6 +572,14 @@ class FileDataObjectManager extends DataObjectManager
 	{
 		return $this->uploadFolder;
 	}
+	
+	public function getCleanUploadFolder()
+	{
+		$path = str_replace("assets/","",$this->getUploadFolder());
+		if(substr($path,-1)=="/") $path = substr($path,0, -1);
+		return $path;
+	}
+	
 }
 
 class FileDataObjectManager_Controller extends Controller
