@@ -61,9 +61,10 @@ $.fn.DataObjectManager.init = function(obj) {
 		else {
   		$container.find('a.popup-button').unbind('click').click(function(e) {
   			$(document).unbind('close.facebox').bind('close.facebox', facebox_close);
-  			w = $(this).attr('rel') == 'hasNested' ? 850 : 500;
+  			w = $(this).attr('rel') == 'hasNested' ? 850 : ($(this).attr('rel') == 'duplicate' ? 400 : 500);
   			width = new String(w);
-  			$.facebox('<iframe src="'+$(this).attr('href')+'" frameborder="0" width="'+width+'" height="' + ($.fn.DataObjectManager.getPageHeight()*.6) + '"></iframe>');
+  			height = $(this).attr('rel') == 'duplicate' ? 180 : ($.fn.DataObjectManager.getPageHeight()*.6);
+  			$.facebox('<iframe src="'+$(this).attr('href')+'" frameborder="0" width="'+width+'" height="' + height + '"></iframe>');
   			e.stopPropagation();
   			return false;
   		});

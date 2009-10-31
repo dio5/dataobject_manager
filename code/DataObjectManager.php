@@ -40,6 +40,11 @@ class DataObjectManager extends ComplexTableField
 			'class' => 'deletelink',
 		)
 	);
+
+	static $url_handlers = array(
+		'duplicate/$ID' => 'handleDuplicate'
+	);
+	
 	
 	public $popupClass = "DataObjectManager_Popup";
 	public $templatePopup = "DataObjectManager_popup";
@@ -472,6 +477,12 @@ class DataObjectManager extends ComplexTableField
 	   else
 	     return "";
 	}
+	
+	public function handleDuplicate($request)
+	{
+		return new DataObjectManager_ItemRequest($this,$request->param('ID'));
+	}
+	
 
 }
 
@@ -506,6 +517,11 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 		if($this->CanViewOrEdit())
 			return $this->parent->Can('edit') ? "edit" : "view";
 		return false;
+	}
+	
+	public function DuplicateLink()
+	{
+    return Controller::join_links($this->Link(), "/duplicate");
 	}
 	
 	
@@ -678,6 +694,81 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 
 		echo $this->renderWith($this->ctf->templatePopup);
 	}
+	
+	public function duplicate()
+	{
+		if(!$this->ctf->Can('duplicate'))
+			return false;
+		$this->methodName = "duplicate";
+		
+		echo $this->renderWith(array('DataObjectManager_duplicate'));
+	}
+	
+	public function DuplicateForm()
+	{
+		return new Form(
+			$this,
+			"DuplicateForm",
+			new FieldSet(
+				new FieldGroup(
+					new LabelField('copy',_t('DataObjectManager.CREATE','Create ')),
+					new NumericField('Count','','1'),
+					new LabelField('times',sprintf(_t('DataObjectManager.COPIESOFOBJECT',' copies of this %s'),$this->ctf->SingleTitle()))
+				),
+				new CheckboxField('Relations',_t('DataObjectManager.INCLUDERELATIONS','Include related objects'))
+			),
+			new FieldSet(
+				new FormAction('doDuplicate',_t('DataObjectManager.DUPLICATE','Duplicate'))
+			)
+		);
+	}
+	
+	public function doDuplicate($data,$form)
+	{
+		if($obj = $this->dataObj()) {
+			for($i = 0;$i < $data['Count'];$i++) {
+				$new = $obj->duplicate();
+				if(isset($data['Relations']) && $data['Relations'] == "1") {
+					if($has_manys = $obj->has_many()) {
+						foreach($has_manys as $name => $class) {
+							// get the owner relation name
+							if($has_ones = singleton($class)->has_one()) {
+								if($ownerRelation = array_search($this->ctf->SourceClass(),$has_ones)) {
+									$ownerID = $ownerRelation."ID";
+									if($related_objects = $obj->$name()) {
+										foreach($related_objects as $related_obj) {
+											$o = $related_obj->duplicate(false);
+											$o->$ownerID = $new->ID;	
+											$o->write();
+										}
+									}
+								}
+								else
+									die(sprintf(_t('DataObjectManager.COULDNOTFINDRELATION','Could not find owner relation for class %s'),$this->ctf->SourceClass()));
+							}
+							else
+									die(sprintf(_t('DataObjectManager.COULDNOTFINDRELATION','Could not find owner relation for class %s'),$this->ctf->SourceClass()));
+						}
+					}
+					if($many_manys = $obj->many_many()) {
+						foreach($many_manys as $name => $class) {
+							if($obj->$name()) {
+								$new->$name()->setByIdList($obj->$name()->column());
+							}
+						}
+						$new->write();
+					}
+				}				
+			}
+			$ret = "$i " . _t('DataObjectManager.DUPLICATESCREATED','duplicate(s) created');
+			if(isset($data['Relations']) && $data['Relations'] == "1") $ret .= ", " . _t('DataObjectManager.WITHRELATIONS','with relations included');
+			$form->sessionMessage($ret,'good');
+		}
+		else
+			$form->sessionMessage(_t('DataObjectManager.ERRORDUPLICATING','There was an error duplicating the object.'),'bad');
+		Director::redirectBack();
+	}
+	
 		
 	protected function getPrevID()
 	{
@@ -704,6 +795,27 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 	function HasPagination()
 	{
 	 return $this->NextRecordLink() || $this->PrevRecordLink();
+	}
+	
+	function HasDuplicate()
+	{
+		return $this->ctf->Can('duplicate');
+	}
+	
+	function SingleTitle()
+	{
+		return $this->ctf->SingleTitle();
+	}
+	
+	function DuplicateLink()
+	{
+		return Controller::join_links($this->ctf->BaseLink(),'/duplicate/'.$this->itemID);
+	}
+	
+	function HasRelated()
+	{
+		$has_many = singleton($this->ctf->SourceClass())->has_many();
+		return is_array($has_many) && !empty($has_many);
 	}
 	
 }

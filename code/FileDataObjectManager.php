@@ -48,7 +48,7 @@ class FileDataObjectManager extends DataObjectManager
 
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 	  
-	  // Intelligent constructory for fileFieldName
+	  // Intelligent constructor for fileFieldName
 		$SNG = singleton($this->sourceClass());
 	  if($fileFieldName === null) {
         if($has_ones = $SNG->stat('has_one')) {

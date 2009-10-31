@@ -13,14 +13,15 @@ class ImageAssetManager extends ImageDataObjectManager
       );
     }
     
-    $fields = new FieldSet(
-      new TextField('Name'),
-      new TextField('Title'),
-      new ReadonlyField('Filename'),
-      new TextareaField('Content'),
-      new SimpleTreeDropdownField('ParentID','Folder',"Folder"),
-      new HiddenField('ID',$controller->ID)
-    );
+    $fields = singleton($sourceClass)->getCMSFields();
+    $fields->removeByName("OwnerID");
+    $fields->removeByName("Parent");
+    $fields->removeByName("Filename");
+    $fields->removeByName("SortOrder");
+    $fields->removeByName("Sort");
+    $fields->push(new ReadonlyField('Filename'));
+    $fields->push(new SimpleTreeDropdownField('ParentID','Folder',"Folder"));
+    $fields->push(new HiddenField('ID','',$controller->ID));
     
     parent::__construct($controller, $name, $sourceClass, null, $headings, $fields, "Classname != 'Folder'");
   }
