@@ -9,7 +9,7 @@
 
 .list .dataobject-list li div.pad {font-size:12px;padding:0 3px;float:none;}
 .list .dataobject-list li div {float:left;}
-.list .dataobject-list div.actions.col {width:9%;float:right;text-align:right;border:0;padding-right:1%;}
+.list .dataobject-list div.actions.col {width:9%;float:right;text-align:right;border:0;}
 .list .dataobject-list div.actions.col a {visibility:hidden;display:inline;margin:0 5px;}
 .list .dataobject-list div.actions.col input {border:0;padding:0;margin:0;background:none;}
 .list .dataobject-list li.head {font-weight:bold;font-size:12px;background:url(../images/heading_bg.gif) repeat-x top left;}
@@ -18,7 +18,7 @@
 .list .dataobject-list li.head a {display:block;width:100%;text-decoration:none;color:#333;font-size:12px;margin:0;padding:0;width:100%;}
 .list .dataobject-list li.head div.pad {padding:0 3px;}
 .list .dataobject-list li.head a:hover {background:none;}
-.list .dataobject-list li {width:100%;overflow:hidden;border-bottom:1px solid #e4e4e4;padding:4px 5px;text-align:left;font-size:12px;}
+.list .dataobject-list li {width:98.9%;overflow:hidden;border-bottom:1px solid #e4e4e4;padding:4px 5px;text-align:left;font-size:12px;}
 .list .dataobject-list li .fields-wrap {width:90%;float:left;}
 .ui-sortable li {cursor:move;}
 
@@ -144,13 +144,6 @@
 .DataObjectManager-popup #pagination a {border:solid 0px #DEDEDE;font-size:11px;color:#888888;display:block;float:left;font-weight:bold;margin-right:2px;padding:3px 4px;text-decoration:none;}
 .DataObjectManager-popup #pagination a:hover{background:#ccc;color:#fff;}
 .DataObjectManager-popup #pagination .next {float:right;}
-.DataObjectManager-popup #duplicate-link {display:block;text-decoration:none;border:1px solid #ddd;background:#fcfcfc url(/dataobject_manager/images/page_copy.png) no-repeat 5px center;width:14em;padding:4px 2px 4px 24px;outline:0;}
-.DataObjectManager-popup #duplicate-link:hover {background-color:#fff;}
-.DataObjectManager-popup #duplicate-form div {border-bottom:1px solid #ccc;border-width:1px 0;padding:4px 6px;}
-.DataObjectManager-popup div#message {border-width:0;background:#DFF2BF;margin-top:5px;display:none;}
-.DataObjectManager-popup #duplicate-form {background:#eee;border:1px solid #aaa;}
-.DataObjectManager-popup #duplicate-submit {border:1px solid #DFF2BF;background:#16a30a;color:#fff;display:block;margin:5px auto;}
-
 
 /** Nested DOM **/
 
@@ -170,13 +163,6 @@ a.nested-close {display:block;text-indent:-9999em;width:30px;height:30px;backgro
 .RelationDataObjectManager .list .dataobject-list li.head div.actions.col a {visibility:visible;font-weight:normal;font-size:10px;color:#0074c6;display:block;}
 .RelationDataObjectManager .grid .dataobject-list div.actions.col {float:none;width:100%;text-align:right;}
 .RelationDataObjectManager .grid .dataobject-list div.actions.col a {text-decoration:none;}
-
-/** Duplicate Form **/
-#Form_DuplicateForm_Count {width:2em;}
-#Form_DuplicateForm .message {border:0;margin: 10px 0px;padding:0;text-align:center;}
-#Form_DuplicateForm .message.good {color: #4F8A10;background:transparent;}
-
-
 
 /* Target IE7 only */
 html>body .DataObjectManager {*width:96%;}
