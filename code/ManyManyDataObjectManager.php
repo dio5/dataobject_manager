@@ -17,23 +17,26 @@ class ManyManyDataObjectManager extends HasManyDataObjectManager
 	function __construct($controller, $name, $sourceClass, $fieldList, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
-		
+		$manyManyTable = false;
 		$classes = array_reverse(ClassInfo::ancestry($this->controllerClass()));
 		foreach($classes as $class) {
-			$singleton = singleton($class);
-			$manyManyRelations = $singleton->uninherited('many_many', true);
-			if(isset($manyManyRelations) && array_key_exists($this->name, $manyManyRelations)) {
-				$this->manyManyParentClass = $class;
-				$manyManyTable = $class . '_' . $this->name;
-				break;
-			}
-			$belongsManyManyRelations = $singleton->uninherited( 'belongs_many_many', true );
-			 if( isset( $belongsManyManyRelations ) && array_key_exists( $this->name, $belongsManyManyRelations ) ) {
-				$this->manyManyParentClass = $class;
-				$manyManyTable = $belongsManyManyRelations[$this->name] . '_' . $this->name;
-				break;
+			if($class != "Object") {
+				$singleton = singleton($class);
+				$manyManyRelations = $singleton->uninherited('many_many', true);
+				if(isset($manyManyRelations) && array_key_exists($this->name, $manyManyRelations)) {
+					$this->manyManyParentClass = $class;
+					$manyManyTable = $class . '_' . $this->name;
+					break;
+				}
+				$belongsManyManyRelations = $singleton->uninherited( 'belongs_many_many', true );
+				 if( isset( $belongsManyManyRelations ) && array_key_exists( $this->name, $belongsManyManyRelations ) ) {
+					$this->manyManyParentClass = $class;
+					$manyManyTable = $belongsManyManyRelations[$this->name] . '_' . $this->name;
+					break;
+				}
 			}
 		}
+		if(!$manyManyTable) user_error("I could not find the relation $this-name in " . $this->controllerClass() . " or any of its ancestors.",E_USER_WARNING);
 		$tableClasses = ClassInfo::dataClassesFor($this->sourceClass);
 		$source = array_shift($tableClasses);
 		$sourceField = $this->sourceClass;
