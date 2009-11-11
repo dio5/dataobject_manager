@@ -91,7 +91,7 @@ class FileDataObjectManager extends DataObjectManager
 
 	}
 
-	protected function getQueryString($params = array())
+	public function getQueryString($params = array())
 	{ 
 		$view = isset($params['view'])? $params['view'] : $this->view;
 		return parent::getQueryString($params)."&ctf[{$this->Name()}][view]={$view}";

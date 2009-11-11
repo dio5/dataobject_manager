@@ -1,6 +1,11 @@
 (function($) {
   $(function() {
     $('body').removeClass('loading');
+<<<<<<< .mine
+		$('iframe').css({'width':'433px'});
+		fields_height = window.parent.jQuery('#facebox iframe').height() - 70;
+    $('#FieldsWrap').css({'height' : fields_height + 'px'});
+=======
 		$('iframe').css({'width':'433px'});		
 		if($('#duplicate-form')) {
 			$('#duplicate-form').hide();
@@ -27,5 +32,6 @@
 				return false;
 			});
 		}
+>>>>>>> .r319
   });
 })(jQuery);

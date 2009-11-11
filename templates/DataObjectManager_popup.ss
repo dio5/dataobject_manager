@@ -12,17 +12,50 @@
 		<% end_if %>
 	">
 		<div class="right $PopupClasses">
-			$DetailForm
+			<% control DetailForm %>
+        <form $FormAttributes>
+        	<% if Message %>
+        	<p id="{$FormName}_error" class="message $MessageType">$Message</p>
+        	<% else %>
+        	<p id="{$FormName}_error" class="message $MessageType" style="display: none"></p>
+        	<% end_if %>
+        	<div id="FieldsWrap">
+          	<fieldset>
+          		<legend>$Legend</legend>
+          		<% control Fields %>
+          			$FieldHolder
+          		<% end_control %>
+          		<div class="clear"><!-- --></div>
+          	</fieldset>
+          </div>
+      <% end_control %> 
+          		<div id="pagination">
+          				<div class="prev">
+          				  <% if PrevRecordLink %>
+          				    <a href="$PrevRecordLink" title=<% _t('PREVIOUS','Previous') %>">&laquo;<% _t('PREVIOUS','Previous') %></a>
+          				  <% else %>
+          				    &nbsp;
+          				  <% end_if %>
+          				</div>
+          			<% control DetailForm %>
+                	<% if Actions %>
+                	<div class="Actions">
+                		<% control Actions %>
+                			$Field
+                		<% end_control %>
+                	</div>
+                	<% end_if %>          			
+          			<% end_control %>
+          				<div class="next">
+          				  <% if NextRecordLink %>
+          				    <a href="$NextRecordLink" title=<% _t('NEXT','Next') %>"><% _t('NEXT','Next') %>&raquo;</a>
+          				  <% else %>
+          				    &nbsp;
+          				  <% end_if %>
+          				</div>
+          		</div>
+
+        </form>
 		</div>
-		<% if HasPagination %>
-		<div id="pagination">
-			<% if PrevRecordLink %>
-				<div class="prev"><a href="$PrevRecordLink" title=<% _t('PREVIOUS','Previous') %>">&laquo;<% _t('PREVIOUS','Previous') %></a></div>
-			<% end_if %>
-			<% if NextRecordLink %>
-				<div class="next"><a href="$NextRecordLink" title=<% _t('NEXT','Next') %>"><% _t('NEXT','Next') %>&raquo;</a></div>
-			<% end_if %>
-		</div>
-		<% end_if %>
 	</body>
 </html>

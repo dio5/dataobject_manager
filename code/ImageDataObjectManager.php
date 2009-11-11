@@ -33,7 +33,7 @@ class ImageDataObjectManager extends FileDataObjectManager
 		return new ImageDataObjectManager_ItemRequest($this, $request->param('ID'));
 	}
 
-	protected function getQueryString($params = array())
+	public function getQueryString($params = array())
 	{ 
 		$imagesize = isset($params['imagesize'])? $params['imagesize'] : $this->imageSize;
 		return parent::getQueryString($params)."&ctf[{$this->Name()}][imagesize]={$imagesize}";

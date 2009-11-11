@@ -27,5 +27,4 @@
     array('cut','copy','paste','|','bold','italic','underline','|','left','center','right'),
     array('ol','ul','|','hyperlink','unlink','image','|','formats')
   ));
-
 ?>

@@ -149,6 +149,7 @@ class DataObjectManager extends ComplexTableField
 	{
 		return $this->pluralTitle ? $this->pluralTitle : $this->AddTitle()."s";
 	}
+	
 		
 	protected function loadSort()
 	{
@@ -161,7 +162,6 @@ class DataObjectManager extends ComplexTableField
 		}
 		elseif(isset($_REQUEST['ctf'][$this->Name()]['sort']))
 			$this->sourceSort = $_REQUEST['ctf'][$this->Name()]['sort'] . " " . $this->sort_dir;
-	
 	}
 	
 	protected function loadSourceFilter()
@@ -194,7 +194,7 @@ class DataObjectManager extends ComplexTableField
 		return new DataObjectManager_ItemRequest($this, $request->param('ID'));
 	}
 
-	protected function getQueryString($params = array())
+	public function getQueryString($params = array())
 	{ 
 		$start    = isset($params['start'])? $params['start']       : 	$this->start;
 		$per_page = isset($params['per_page'])? $params['per_page'] : 	$this->per_page;
@@ -519,10 +519,16 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 		return false;
 	}
 	
+	public function EditLink()
+	{
+	 return $this->Link()."/edit?".$this->parent->getQueryString();
+	}
+
 	public function DuplicateLink()
 	{
     return Controller::join_links($this->Link(), "/duplicate");
 	}
+
 	
 	
 	
@@ -650,6 +656,7 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 		parent::__construct($ctf, $itemID);
 		$this->isNested = $this->ctf->isNested;
 		if($this->ctf->Items()) {
+		echo $this->ctf->sourceSort;
   	  $this->itemList = $this->ctf->Items()->column();
   	  $this->currentIndex = array_search($this->itemID,$this->itemList);
     }
@@ -783,13 +790,13 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 	function NextRecordLink()
 	{
     if(!$this->itemList || $this->currentIndex == sizeof($this->itemList)-1) return false;
-    return Controller::join_links($this->ctf->BaseLink() , '/item/' . $this->getNextID().'/edit');		 
+    return Controller::join_links($this->ctf->BaseLink() , '/item/' . $this->getNextID().'/edit')."?".$this->ctf->getQueryString();		 
 	}
 	
 	function PrevRecordLink()
 	{
     if(!$this->itemList || $this->currentIndex == 0) return false;
-    return Controller::join_links($this->ctf->BaseLink() , '/item/' . $this->getPrevID().'/edit');		
+    return Controller::join_links($this->ctf->BaseLink() , '/item/' . $this->getPrevID().'/edit')."?".$this->ctf->getQueryString();		
 	}
 	
 	function HasPagination()
