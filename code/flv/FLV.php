@@ -3,7 +3,7 @@
 class FLV extends File 
 {
 	public static $allowed_file_types = array(
-		'flv','avi','mov','mpeg','mpg'
+		'flv','avi','mov','mpeg','mpg','m4a'
 	);
   
   private static $has_ffmpeg = null;
