@@ -1,11 +1,14 @@
 (function($) {
   $(function() {
     $('body').removeClass('loading');
-    /*
-		$('iframe').css({'width':'433px'});
-		fields_height = window.parent.jQuery('#facebox iframe').height() - 70;
-    $('#FieldsWrap').css({'height' : fields_height + 'px'});
-    */
+
+		fields_height = window.parent.jQuery('#facebox iframe').height() - 82;
+    $('#field-holder').css({'height' : fields_height + 'px'});
+    $('#fade').css({
+    	'top' : (fields_height + 8) + 'px',
+    	'width' : ($('#field-holder').width() - 10) + 'px' 
+    });
+
 		$('iframe').css({'width':'433px'});		
 		if($('#duplicate-form')) {
 			$('#duplicate-form').hide();
