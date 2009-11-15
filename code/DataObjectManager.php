@@ -468,6 +468,18 @@ class DataObjectManager extends ComplexTableField
 		$this->filter_empty_string = $str;
 	}
 	
+	public function addPermission($perm)
+	{
+		if(!in_array($perm,$this->permissions))
+			$this->permissions[] = $perm;
+	}
+	
+	public function removePermission($perm)
+	{
+		if($key = array_search($perm,$this->permissions))
+			unset($this->permissions[$key]);
+	}
+	
 	public function NestedType()
 	{
 	   if($this->hasNested)
@@ -656,7 +668,6 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 		parent::__construct($ctf, $itemID);
 		$this->isNested = $this->ctf->isNested;
 		if($this->ctf->Items()) {
-		echo $this->ctf->sourceSort;
   	  $this->itemList = $this->ctf->Items()->column();
   	  $this->currentIndex = array_search($this->itemID,$this->itemList);
     }
