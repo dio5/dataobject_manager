@@ -532,7 +532,7 @@ class FileDataObjectManager extends DataObjectManager
 				// If something other than File has been specified as the linked file class,
 				// we need to "upgrade" the imported file to the correct class.
 				if($this->fileClassName != "File" && $file->ClassName != $this->fileClassName) {
-					$file->ClassName = $this->fileClassName;
+					$file = $file->newClassInstance($this->fileClassName);
 					$file->write();
 				}
 				$owner_id = $data['parentIDName'];
@@ -546,7 +546,7 @@ class FileDataObjectManager extends DataObjectManager
 					$_POST['uploaded_files'][] = $obj->ID;
 				}
 				else {
-					if($file = DataObject::get_by_id("File", $file_id)) {
+					if($file = DataObject::get_by_id($this->fileClassName, $file_id)) {
 						$id_field = $this->controllerFieldName."ID";
 
 						if($file->hasField($owner_id)) {
