@@ -82,6 +82,17 @@ $.fn.DataObjectManager.init = function(obj) {
 			e.stopPropagation();
 			return false;
 		});
+		
+		// Refresh
+		
+		$container.find('a.refresh-button').unbind('click').click(function(e) {
+			$t = $(this);
+			$.post($t.attr('href'),{},function() {
+				refresh($container, $container.attr('href'));
+			});
+			return false;
+		});
+				
 
 		// Pagination
 		$container.find('.Pagination a').unbind('click').click(function() {

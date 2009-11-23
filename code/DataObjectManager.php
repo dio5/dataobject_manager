@@ -541,9 +541,12 @@ class DataObjectManager_Item extends ComplexTableField_Item {
     return Controller::join_links($this->Link(), "/duplicate");
 	}
 
-	
-	
-	
+	public function CustomActions()
+	{
+		if($this->item->hasMethod('customDOMActions'))
+			return $this->item->customDOMActions();
+		return false;
+	}
 }
 
 class DataObjectManager_Controller extends Controller
@@ -839,6 +842,30 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 		return is_array($has_many) && !empty($has_many);
 	}
 	
+}
+
+class DataObjectManagerAction extends ViewableData
+{
+	static $behaviour_to_js = array (
+		'popup' => 'popup-button',
+		'delete' => 'delete-link',
+		'refresh' => 'refresh-button'
+	);
+	
+	public $Title;
+	public $Behaviour;
+	public $ActionClass;
+	public $Link;
+	public $IconURL;
+	
+	public function __construct($title, $link, $behaviour = "popup", $icon = null, $class = null) {
+		parent::__construct();
+		$this->Title = $title;
+		$this->Link = $link;
+		$this->Behaviour = self::$behaviour_to_js[$behaviour];
+		$this->IconURL = $icon;
+		$this->ActionClass = $class;
+	}
 }
 
 class DOMUtil
