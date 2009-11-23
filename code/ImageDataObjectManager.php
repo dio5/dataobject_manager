@@ -16,7 +16,7 @@ class ImageDataObjectManager extends FileDataObjectManager
 	
 	public $imageSize = 100;
 
-	public function __construct($controller, $name = null, $sourceClass = null, $fileFieldName = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
+	public function __construct($controller, $name = null, $sourceClass = null, $fileFieldName = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "Created DESC", $sourceJoin = "") 
 	{
 		parent::__construct($controller, $name, $sourceClass, $fileFieldName, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin); 
 		Requirements::css('dataobject_manager/css/ui/ui.all.css');
@@ -106,7 +106,7 @@ class ImageDataObjectManager_ItemRequest extends DataObjectManager_ItemRequest
 		else
 			$imgObj = $this->dataObj();
 		$form = parent::DetailForm($childID);
-		$form->Fields()->insertBefore($this->ctf->getPreviewFieldFor($imgObj, 200), $form->Fields()->First()->Name());
+		$form->Fields()->insertAfter($this->ctf->getPreviewFieldFor($imgObj, 200), 'open');
 		return $form;
 	}
 

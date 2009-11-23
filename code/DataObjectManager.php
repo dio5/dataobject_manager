@@ -93,7 +93,6 @@ class DataObjectManager extends ComplexTableField
       }
     }
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
-
 		Requirements::css('dataobject_manager/css/dataobject_manager.css');
 		Requirements::css('dataobject_manager/css/facebox.css');
 		if(self::$allow_css_override)
@@ -123,6 +122,7 @@ class DataObjectManager extends ComplexTableField
 		  if($field instanceof DataObjectManager && !($field->controller instanceof SiteTree))
 		    $this->hasNested = true;
 		}
+
 	}
 	
 	public function setSourceFilter($filter)

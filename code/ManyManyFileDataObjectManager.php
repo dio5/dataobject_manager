@@ -14,7 +14,7 @@ class ManyManyFileDataObjectManager extends HasManyFileDataObjectManager
 	
 
 		
-	function __construct($controller, $name, $sourceClass, $fileFieldName, $fieldList, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+	function __construct($controller, $name, $sourceClass, $fileFieldName, $fieldList, $detailFormFields = null, $sourceFilter = "", $sourceSort = "Created DESC", $sourceJoin = "") {
 
 		parent::__construct($controller, $name, $sourceClass, $fileFieldName, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 		$manyManyTable = false;

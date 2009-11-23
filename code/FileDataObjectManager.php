@@ -41,13 +41,11 @@ class FileDataObjectManager extends DataObjectManager
 	
 	
 	
-	public function __construct($controller, $name = null, $sourceClass = null, $fileFieldName = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
+	public function __construct($controller, $name = null, $sourceClass = null, $fileFieldName = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "Created DESC", $sourceJoin = "") 
 	{
 		if(!class_exists("SWFUploadField"))
 			die("<strong>"._t('DataObjectManager.ERROR','Error')."</strong>: "._t('FileDataObjectManager.SWFUPLOAD','DataObjectManager requires the SWFUpload module.'));
-
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
-	  
 	  // Intelligent constructor for fileFieldName
 		$SNG = singleton($this->sourceClass());
 	  if($fileFieldName === null) {
@@ -88,7 +86,6 @@ class FileDataObjectManager extends DataObjectManager
 		// Check for allowed file types
 		if($types = Object::get_static($this->fileClassName,'allowed_file_types'))
 			$this->setAllowedFileTypes($types);
-
 	}
 
 	public function getQueryString($params = array())
