@@ -133,7 +133,7 @@
 .DataObjectManager-popup #preview-image {position:relative;}
 .DataObjectManager-popup #preview-image .ajax-loader {height:auto;width:100%;position:static;margin:0;text-align:center;background:none;}
 .DataObjectManager-popup #preview-image .ajax-loader img {vertical-align:-5px;}
-.DataObjectManager-popup .Actions {padding:0px 5px 5px 5px;width:49%;float:left;}
+.DataObjectManager-popup .Actions {padding:0px 5px 5px 5px;width:49%;float:left;margin-top:5px;}
 .DataObjectManager-popup .Actions input {background:#3b5998;border:0;font-size:12px;color:#fff;padding:5px 10px;border:1px solid;border-color: #d9dfda #0e1f5b #0e1f5b #d9dfda; }
 .DataObjectManager-popup .Actions input:hover {background:#4c69a6;}
 .DataObjectManager-popup .message {border: 1px solid;margin: 10px 0px;padding:15px 10px 15px 50px;background-repeat: no-repeat;background-position: 10px center;}

@@ -42,7 +42,7 @@ $.fn.DataObjectManager.init = function(obj) {
         	'margin-left':'-215px'
         }).addClass('loading');
         $iframe.load(function() {
-	        iframe_height = $iframe.contents().find('body').height()+28;
+	        iframe_height = $iframe.contents().find('body').height()+36;
 	        $iframe.attr('height',iframe_height);
 	        $iframeWrap.removeClass('loading');
         });

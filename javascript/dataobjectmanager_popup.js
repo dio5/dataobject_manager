@@ -2,10 +2,14 @@
   $(function() {
     $('body').removeClass('loading');
 
-		fields_height = window.parent.jQuery('#facebox iframe').height() - 82;
-    $('#field-holder').css({'height' : fields_height + 'px'});
+		iframe_height = window.parent.jQuery('#facebox iframe').height(); // - 82;
+    diff = $('body').height() - $('#field-holder').height();
+    fields_height = (iframe_height - diff)-50;
+		top = fields_height + diff-21;
+		
+    $('#field-holder').css({'height' :  fields_height + 'px'});
     $('#fade').css({
-    	'top' : (fields_height + 8) + 'px',
+    	'top' : top + 'px',
     	'width' : ($('#field-holder').width() - 10) + 'px' 
     });
 
