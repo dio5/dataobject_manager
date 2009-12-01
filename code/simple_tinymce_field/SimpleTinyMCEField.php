@@ -3,7 +3,7 @@
 class SimpleTinyMCEField extends TextareaField
 {
 
-  private static $default_plugins = "safari";
+  private static $default_plugins = "safari,paste";
   private static $default_theme = "advanced";
   private static $default_buttons = array(
     'bold,italic,underline,|,justifyleft,justifycenter,justifyright,|,styleselect,formatselect',
@@ -192,6 +192,9 @@ class SimpleTinyMCEField extends TextareaField
       		 theme_advanced_toolbar_align : '%s',
       		 theme_advanced_statusbar_location : '%s',
       		 theme_advanced_resizing : %s,
+           paste_auto_cleanup_on_paste : true, 
+           paste_remove_spans: true, 
+           paste_remove_styles: true,      		 
   			   content_css : '%s'
   			   %s
 		    });
