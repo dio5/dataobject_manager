@@ -158,7 +158,7 @@ class DataObjectManager extends ComplexTableField
 		
 		if($this->Sortable() && (!isset($_REQUEST['ctf'][$this->Name()]['sort']) || $_REQUEST['ctf'][$this->Name()]['sort'] == "SortOrder")) {
 			$this->sort = "SortOrder";
-			$this->sourceSort = "SortOrder ASC";
+			$this->sourceSort = "SortOrder " . SortableDataObject::$sort_dir;
 		}
 		elseif(isset($_REQUEST['ctf'][$this->Name()]['sort']))
 			$this->sourceSort = $_REQUEST['ctf'][$this->Name()]['sort'] . " " . $this->sort_dir;
@@ -243,6 +243,11 @@ class DataObjectManager extends ComplexTableField
 		$childData = new $className();
 		$form->saveInto($childData);
 		$childData->write();
+		if($childData->many_many()) {
+		  $form->saveInto($childData);
+		  $childData->write();
+		}
+		
 		$form->sessionMessage(sprintf(_t('DataObjectManager.ADDEDNEW','Added new %s successfully'),$this->SingleTitle()), 'good');
 
 		if($form->getFileFields() || $form->getNestedDOMs()) {
@@ -555,13 +560,35 @@ class DataObjectManager_Controller extends Controller
 	{
 		if(!empty($_POST) && is_array($_POST) && isset($this->urlParams['ID'])) {
 			$className = $this->urlParams['ID'];
+			if(stristr($className,"-") !== false) {
+			 list($ownerClass, $className) = explode("-",$className);
+			}
+			$many_many = ((is_numeric($this->urlParams['OtherID'])) && SortableDataObject::is_sortable_many_many($className));
 			foreach($_POST as $group => $map) {
 				if(substr($group, 0, 7) == "record-") {
- 					foreach($map as $sort => $id) {
- 						$obj = DataObject::get_by_id($className, $id);
- 						$obj->SortOrder = $sort;
- 						$obj->write();
+ 					if($many_many) {
+      			$controllerID = $this->urlParams['OtherID']; 					
+ 					  $candidates = singleton($ownerClass)->many_many();
+ 					  if(is_array($candidates)) {
+ 					    foreach($candidates as $name => $class)
+ 					      if($class == $className) {
+ 					        $relationName = $name;
+ 					        break;
+ 					      }
+ 					  }
+ 					  if(!isset($relationName)) return false;
+ 					  list($parentClass, $componentClass, $parentField, $componentField, $table) = singleton($ownerClass)->many_many($relationName); 					  
+   					foreach($map as $sort => $id)
+   						DB::query("UPDATE `$table` SET SortOrder = $sort WHERE {$className}ID = $id AND {$ownerClass}ID = $controllerID");
  					}
+ 					else {
+   					foreach($map as $sort => $id) {
+   						$obj = DataObject::get_by_id($className, $id);
+   						$obj->SortOrder = $sort;
+   						$obj->write();
+   					} 					
+ 					}
+ 					break;
 				}
 			}
 		}

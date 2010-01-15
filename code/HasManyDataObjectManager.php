@@ -3,7 +3,8 @@
 class HasManyDataObjectManager extends DataObjectManager
 {
 	public $joinField;
-	public $addTitle;	
+	public $addTitle;
+	public $RelationType = "HasMany";	
 	protected $htmlListEndName = 'CheckedList';
 	protected $htmlListField = 'selected';
 	public $template = 'RelationDataObjectManager';
@@ -45,7 +46,9 @@ class HasManyDataObjectManager extends DataObjectManager
 	
 	public function hasMarkingPermission()
 	{
-	   if($this->markingPermission)
+	   if(is_bool($this->markingPermission))
+	     return $this->markingPermission;
+	   elseif($this->markingPermission)
 	     return Permission::check($this->markingPermission);
      return true;
 	}
@@ -116,6 +119,11 @@ class HasManyDataObjectManager extends DataObjectManager
 		
 	function getControllerID() {
 		return $this->controller->ID;
+	}
+	
+	public function SortableClass()
+	{
+	   return $this->sourceClass();
 	}
 	
 	function saveInto(DataObject $record) {

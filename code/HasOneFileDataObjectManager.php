@@ -9,7 +9,6 @@ class HasOneFileDataObjectManager extends HasManyFileDataObjectManager
 	 */
 
 	public $itemClass = 'HasOneFileDataObjectManager_Item';
-	
 	public $isOneToOne = false;
 	
 	function getParentIdName($parentClass, $childClass) {

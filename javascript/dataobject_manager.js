@@ -107,6 +107,8 @@ $.fn.DataObjectManager.init = function(obj) {
 				return false;
 			});
 		}
+		
+		
 
 		// Sortable
 		$container.find('.sort-control input').unbind('click').click(function(e) {
@@ -117,15 +119,22 @@ $.fn.DataObjectManager.init = function(obj) {
 		$container.find("ul[class^='sortable-']").sortable({
 			update : function(e) {
 				$list = $(this);
-				do_class = $list.attr('class').replace('sortable-','').replace('ui-sortable','');
-				$.post('DataObjectManager_Controller/dosort/' + do_class, $list.sortable("serialize"));
+				do_class = $.trim($list.attr('class').replace('sortable-','').replace('ui-sortable',''));
+				type = $container.hasClass('ManyMany') ? $container.find('input[name=controllerID]').val() : '';
+				$.post('DataObjectManager_Controller/dosort/'+do_class+'/'+type, $list.sortable("serialize"));
 				e.stopPropagation();
 			},
 			items : 'li:not(.head)',
 			containment : 'document',
 			tolerance : 'intersect',
-			handle : ($('#list-holder').hasClass('grid') ? '.handle' : null)
+			handle : ($('.list-holder').hasClass('grid') ? '.handle' : null)
 		});
+		
+		// Click function for the LI
+		$container.find('ul:not(.ui-sortable) li.data').click(function() {
+		  $(this).find('a.popup-button:first').click();
+		}).css({'cursor' : 'pointer'});
+		
 		
 		// Column sort
 		if(!$container.hasClass('ImageDataObjectManager')) {
@@ -244,9 +253,9 @@ $.fn.DataObjectManager.init = function(obj) {
 	
 			$container.find('.actions input, .file-label input').each(function(i,e) {
 				if($checkedList.val().indexOf(","+$(e).val()+",") != -1)
-					$(e).attr('checked',true).parents('li').toggleClass('selected');
+					$(e).attr('checked',true).parents('li').addClass('selected');
 				else
-					$(e).attr('checked',false);
+					$(e).attr('checked',false).parents('li').removeClass('selected');
 					
 			});	
 			
@@ -255,7 +264,14 @@ $.fn.DataObjectManager.init = function(obj) {
 			   $(e).attr('checked', false).parents('li').removeClass('selected');
 			   $checkedList.attr('value','');
 			 });
-			});	
+			});
+			
+  		$container.find('.only-related-control input').unbind('click').click(function(e) {
+  			refresh($container, $(this).attr('value'));
+  			$(this).attr('disabled', true);
+  			e.stopPropagation();
+  		});
+				
     }
 		
     // Columns. God forbid there are more than 10.

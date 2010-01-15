@@ -290,7 +290,7 @@ class FileDataObjectManager extends DataObjectManager
 			));
 			
 			if($this->allowUploadFolderSelection)
-				SWFUploadConfig::addDynamicPostParam('UploadFolder','FileDataObjectManager_Popup_UploadForm_UploadFolder');
+				SWFUploadConfig::addDynamicPostParam('UploadFolder',$this->popupClass.'_UploadForm_UploadFolder');
 	
 			if($this->getAllowedFileTypes()) 
 				SWFUploadConfig::addFileTypes($this->getAllowedFileTypes());

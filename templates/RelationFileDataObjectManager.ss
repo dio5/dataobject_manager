@@ -1,4 +1,4 @@
-<div id="$id" class="RequestHandler FormField DataObjectManager FileDataObjectManager RelationDataObjectManager $NestedType field" href="$CurrentLink">
+<div id="$id" class="RequestHandler FormField DataObjectManager FileDataObjectManager RelationDataObjectManager $RelationType $NestedType field" href="$CurrentLink">
 	<div class="ajax-loader"></div>
 	<div class="dataobjectmanager-actions <% if HasFilter %>filter<% end_if %>">
 		<% if Can(add) %>
@@ -42,7 +42,7 @@
 	</div>
 	<div class="$ListStyle column{$Headings.Count}" style="width:100%;">
 		<div class="dataobject-list">
-			<ul <% if ShowAll %>class="sortable-{$sourceClass}"<% end_if %>>
+			<ul <% if ShowAll %>class="sortable-{$SortableClass}"<% end_if %>>
 				<% if ListView %>
 					<li class="head">
 						<div class="fields-wrap">
@@ -119,6 +119,14 @@
 						<input id="showall-{$id}" type="checkbox" <% if ShowAll %>checked="checked"<% end_if %> value="<% if Paginated %>$ShowAllLink<% else %>$PaginatedLink<% end_if %>" /><label for="showall-{$id}"><% _t('DataObjectManager.DRAGDROP','Allow drag &amp; drop reordering') %></label>
 					<% end_if %>
 				</div>
+			  <% if RelationType = ManyMany %>
+  			  <% if Can(only_related) %>
+  			    <div class="only-related-control">
+  					   <input id="only-related-{$id}" type="checkbox" <% if OnlyRelated %>checked="checked"<% end_if %> value="<% if OnlyRelated %>$AllRecordsLink<% else %>$OnlyRelatedLink<% end_if %>" /><label for="only-related-{$id}"><% _t('DataObjectManager.ONLYRELATED','Show only related records') %></label>
+            </div>
+          <% end_if %>
+			  <% end_if %>				
+				
 				<div class="per-page-control">
 					<% if ShowAll %><% else %>$PerPageDropdown<% end_if %>
 				</div>

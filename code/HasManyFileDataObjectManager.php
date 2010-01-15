@@ -4,6 +4,7 @@ class HasManyFileDataObjectManager extends FileDataObjectManager
 {
 	public $joinField;
 	public $addTitle;	
+	public $RelationType = "HasMany";
 	protected $htmlListEndName = 'CheckedList';
 	protected $htmlListField = 'selected';
 	public $template = 'RelationFileDataObjectManager';
@@ -47,9 +48,11 @@ class HasManyFileDataObjectManager extends FileDataObjectManager
 	
 	public function hasMarkingPermission()
 	{
-	   if($this->markingPermission)
+	   if(is_bool($this->markingPermission))
+	     return $this->markingPermission;
+	   elseif($this->markingPermission)
 	     return Permission::check($this->markingPermission);
-	   return true;
+     return true;
 	}
 	
 	
@@ -120,6 +123,12 @@ class HasManyFileDataObjectManager extends FileDataObjectManager
 	function getControllerID() {
 		return $this->controller->ID;
 	}
+	
+	public function SortableClass()
+	{
+	   return $this->sourceClass();
+	}
+	
 	
 	function saveInto(DataObject $record) {
 		$fieldName = $this->name;

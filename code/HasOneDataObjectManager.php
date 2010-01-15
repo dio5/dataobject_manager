@@ -9,7 +9,6 @@ class HasOneDataObjectManager extends HasManyDataObjectManager
 	 */
 
 	public $itemClass = 'HasOneDataObjectManager_Item';
-	
 	public $isOneToOne = false;
 	
 	function getParentIdName($parentClass, $childClass) {
