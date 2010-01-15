@@ -144,6 +144,11 @@ class DataObjectManager extends ComplexTableField
 	{
 		$this->pluralTitle = $title;
 	}
+	
+	public function setWideMode($bool)
+	{
+	  $this->hasNested = $bool;
+	}
 
 	public function PluralTitle()
 	{
