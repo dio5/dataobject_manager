@@ -17,10 +17,19 @@ class SortableDataObject extends DataObjectDecorator
 	{
 		if(!self::is_sortable_class($className)) {
   		DataObject::add_extension($className,'SortableDataObject');
-  		Object::add_static_var($className,'db',array('SortOrder' => 'Int'));
   		self::$sortable_classes[] = $className;
 		}
 	}
+	
+	public function extraStatics()
+	{
+		return array (
+			'db' => array (
+				'SortOrder' => 'Int'
+			)
+		);
+	}
+	
 	
 	public static function add_sortable_classes(array $classes)
 	{
@@ -111,5 +120,3 @@ class SortableDataObject extends DataObjectDecorator
 	}	
 
 }
-
-?>
