@@ -91,11 +91,12 @@
 	<div class="bottom-controls">
 		<div class="rounded_table_bottom_right">
 			<div class="rounded_table_bottom_left">
-				<div class="sort-control">
+			  <div class="checkboxes">
 					<% if Sortable %>
-						<input id="showall-{$id}" type="checkbox" <% if ShowAll %>checked="checked"<% end_if %> value="<% if Paginated %>$ShowAllLink<% else %>$PaginatedLink<% end_if %>" /><label for="showall-{$id}"><% _t('DataObjectManager.DRAGDROP','Allow drag &amp; drop reordering') %></label>
+    				<div class="sort-control">
+    						<input id="showall-{$id}" type="checkbox" <% if ShowAll %>checked="checked"<% end_if %> value="<% if Paginated %>$ShowAllLink<% else %>$PaginatedLink<% end_if %>" /><label for="showall-{$id}"><% _t('DataObjectManager.DRAGDROP','Allow drag &amp; drop reordering') %></label>
+    				</div>
 					<% end_if %>
-				</div>
 			  <% if RelationType = ManyMany %>
   			  <% if Can(only_related) %>
   			    <div class="only-related-control">

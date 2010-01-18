@@ -20,6 +20,7 @@
 .list .dataobject-list li.head a:hover {background:none;}
 .list .dataobject-list li {width:98.9%;overflow:hidden;border-bottom:1px solid #e4e4e4;padding:4px 5px;text-align:left;font-size:12px;}
 .list .dataobject-list li .fields-wrap {width:90%;float:left;}
+.list .dataobject-list li .fields-wrap .col li {width:auto;border:0;padding:0;}
 .ui-sortable li {cursor:move;}
 
 .grid .dataobject-list {padding:10px 0;}
@@ -88,13 +89,16 @@
 .bottom-controls .rounded_table_bottom_right {height:34px;background:url(../images/rounded_bottom_right.gif) no-repeat top right;padding-right:6px;}
 .bottom-controls .rounded_table_bottom_left {height:34px;background:url(../images/rounded_bottom_left.gif) no-repeat top left;}
 
-.sort-control {width:200px;position:absolute;left:6px;top:8px;}
-.sort-control label {position:absolute; left:15px;top:2px;font-size:10px !important;}
+.sort-control {width:16em;float:left;padding:8px 0 0 5px;}
+.sort-control label {font-size:10px !important;margin-left:3px;}
+
+.only-related-control {width:16em;float:left;padding:8px 0 0 5px;}
+.only-related-control label {font-size:10px !important;margin-left:3px;}
+
+
 .per-page-control {position:absolute;right:10px;top:5px;}
 .ajax-loader {width:16px;height:16px;background:url(../images/ajax-loader.gif);display:none;position:absolute;left:50%;margin-left:-8px;top:15px;}
 
-.only-related-control {width:200px;position:absolute;left:16em;top:8px;padding-left:5px;border-left:1px solid #999;}
-.only-related-control label {position:absolute; left:20px;top:2px;font-size:10px !important;}
 
 
 /* preload column widths */
