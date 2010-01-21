@@ -144,6 +144,11 @@ class DataObjectManager extends ComplexTableField
 	{
 		$this->pluralTitle = $title;
 	}
+	
+	public function setWideMode($bool)
+	{
+	  $this->hasNested = $bool;
+	}
 
 	public function PluralTitle()
 	{
@@ -243,6 +248,10 @@ class DataObjectManager extends ComplexTableField
 		$childData = new $className();
 		$form->saveInto($childData);
 		$childData->write();
+		if($childData->many_many()) {
+		  $form->saveInto($childData);
+		  $childData->write();
+		}		
 		$form->sessionMessage(sprintf(_t('DataObjectManager.ADDEDNEW','Added new %s successfully'),$this->SingleTitle()), 'good');
 
 		if($form->getFileFields() || $form->getNestedDOMs()) {
