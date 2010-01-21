@@ -113,6 +113,13 @@ class DataObjectManager extends ComplexTableField
 			$this->sort = $_REQUEST['ctf'][$this->Name()]['sort'];
 			$this->sort_dir = $_REQUEST['ctf'][$this->Name()]['sort_dir'];
 		}
+		
+		if($this->sourceSort) {
+		  list($field,$dir) = explode(" ", $this->sourceSort);
+		  $this->sort = trim($field);
+		  $this->sort_dir = trim($dir);
+		}
+		
 		$this->setPageSize($this->per_page);
 		$this->loadSort();
 		$this->loadSourceFilter();
