@@ -115,9 +115,15 @@ class DataObjectManager extends ComplexTableField
 		}
 		
 		if($this->sourceSort) {
-		  list($field,$dir) = explode(" ", $this->sourceSort);
-		  $this->sort = trim($field);
-		  $this->sort_dir = trim($dir);
+		  if($parts = explode(" " , $this->sourceSort)) {
+  		  list($field,$dir) = $parts;
+  		  $this->sort = trim($field);
+  		  $this->sort_dir = trim($dir);
+		  }
+		  else {
+		    $this->sort = $this->sourceSort;
+		    $this->sort_dir = "ASC";
+		  }
 		}
 		
 		$this->setPageSize($this->per_page);
@@ -548,6 +554,14 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 		return false;
 	}
 	
+	public function ViewOrEdit_i18n()
+	{
+	  if($res = $this->ViewOrEdit()) {
+	     return ($res == "edit") ? _t('DataObjectManager.EDIT','Edit') : _t('DataObjectManager.VIEW','View');
+	  }
+	  return null;
+	}
+	
 	public function EditLink()
 	{
 	 return $this->Link()."/edit?".$this->parent->getQueryString();
@@ -563,6 +577,54 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 		if($this->item->hasMethod('customDOMActions'))
 			return $this->item->customDOMActions();
 		return false;
+	}
+	
+	public function Actions()
+	{
+	   $actions = new DataObjectSet();
+	   foreach($this->parent->permissions as $perm) {
+	     $action = false;
+	     switch($perm) {
+	       case "edit":
+	       case "view":
+	         $actions->push(new DataObjectManagerAction(
+	           $this->ViewOrEdit_i18n(),
+	           $this->EditLink(),
+	           "popup",
+	           "dataobject_manager/images/page_white_{$this->ViewOrEdit()}.png",
+	           "editlink"	,
+	           $this->parent->NestedType()           
+	         ));
+	       break;
+	       	       	       
+	       case "delete":
+	         $actions->push(new DataObjectManagerAction(
+	           _t('DataObjectManager.DELETE','Delete'),
+	           $this->DeleteLink(),
+	           "delete",
+	           "dataobject_manager/images/trash.gif"
+	         ));
+	       break;
+	       
+	       case "duplicate":
+	         $actions->push(new DataObjectManagerAction(
+	           _t('DataObjectManager.DUPLICATE','Duplicate'),
+	           $this->DuplicateLink(),
+	           "popup",
+	           "dataobject_manager/images/page_copy.png",
+	           null,
+	           "duplicate"
+	         ));
+	       break;
+	     }
+	   }
+	   if($custom = $this->CustomActions()) {
+	     if($custom instanceof DataObjectSet)
+	       $actions->merge($custom);
+	     else
+	       $actions->push($custom);
+	   }
+	   return $actions;
 	}
 }
 
@@ -875,13 +937,14 @@ class DataObjectManagerAction extends ViewableData
 	public $Link;
 	public $IconURL;
 	
-	public function __construct($title, $link, $behaviour = "popup", $icon = null, $class = null) {
+	public function __construct($title, $link, $behaviour = "popup", $icon = null, $class = null, $rel = null) {
 		parent::__construct();
 		$this->Title = $title;
 		$this->Link = $link;
 		$this->Behaviour = self::$behaviour_to_js[$behaviour];
 		$this->IconURL = $icon;
 		$this->ActionClass = $class;
+		$this->Rel = $rel;
 	}
 }
 
