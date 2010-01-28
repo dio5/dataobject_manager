@@ -74,10 +74,7 @@
 						<% end_control %>
 						</div>
 						<div class="actions col">
-								<% include CustomActions %>
-								<% if Can(duplicate) %><a class="popup-button duplicatelink" title="<% _t('DUPLICATE','Duplicate') %>" rel="duplicate" href="$DuplicateLink"><img src="dataobject_manager/images/page_copy.png" height="12px" alt="<% _t('DUPLICATE','Duplicate') %>" /></a><% end_if %>
-								<% if CanViewOrEdit %><a class="popup-button editlink" title="<% _t('EDIT','Edit') %>" rel="$Top.NestedType" href="$EditLink"><img src="dataobject_manager/images/page_white_{$ViewOrEdit}.png" height="12px" alt="$ViewOrEdit" /></a><% end_if %>
-								<% if Can(delete) %><a class="delete-link" title="<% _t('DELETE','Delete') %>" href="$DeleteLink"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a><% end_if %>
+								<% include Actions %>
 						</div>
 				</li>
 			<% end_control %>
