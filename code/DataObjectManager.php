@@ -104,6 +104,19 @@ class DataObjectManager extends ComplexTableField
 		
 		$this->filter_empty_string = '-- '._t('DataObjectManager.NOFILTER','No filter').' --';
 
+		if($this->sourceSort) {
+  		$parts = explode(" " , $this->sourceSort);
+		  if(is_array($parts) && sizeof($parts) == 2) {
+  		  list($field,$dir) = $parts;
+  		  $this->sort = trim($field);
+  		  $this->sort_dir = trim($dir);
+		  }
+		  else {
+		    $this->sort = $this->sourceSort;
+		    $this->sort_dir = "ASC";
+		  }
+		}
+
 		if(isset($_REQUEST['ctf'][$this->Name()])) {
 			$this->start = $_REQUEST['ctf'][$this->Name()]['start'];
 			$this->per_page = $_REQUEST['ctf'][$this->Name()]['per_page'];
@@ -114,17 +127,6 @@ class DataObjectManager extends ComplexTableField
 			$this->sort_dir = $_REQUEST['ctf'][$this->Name()]['sort_dir'];
 		}
 		
-		if($this->sourceSort) {
-		  if($parts = explode(" " , $this->sourceSort)) {
-  		  list($field,$dir) = $parts;
-  		  $this->sort = trim($field);
-  		  $this->sort_dir = trim($dir);
-		  }
-		  else {
-		    $this->sort = $this->sourceSort;
-		    $this->sort_dir = "ASC";
-		  }
-		}
 		
 		$this->setPageSize($this->per_page);
 		$this->loadSort();
@@ -178,8 +180,10 @@ class DataObjectManager extends ComplexTableField
 			$this->sort = "SortOrder";
 			$this->sourceSort = "SortOrder ASC";
 		}
-		elseif(isset($_REQUEST['ctf'][$this->Name()]['sort']))
+		elseif(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
 			$this->sourceSort = $_REQUEST['ctf'][$this->Name()]['sort'] . " " . $this->sort_dir;
+		}
+
 	}
 	
 	protected function loadSourceFilter()
@@ -630,7 +634,7 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 
 class DataObjectManager_Controller extends Controller
 {
-	function dosort()
+	public function dosort()
 	{
 		if(!empty($_POST) && is_array($_POST) && isset($this->urlParams['ID'])) {
 			$className = $this->urlParams['ID'];
@@ -644,6 +648,12 @@ class DataObjectManager_Controller extends Controller
 				}
 			}
 		}
+	}
+	public function i18n_js()
+	{
+	   return Convert::array2json(array(
+	     'delete_confirm' => _t('DataObjectManager.CONFIRMDELETE','Are you sure you want to delete this item?')
+	   ));
 	}
 }
 

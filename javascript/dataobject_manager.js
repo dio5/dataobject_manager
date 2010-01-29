@@ -1,4 +1,7 @@
 (function($) {
+//$.getJSON('DataObjectManager_Controller/i18n_js/',function(json) {var i18n_js = json;});
+//console.log(i18n_js);
+
 
 $.fn.DataObjectManager = function() {
 	this.each(function() {
