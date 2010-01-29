@@ -150,7 +150,7 @@
 
 .DataObjectManager-popup form .field div.middleColumn {width:95%;}
 .DataObjectManager-popup #field-holder {position:relative;overflow:auto;padding-bottom:32px;}
-.DataObjectManager-popup #fade {height:32px;background:url('../images/fade.png') repeat-x;position:fixed;left:0;z-index:100;}
+.DataObjectManager-popup #fade {display:none;height:32px;background: url('../images/fade.png') repeat-x;position:fixed;left:0;z-index:100;}
 
 .DataObjectManager-popup #pagination {border:0;width:110px;float:right;padding:2px;overflow:hidden; margin:10px 0 0 0;clear:none;}
 .DataObjectManager-popup #pagination a {border:solid 0px #DEDEDE;font-size:11px;color:#888888;display:block;float:left;font-weight:bold;margin-right:2px;padding:3px 4px;text-decoration:none;}
