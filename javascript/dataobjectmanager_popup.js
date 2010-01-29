@@ -1,19 +1,21 @@
 (function($) {
   $(function() {
+    var ie = $.browser.msie;
     $('body').removeClass('loading');
+		$('iframe').css({'width':'433px'});		
 
 		var iframe_height = window.parent.jQuery('#facebox iframe').height(); // - 82;
     var diff = $('body').height() - $('#field-holder').height();
-    var fields_height = (iframe_height - diff)-50;
-		var top = fields_height + diff-21;
-		
-    $('#field-holder').css({'height' :  fields_height + 'px'});
+    var fields_height = (iframe_height - diff)-((ie) ? 30 : 50);
+		var top = fields_height + diff-((ie) ? 55 : 21);
+				
+    $('#field-holder').css({'height' : fields_height + 'px'});
     $('#fade').css({
     	'top' : top + 'px',
-    	'width' : ($('#field-holder').width() - 10) + 'px' 
+    	'width' : ($('#field-holder').width() - ((ie) ? 0 : 10)) + 'px' ,
+    	'left' : ((ie) ? 10 : 0) + 'px'
     });
 
-		$('iframe').css({'width':'433px'});		
 		if($('#duplicate-form')) {
 			$('#duplicate-form').hide();
 			$('#duplicate-link').click(function() {

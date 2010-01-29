@@ -148,6 +148,7 @@
 .DataObjectManager-popup .message.good {color: #4F8A10;background-color: #DFF2BF;background-image:url('../images/success.png');}
 .DataObjectManager-popup input#action_saveUploadForm {display:none;}
 
+.DataObjectManager-popup form .field div.middleColumn {width:95%;}
 .DataObjectManager-popup #field-holder {position:relative;overflow:auto;padding-bottom:32px;}
 .DataObjectManager-popup #fade {height:32px;background:url('../images/fade.png') repeat-x;position:fixed;left:0;z-index:100;}
 

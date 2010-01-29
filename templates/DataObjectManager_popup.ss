@@ -2,7 +2,8 @@
 <html>
 	<head>
 		<% base_tag %>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-type"/> 		
+    <meta content="text/html; charset=utf-8" http-equiv="Content-type"/> 
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />		
 	</head>
 	<body class="DataObjectManager-popup loading 
 		<% if String %>
