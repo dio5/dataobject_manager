@@ -1,7 +1,4 @@
 (function($) {
-//$.getJSON('DataObjectManager_Controller/i18n_js/',function(json) {var i18n_js = json;});
-//console.log(i18n_js);
-
 
 $.fn.DataObjectManager = function() {
 	this.each(function() {
@@ -13,6 +10,7 @@ $.fn.DataObjectManager.init = function(obj) {
 		var $container = $(obj);
 		var container_id = '#'+$container.attr('id');
 		var nested = $('.DataObjectManager').hasClass('isNested');
+    var i18n_js = $.fn.DataObjectManager.loadi18n(); 
 		
 		var facebox_close = function() {			
 			$('#facebox').fadeOut(function() {
@@ -64,7 +62,7 @@ $.fn.DataObjectManager.init = function(obj) {
 		else {
   		$container.find('a.popup-button').unbind('click').click(function(e) {
   			$(document).unbind('close.facebox').bind('close.facebox', facebox_close);
-  			w = $(this).attr('rel') == 'hasNested' ? 850 : ($(this).attr('rel') == 'duplicate' ? 400 : 500);
+  			w = $(this).attr('rel');
   			width = new String(w);
   			height = $(this).attr('rel') == 'duplicate' ? 180 : ($.fn.DataObjectManager.getPageHeight()*.6);
   			$.facebox('<iframe src="'+$(this).attr('href')+'" frameborder="0" width="'+width+'" height="' + height + '"></iframe>');
@@ -73,17 +71,44 @@ $.fn.DataObjectManager.init = function(obj) {
   		});
 		}
 		// Delete
+    $deletes = $container.find('a.delete-link');
+		$deletes.unbind('click').click(function(e) {
+  		params = $('#SecurityID') ? {'forceajax' : '1', 'SecurityID' : $('#SecurityID').attr('value')} : {'forceajax' : '1'};
+    	$target = $(this);
 
-		$container.find('a.delete-link').unbind('click').click(function(e) {
-			params = $('#SecurityID') ? {'forceajax' : '1', 'SecurityID' : $('#SecurityID').attr('value')} : {'forceajax' : '1'};
-			$target = $(this);
-			$.post(
-				$target.attr('href'),
-				params,
-				function() {$($target).parents('li:first').fadeOut();$(".ajax-loader").fadeOut("fast");}
-			);
-			e.stopPropagation();
-			return false;
+			if($(this).attr('rel') == "confirm") {
+			  $div = $('<div class="delete_dialog">'
+  			           +i18n_js.delete_confirm
+  			           +' <a class="yes" href="javascript:void(0)"><img src="dataobject_manager/images/accept.png" alt="yes" /></a> '
+  			           +' <a class="no" href="javascript:void(0)"><img src="dataobject_manager/images/cancel.png" alt="no"/></a> '
+			           +'</div>'
+			  ).click(function(e) {return false;e.stopPropagation()});
+
+			  $(this).parents('div:first').append($div);
+			  height = $(this).parents('li').height();
+			  $(this).parents('li').css({
+			   'height' : height+'px',
+			   'overflow' : 'visible'
+			  });
+			  $div.animate({'right' : '+=51%'});
+			  $div.find('.yes').click(function(e) {
+    			$.post($target.attr('href'),params,function() {$($target).parents('li:first').fadeOut();$(".ajax-loader").fadeOut("fast");});		  
+          e.stopPropagation();
+			    return false;
+			  });
+			  $div.find('.no').click(function(e) {
+			   $(this).parent().remove().parents('li').css({
+			     'height' : 'auto',
+			     'overflow' : 'hidden'
+			   });
+			   e.stopPropagation();
+			   return false;
+			  })
+			}
+			else {
+  			$.post($target.attr('href'),params,function() {$($target).parents('li:first').fadeOut();$(".ajax-loader").fadeOut("fast");});
+      }
+		  return false;
 		});
 		
 		// Refresh
@@ -312,6 +337,21 @@ $.fn.DataObjectManager.getPageScroll = function() {
     }
     return new Array(xScroll,yScroll) 
 };
+
+$.fn.DataObjectManager.loadi18n = function() {
+  var json = null;
+  $.ajax({
+    'async': false,
+    'global': false,
+    'url': 'DataObjectManager_Controller/i18n_js/',
+    'dataType': "json",
+    'success': function (data) {
+        json = data;
+    }
+  });
+  return json;
+}
+
 
 
 $().ajaxSend(function(r,s){  

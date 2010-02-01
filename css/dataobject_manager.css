@@ -1,6 +1,6 @@
 .DataObjectManager {position:relative;}
 
-.dataobject-list {padding:0;overflow:hidden;margin:0;}
+.dataobject-list {padding:0;overflow:visible;margin:0;}
 .dataobject-list ul {margin:0;}
 .dataobject-list li:hover {background:#feffe0;}
 .dataobject-list li.selected {background:#f0fdf4;}
@@ -9,7 +9,7 @@
 
 .list .dataobject-list li div.pad {font-size:12px;padding:0 3px;float:none;}
 .list .dataobject-list li div {float:left;}
-.list .dataobject-list div.actions.col {width:9%;float:right;text-align:right;border:0;}
+.list .dataobject-list div.actions.col {width:9%;float:right;text-align:right;border:0;position:relative;}
 .list .dataobject-list div.actions.col a {visibility:hidden;display:inline;margin:0 5px;}
 .list .dataobject-list div.actions.col input {border:0;padding:0;margin:0;background:none;}
 .list .dataobject-list li.head {font-weight:bold;font-size:12px;background:url(../images/heading_bg.gif) repeat-x top left;}
@@ -181,4 +181,6 @@ html>body .DataObjectManager {*width:96%;}
 /* end */
 
 
-
+.delete_dialog {background:#fff;border:3px solid #ccc;position:absolute; width:150px;text-align:center;right:-50%;top:50%;height:26px;z-index:10000;color:#666;font-weight:bold;line-height:24px;margin-top:-16px;-moz-border-radius: 5px;-webkit-border-radius:5px;background:#fff;}
+.list .dataobject-list div.actions.col .delete_dialog a {visibility:visible;}
+.delete_dialog img {height:10px;vertical-align:middle;}

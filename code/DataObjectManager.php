@@ -5,6 +5,8 @@ class DataObjectManager extends ComplexTableField
 	
 	protected static $allow_assets_override = true;
 	protected static $allow_css_override = false;
+	protected static $popup_width = 500;
+	protected static $confirm_delete = true;
 	
 	protected $template = "DataObjectManager";
 	protected $start = "0";
@@ -21,12 +23,14 @@ class DataObjectManager extends ComplexTableField
 	protected $column_widths = array();
 	protected $per_page_map = array('10','20','30','40','50');
 	protected $use_view_all = true;
+	protected $popupWidth;
+	protected $confirmDelete;
 	public $itemClass = "DataObjectManager_Item";
 	public $addTitle;
 	public $singleTitle;
 	public $hasNested = false;
 	public $isNested = false;
-	
+
 
 	public $actions = array(
 		'edit' => array(
@@ -62,6 +66,16 @@ class DataObjectManager extends ComplexTableField
 	public static function allow_css_override($bool)
 	{
 	   self::$allow_css_override = $bool;
+	}
+	
+	public static function set_popup_width($width)
+	{
+	   self::$popup_width = $width;
+	}
+	
+	public static function set_confirm_delete($bool)
+	{
+	   self::$confirm_delete = $bool;
 	}
 	
 	function __construct($controller, $name = null, $sourceClass = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "Created DESC", $sourceJoin = "") 
@@ -136,6 +150,7 @@ class DataObjectManager extends ComplexTableField
 		foreach($fields as $field) {
 		  if($field instanceof DataObjectManager && !($field->controller instanceof SiteTree))
 		    $this->hasNested = true;
+		    $this->setPopupWidth(850);
 		}
 
 	}
@@ -226,6 +241,14 @@ class DataObjectManager extends ComplexTableField
 		$filter   = isset($params['filter'])? $params['filter'] 	  : 	$this->filter;
 		$search   = isset($params['search'])? $params['search'] 	  : 	$this->search;
 		return "ctf[{$this->Name()}][start]={$start}&ctf[{$this->Name()}][per_page]={$per_page}&ctf[{$this->Name()}][showall]={$show_all}&ctf[{$this->Name()}][sort]={$sort}&ctf[{$this->Name()}][sort_dir]={$sort_dir}&ctf[{$this->Name()}][search]={$search}&ctf[{$this->Name()}][filter]={$filter}";
+	}
+	
+	public function getSetting($setting)
+	{
+	   if($this->$setting) {
+	     return $this->$setting;
+	   }
+	   return Object::get_static($this->class,DOMUtil::to_underscore($setting));
 	}
 	
 	function FieldHolder()
@@ -522,6 +545,17 @@ class DataObjectManager extends ComplexTableField
 		return new DataObjectManager_ItemRequest($this,$request->param('ID'));
 	}
 	
+	public function setPopupWidth($val)
+	{
+	   $this->popup_width = $val;
+	}
+	
+	public function PopupWidth()
+	{
+	   return $this->getSetting('popupWidth'); 
+	}
+	
+	
 
 }
 
@@ -597,7 +631,7 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 	           "popup",
 	           "dataobject_manager/images/page_white_{$this->ViewOrEdit()}.png",
 	           "editlink"	,
-	           $this->parent->NestedType()           
+	           $this->parent->PopupWidth()           
 	         ));
 	       break;
 	       	       	       
@@ -606,7 +640,9 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 	           _t('DataObjectManager.DELETE','Delete'),
 	           $this->DeleteLink(),
 	           "delete",
-	           "dataobject_manager/images/trash.gif"
+	           "dataobject_manager/images/trash.gif",
+	           null,
+	           $this->parent->getSetting('confirmDelete') ? "confirm" : null
 	         ));
 	       break;
 	       
@@ -617,7 +653,7 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 	           "popup",
 	           "dataobject_manager/images/page_copy.png",
 	           null,
-	           "duplicate"
+	           400
 	         ));
 	       break;
 	     }
@@ -652,7 +688,7 @@ class DataObjectManager_Controller extends Controller
 	public function i18n_js()
 	{
 	   return Convert::array2json(array(
-	     'delete_confirm' => _t('DataObjectManager.CONFIRMDELETE','Are you sure you want to delete this item?')
+	     'delete_confirm' => _t('DataObjectManager.CONFIRMDELETE','Delete?')
 	   ));
 	}
 }
@@ -984,6 +1020,32 @@ class DOMUtil
 	{
     return ucwords(trim(strtolower(ereg_replace('([A-Z])',' \\1',$string))));	
 	}
+	
+  /**
+   * Translates a camel case string into a string with underscores (e.g. firstName -&gt; first_name)
+   * @param    string   $str    String in camel case format
+   * @return    string            $str Translated into underscore format
+   */
+  public static function to_underscore($str) {
+    $str[0] = strtolower($str[0]);
+    $func = create_function('$c', 'return "_" . strtolower($c[1]);');
+    return preg_replace_callback('/([A-Z])/', $func, $str);
+  }
+ 
+  /**
+   * Translates a string with underscores into camel case (e.g. first_name -&gt; firstName)
+   * @param    string   $str                     String in underscore format
+   * @param    bool     $capitalise_first_char   If true, capitalise the first char in $str
+   * @return   string                              $str translated into camel caps
+   */
+  public static function to_camel_case($str, $capitalise_first_char = false) {
+    if($capitalise_first_char) {
+      $str[0] = strtoupper($str[0]);
+    }
+    $func = create_function('$c', 'return strtoupper($c[1]);');
+    return preg_replace_callback('/_([a-z])/', $func, $str);
+  }
+	
 }
 
 
