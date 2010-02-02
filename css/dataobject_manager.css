@@ -181,6 +181,6 @@ html>body .DataObjectManager {*width:96%;}
 /* end */
 
 
-.delete_dialog {background:#fff;border:3px solid #ccc;position:absolute; width:150px;text-align:center;right:-50%;top:50%;height:26px;z-index:10000;color:#666;font-weight:bold;line-height:24px;margin-top:-16px;-moz-border-radius: 5px;-webkit-border-radius:5px;background:#fff;}
+.delete_dialog {background:#fff;border:3px solid #ccc;position:absolute; width:150px;text-align:center;right:5px;top:50%;height:26px;z-index:10000;color:#666;font-weight:bold;line-height:24px;margin-top:-17px;-moz-border-radius: 5px;-webkit-border-radius:5px;background:#fff;display:none;}
 .list .dataobject-list div.actions.col .delete_dialog a {visibility:visible;}
 .delete_dialog img {height:10px;vertical-align:middle;}

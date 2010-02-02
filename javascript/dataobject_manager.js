@@ -73,6 +73,7 @@ $.fn.DataObjectManager.init = function(obj) {
 		// Delete
     $deletes = $container.find('a.delete-link');
 		$deletes.unbind('click').click(function(e) {
+  		$('.delete_dialog').remove();
   		params = $('#SecurityID') ? {'forceajax' : '1', 'SecurityID' : $('#SecurityID').attr('value')} : {'forceajax' : '1'};
     	$target = $(this);
 
@@ -90,7 +91,7 @@ $.fn.DataObjectManager.init = function(obj) {
 			   'height' : height+'px',
 			   'overflow' : 'visible'
 			  });
-			  $div.animate({'right' : '+=51%'});
+			  $div.fadeIn("slow");
 			  $div.find('.yes').click(function(e) {
     			$.post($target.attr('href'),params,function() {$($target).parents('li:first').fadeOut();$(".ajax-loader").fadeOut("fast");});		  
           e.stopPropagation();
