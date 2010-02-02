@@ -343,7 +343,17 @@ class DataObjectManager extends ComplexTableField
 		}
 		if($doms = $form->getNestedDOMs())
 			foreach($doms as $field) $titles[] = $field->PluralTitle(); 
-		$text = empty($titles) ? _t('DataObjectManager.SAVE','Save') : sprintf(_t('DataObjectManager.SAVEANDADD','Save and add %s'), DOMUtil::readable_list($titles));
+    if(empty($titles))
+      $text = _t('DataObjectManager.SAVE','Save');
+    elseif(sizeof($titles) > 3) {
+      $first_three = array_slice($titles,0,3);
+      $remaining = sizeof(array_slice($titles, 4));
+      $text = sprintf(_t('DataObjectManager.SAVEANDADD','Save and add %s'), implode(', ',$first_three));
+      $text .= ", " . sprintf(_t('DataObjectManager.ANDOTHERCOMPONENTS','and %d other components'),$remaining);
+    }
+    else
+      $text = sprintf(_t('DataObjectManager.SAVEANDADD','Save and add %s'), DOMUtil::readable_list($titles));
+
 		$actions->push(
 			$saveAction = new FormAction("saveComplexTableField", $text)
 		);	
@@ -409,8 +419,6 @@ class DataObjectManager extends ComplexTableField
 	public function AddLink() {
     return Controller::join_links($this->BaseLink(), '/add');
 	}
-	
-	
 		
 	public function ShowAll()
 	{
@@ -547,12 +555,22 @@ class DataObjectManager extends ComplexTableField
 	
 	public function setPopupWidth($val)
 	{
-	   $this->popup_width = $val;
+	   $this->popupWidth = $val;
+	}
+	
+	public function setConfirmDelete($bool)
+	{
+	   $this->confirmDelete = $bool;
 	}
 	
 	public function PopupWidth()
 	{
 	   return $this->getSetting('popupWidth'); 
+	}
+	
+	public function ConfirmDelete()
+	{
+	   return $this->getSetting('confirmDelete');
 	}
 	
 	
