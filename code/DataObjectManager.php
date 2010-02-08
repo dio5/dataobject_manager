@@ -635,6 +635,11 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 		return false;
 	}
 	
+	public function PopupWidth()
+	{
+	   return $this->parent->PopupWidth();
+	}
+	
 	public function Actions()
 	{
 	   $actions = new DataObjectSet();
