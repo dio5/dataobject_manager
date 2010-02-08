@@ -68,7 +68,7 @@
 					<li id="record-$Parent.id-$ID" style="width:{$ImageSize}px; height:{$ImageSize}px;">
 								<div class="pad">
 									<% if Top.ShowAll %><span class="handle"><img src="dataobject_manager/images/move_icon.jpg" /></span><% end_if %>
-									<div class="file-icon"><a href="<% if CanViewOrEdit %>$EditLink<% else %>#<% end_if %>" rel="$Top.NestedType" class="popup-button editlink tooltip"><img class="image" src="$FileIcon" alt="" style="width:{$ImageSize}px;" /></a></div>
+									<div class="file-icon"><a href="<% if CanViewOrEdit %>$EditLink<% else %>#<% end_if %>" rel="$PopupWidth" class="popup-button editlink tooltip"><img class="image" src="$FileIcon" alt="" style="width:{$ImageSize}px;" /></a></div>
 									<% if Can(delete) %><div class="delete"><a title="<% _t('DataObjectManager.DELETE','Delete') %>" href="$DeleteLink" class="delete-link"><img src="dataobject_manager/images/trash.gif" height="12px" alt="delete" /></a></div><% end_if %>
 									<span class="tooltip-info" style="display:none">
 										<% control Fields %>
