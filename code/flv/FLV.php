@@ -248,15 +248,15 @@ class FLV extends File
 		self::$player_count++;
 		Requirements::javascript('dataobject_manager/code/flv/swfobject.js');
 		Requirements::customScript(sprintf(
-			"swfobject.embedSWF('%s','player-%s','%d','%d','9.0.0','expressInstall.swf',{file : '%s',image : '%s'},{allowscriptaccess : 'true', allowfullscreen : '%s'})",
-			$this->SWFLink(),
-			self::$player_count,
-			$width,
-			$height,
-			$this->FLVLink(),
-			$image,
-			$this->AllowFullScreen()
-		)
+				"swfobject.embedSWF('%s','player-%s','%d','%d','9.0.0','expressInstall.swf',{file : '%s',image : '%s'},{allowscriptaccess : 'true', allowfullscreen : '%s'})",
+				$this->SWFLink(),
+				self::$player_count,
+				$width,
+				$height,
+				$this->FLVLink(),
+				$image,
+				$this->AllowFullScreen()
+			)
 		);
 		return "<div id='player-".self::$player_count."'>Loading...</div>";
 	}
