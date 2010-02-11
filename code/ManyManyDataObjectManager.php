@@ -18,7 +18,7 @@ class ManyManyDataObjectManager extends HasManyDataObjectManager
 	 * Most of the code below was copied from ManyManyComplexTableField.
 	 * Painful, but necessary, until PHP supports multiple inheritance.
 	 */
-	function __construct($controller, $name, $sourceClass, $fieldList, $detailFormFields = null, $sourceFilter = "", $sourceSort = "Created DESC", $sourceJoin = "") {
+	function __construct($controller, $name, $sourceClass, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "Created DESC", $sourceJoin = "") {
 
 		parent::__construct($controller, $name, $sourceClass, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 		$manyManyTable = false;

@@ -6,7 +6,7 @@ class ManyManyFileDataObjectManager extends HasManyFileDataObjectManager
   protected static $only_related;
 	private $manyManyParentClass;
 	public $RelationType = "ManyMany";
-	public $itemClass = 'ManyManyDataObjectManager_Item';
+	public $itemClass = 'ManyManyFileDataObjectManager_Item';
 	protected $OnlyRelated = false;
 
 	/**
@@ -16,11 +16,11 @@ class ManyManyFileDataObjectManager extends HasManyFileDataObjectManager
 	
 
 		
-	function __construct($controller, $name, $sourceClass, $fileFieldName, $fieldList, $detailFormFields = null, $sourceFilter = "", $sourceSort = "Created DESC", $sourceJoin = "") {
+	function __construct($controller, $name, $sourceClass, $fileFieldName, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "Created DESC", $sourceJoin = "") {
 
 		parent::__construct($controller, $name, $sourceClass, $fileFieldName, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 		$manyManyTable = false;
-		$classes = array_reverse(ClassInfo::ancestry($this->controllerClass(),true));
+		$classes = array_reverse(ClassInfo::ancestry($this->controllerClass()));
 		foreach($classes as $class) {
 			if($class != "Object") {
 				$singleton = singleton($class);
