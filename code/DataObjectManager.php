@@ -794,7 +794,7 @@ class DataObjectManager_Popup extends Form {
 	public function getNestedDOMs()
 	{
 		$dom_fields = array();
-		foreach($this->Fields() as $field) {
+		foreach($this->Fields()->dataFields() as $field) {
 			if($field instanceof DataObjectManager) {
 			  $field->isNested = true;
 				$dom_fields[] = $field;
