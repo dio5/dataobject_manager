@@ -148,9 +148,10 @@ class DataObjectManager extends ComplexTableField
 
 		$fields = $this->getRawDetailFields(singleton($this->sourceClass()));
 		foreach($fields as $field) {
-		  if($field instanceof DataObjectManager && !($field->controller instanceof SiteTree))
+		  if($field instanceof DataObjectManager && !($field->controller instanceof SiteTree)) {
 		    $this->hasNested = true;
 		    $this->setPopupWidth(850);
+		  }
 		}
 
 	}
@@ -733,6 +734,15 @@ class DataObjectManager_Popup extends Form {
 		Requirements::block('jsparty/prototype.js');
 		Requirements::clear('jsparty/behavior.js');
 		Requirements::block('jsparty/behavior.js');
+		Requirements::block('sapphire/javascript/ComplexTableField.js');
+		Requirements::block('sapphire/javascript/TableListField.js');
+		Requirements::block('jsparty/greybox/greybox.js');
+		Requirements::block('jsparty/greybox/AmiJS.js');
+		Requirements::block('jsparty/greybox/greybox.css');
+		Requirements::block('sapphire/css/TableListField.css');
+		Requirements::block('sapphire/css/ComplexTableField.css');
+		Requirements::block('assets/leftandmain.js');
+		
 
 		//Requirements::block('sapphire/javascript/i18n.js');
 		Requirements::block('assets/base.js');
@@ -761,14 +771,6 @@ class DataObjectManager_Popup extends Form {
 		$this->unsetValidator();
 		
 	  if($this->getNestedDOMs()) {
-    	Requirements::block('sapphire/javascript/ComplexTableField.js');
-    	Requirements::block('sapphire/javascript/TableListField.js');
-    	Requirements::block('jsparty/greybox/greybox.js');
-    	Requirements::block('jsparty/greybox/AmiJS.js');
-			Requirements::block('jsparty/greybox/greybox.css');
-			Requirements::block('sapphire/css/TableListField.css');
-			Requirements::block('sapphire/css/ComplexTableField.css');
-			Requirements::block('assets/leftandmain.js');
 			Requirements::javascript($this->BaseHref() . 'jsparty/jquery/plugins/livequery/jquery.livequery.js');
 		  Requirements::javascript($this->BaseHref() . 'dataobject_manager/javascript/dataobject_manager.js');
     	Requirements::javascript($this->BaseHref() . 'dataobject_manager/javascript/jquery-ui-1.6.js');  
@@ -798,6 +800,16 @@ class DataObjectManager_Popup extends Form {
 			if($field instanceof DataObjectManager) {
 			  $field->isNested = true;
 				$dom_fields[] = $field;
+		  }
+		  elseif($field instanceof CompositeField) {
+		  	if($children = $field->children) {
+		  		foreach($children as $child) {
+		  			if($child instanceof DataObjectManager) {
+		  				$child->isNested = true;
+		  				$dom_fields[] = $child;
+		  			}
+		  		}
+		  	}
 		  }
 		}
 		return !empty($dom_fields)? $dom_fields : false;		
@@ -830,8 +842,9 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
   }
 
 	function saveComplexTableField($data, $form, $request) {
-		$form->saveInto($this->dataObj());
-		$this->dataObj()->write();
+		$dataObject = $this->dataObj();
+		$form->saveInto($dataObject);
+		$dataObject->write();
 		// Save the many many relationship if it's available
 		if(isset($data['ctf']['manyManyRelation'])) {
 			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);

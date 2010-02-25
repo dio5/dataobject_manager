@@ -61,6 +61,13 @@ class ManyManyDataObjectManager extends HasManyDataObjectManager
 		  $this->OnlyRelated = '1';
 
 	}
+	
+	public function setParentClass($class)
+	{
+		parent::setParentClass($class);
+		$this->joinField = "Checked";
+	}
+	
 
 	protected function loadSort()
 	{
