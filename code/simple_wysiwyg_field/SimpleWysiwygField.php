@@ -47,9 +47,9 @@ class SimpleWysiwygField extends TextareaField
   
   function Field()
   {
-    Requirements::javascript($this->BaseHref() . "jsparty/jquery/jquery.js");
-    Requirements::javascript($this->BaseHref() . "dataobject_manager/code/simple_wysiwyg_field/javascript/htmlbox.min.js");
-    Requirements::javascript($this->BaseHref() . "dataobject_manager/code/simple_wysiwyg_field/javascript/xhtml.js");
+    Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");
+    Requirements::javascript("dataobject_manager/code/simple_wysiwyg_field/javascript/htmlbox.min.js");
+    Requirements::javascript("dataobject_manager/code/simple_wysiwyg_field/javascript/xhtml.js");
     Requirements::customScript($this->buildJS());
     return parent::Field();
   }

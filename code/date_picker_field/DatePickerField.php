@@ -66,8 +66,8 @@ HTML;
 	
 	
 	function Field() {
-    Requirements::javascript($this->BaseHref() . "dataobject_manager/javascript/jquery-ui-1.6.js");
-  	Requirements::javascript($this->BaseHref() . "dataobject_manager/code/date_picker_field/datepicker_init.js");
+    Requirements::javascript("dataobject_manager/javascript/jquery-ui-1.6.js");
+  	Requirements::javascript("dataobject_manager/code/date_picker_field/datepicker_init.js");
 		Requirements::css("dataobject_manager/css/ui/ui.all.css");	
 		$id = $this->id();
 		$val = $this->attrValue();

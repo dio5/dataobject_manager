@@ -159,7 +159,7 @@ class FLV extends File
 	
 	public function Icon()
 	{
-		return "sapphire/images/app_icons/mov_32.gif";
+		return SAPPHIRE_DIR."/images/app_icons/mov_32.gif";
 	}
 	
 	public function FLVPath()

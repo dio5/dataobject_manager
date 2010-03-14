@@ -572,7 +572,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public function getCleanUploadFolder()
 	{
-		$path = str_replace("assets/","",$this->getUploadFolder());
+		$path = str_replace(ASSETS_DIR."/","",$this->getUploadFolder());
 		if(substr($path,-1)=="/") $path = substr($path,0, -1);
 		return $path;
 	}
@@ -592,11 +592,11 @@ class FileDataObjectManager_Controller extends Controller
 
 			if(isset($_POST['UploadFolder'])) {
 				$folder = DataObject::get_by_id("Folder",$_POST['UploadFolder']);
-				$path = str_replace("assets/","",$folder->Filename);
+				$path = str_replace(ASSETS_DIR."/","",$folder->Filename);
 				if(substr($path,-1)=="/") $path = substr($path,0, -1);
 			}
 			else {
-				$path = str_replace("assets/","",$_POST['OverrideUploadFolder']);
+				$path = str_replace(ASSETS_DIR."/","",$_POST['OverrideUploadFolder']);
 				if(substr($path,-1)=="/") $path = substr($path,0, -1);
 			}
 			if(class_exists("Upload")) {
@@ -706,7 +706,7 @@ class FileDataObjectManager_Popup extends DataObjectManager_Popup
 			parent::__construct($controller, $name, $fields, $validator, $readonly, $dataObject);
 			
 			// Hack!
-			Requirements::block('jsparty/prototype.js');
+			Requirements::block(THIRDPARTY_DIR.'/prototype.js');
 			if($name == "UploadForm" && !isset($_POST['uploaded_files']) && $controller->Can('upload')) SWFUploadConfig::bootstrap();
 			
 			Requirements::javascript('dataobject_manager/javascript/filedataobjectmanager_popup.js');			

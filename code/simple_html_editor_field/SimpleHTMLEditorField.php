@@ -72,8 +72,8 @@ class SimpleHTMLEditorField extends TextareaField
 	
 	public function FieldHolder()
 	{
-		Requirements::javascript($this->BaseHref() . 'dataobject_manager/javascript/jquery.wysiwyg.js');
-		Requirements::css($this->BaseHref() . 'dataobject_manager/css/jquery.wysiwyg.css');
+		Requirements::javascript('dataobject_manager/javascript/jquery.wysiwyg.js');
+		Requirements::css('dataobject_manager/css/jquery.wysiwyg.css');
 		Requirements::customScript("
 			$(function() {
 				$('#{$this->id()}').wysiwyg({

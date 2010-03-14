@@ -111,10 +111,10 @@ class DataObjectManager extends ComplexTableField
 		Requirements::css('dataobject_manager/css/facebox.css');
 		if(self::$allow_css_override)
   		Requirements::css('dataobject_manager/css/dataobjectmanager_override.css');
-		Requirements::javascript($this->BaseHref().'dataobject_manager/javascript/facebox.js');	
-		Requirements::javascript($this->BaseHref().'dataobject_manager/javascript/jquery-ui-1.6.js');
-		Requirements::javascript($this->BaseHref().'dataobject_manager/javascript/dataobject_manager.js');
-		Requirements::javascript($this->BaseHref().'dataobject_manager/javascript/tooltip.js');
+		Requirements::javascript('dataobject_manager/javascript/facebox.js');	
+		Requirements::javascript('dataobject_manager/javascript/jquery-ui-1.6.js');
+		Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
+		Requirements::javascript('dataobject_manager/javascript/tooltip.js');
 		
 		$this->filter_empty_string = '-- '._t('DataObjectManager.NOFILTER','No filter').' --';
 
@@ -727,35 +727,35 @@ class DataObjectManager_Popup extends Form {
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
 		$this->dataObject = $dataObject;
 		Requirements::clear();
-    Requirements::javascript($this->BaseHref() . 'jsparty/jquery/jquery.js');
-		Requirements::javascript($this->BaseHref() . "jsparty/jquery/plugins/livequery/jquery.livequery.js");    
-		Requirements::block('/jsparty/behaviour.js');
-		Requirements::block('sapphire/javascript/Validator.js');
-		Requirements::block('jsparty/prototype.js');
-		Requirements::clear('jsparty/behavior.js');
-		Requirements::block('jsparty/behavior.js');
-		Requirements::block('sapphire/javascript/ComplexTableField.js');
-		Requirements::block('sapphire/javascript/TableListField.js');
-		Requirements::block('jsparty/greybox/greybox.js');
-		Requirements::block('jsparty/greybox/AmiJS.js');
-		Requirements::block('jsparty/greybox/greybox.css');
-		Requirements::block('sapphire/css/TableListField.css');
-		Requirements::block('sapphire/css/ComplexTableField.css');
-		Requirements::block('assets/leftandmain.js');
+	    Requirements::javascript(THIRDPARTY_DIR.'jquery/jquery.js');
+		Requirements::javascript(THIRDPARTY_DIR."/jquery/plugins/livequery/jquery.livequery.js");    
+		Requirements::block(THIRDPARTY_DIR.'/behaviour.js');
+		Requirements::block(SAPPHIRE_DIR.'/javascript/Validator.js');
+		Requirements::block(THIRDPARTY_DIR.'/prototype.js');
+		Requirements::clear(THIRDPARTY_DIR.'/behavior.js');
+		Requirements::block(THIRDPARTY_DIR.'/behavior.js');
+		Requirements::block(SAPPHIRE_DIR.'/javascript/ComplexTableField.js');
+		Requirements::block(THIRDPARTY_DIR.'/javascript/TableListField.js');
+		Requirements::block(THIRDPARTY_DIR.'/greybox/greybox.js');
+		Requirements::block(THIRDPARTY_DIR.'/greybox/AmiJS.js');
+		Requirements::block(THIRDPARTY_DIR.'/greybox/greybox.css');
+		Requirements::block(SAPPHIRE_DIR.'/css/TableListField.css');
+		Requirements::block(SAPPHIRE_DIR.'/css/ComplexTableField.css');
+		Requirements::block(ASSETS_DIR.'/leftandmain.js');
 		
 
 		//Requirements::block('sapphire/javascript/i18n.js');
-		Requirements::block('assets/base.js');
-		Requirements::block('sapphire/javascript/lang/en_US.js');
+		Requirements::block(ASSETS_DIR.'/base.js');
+		Requirements::block(SAPPHIRE_DIR.'/javascript/lang/en_US.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
 		Requirements::css(CMS_DIR . '/css/typography.css');
 		Requirements::css(CMS_DIR . '/css/cms_right.css');
-    Requirements::css('dataobject_manager/css/dataobject_manager.css');
+	    Requirements::css('dataobject_manager/css/dataobject_manager.css');
 
  		if($this->dataObject->hasMethod('getRequirementsForPopup')) {
 			$this->dataObject->getRequirementsForPopup();
 		}
-		Requirements::javascript($this->BaseHref() . 'dataobject_manager/javascript/dataobjectmanager_popup.js');
+		Requirements::javascript('dataobject_manager/javascript/dataobjectmanager_popup.js');
 		
 		
 		$actions = new FieldSet();	
@@ -771,10 +771,10 @@ class DataObjectManager_Popup extends Form {
 		$this->unsetValidator();
 		
 	  if($this->getNestedDOMs()) {
-			Requirements::javascript($this->BaseHref() . 'jsparty/jquery/plugins/livequery/jquery.livequery.js');
-		  Requirements::javascript($this->BaseHref() . 'dataobject_manager/javascript/dataobject_manager.js');
-    	Requirements::javascript($this->BaseHref() . 'dataobject_manager/javascript/jquery-ui-1.6.js');  
-  		Requirements::javascript($this->BaseHref() . 'dataobject_manager/javascript/tooltip.js');    
+			Requirements::javascript(THIRDPARTY_DIR.'/plugins/livequery/jquery.livequery.js');
+		  Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
+    	Requirements::javascript('dataobject_manager/javascript/jquery-ui-1.6.js');  
+  		Requirements::javascript('dataobject_manager/javascript/tooltip.js');    
   	}
     $this->NestedController = $this->controller->isNested;
 	}

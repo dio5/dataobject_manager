@@ -1,5 +1,5 @@
 <% require css(dataobject_manager/code/flv/shadowbox/shadowbox.css) %>
-<% require javascript(jsparty/jquery/jquery.js) %>
+<% require javascript(sapphire/thirdparty/jquery/jquery.js) %>
 <% require javascript(dataobject_manager/code/flv/shadowbox/shadowbox.js) %>
 <% require javascript(dataobject_manager/code/flv/shadowbox_init.js) %>
 <% require css(dataobject_manager/code/flv/css/flv.css) %>
