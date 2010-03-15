@@ -727,15 +727,16 @@ class DataObjectManager_Popup extends Form {
 	function __construct($controller, $name, $fields, $validator, $readonly, $dataObject) {
 		$this->dataObject = $dataObject;
 		Requirements::clear();
-	    Requirements::javascript(THIRDPARTY_DIR.'jquery/jquery.js');
+	    Requirements::javascript(THIRDPARTY_DIR.'/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR."/jquery/plugins/livequery/jquery.livequery.js");    
+		Requirements::javascript(THIRDPARTY_DIR."/jquery-livequery/jquery.livequery.js");    
 		Requirements::block(THIRDPARTY_DIR.'/behaviour.js');
 		Requirements::block(SAPPHIRE_DIR.'/javascript/Validator.js');
 		Requirements::block(THIRDPARTY_DIR.'/prototype.js');
 		Requirements::clear(THIRDPARTY_DIR.'/behavior.js');
 		Requirements::block(THIRDPARTY_DIR.'/behavior.js');
 		Requirements::block(SAPPHIRE_DIR.'/javascript/ComplexTableField.js');
-		Requirements::block(THIRDPARTY_DIR.'/javascript/TableListField.js');
+		Requirements::block(SAPPHIRE_DIR.'/javascript/TableListField.js');
 		Requirements::block(THIRDPARTY_DIR.'/greybox/greybox.js');
 		Requirements::block(THIRDPARTY_DIR.'/greybox/AmiJS.js');
 		Requirements::block(THIRDPARTY_DIR.'/greybox/greybox.css');

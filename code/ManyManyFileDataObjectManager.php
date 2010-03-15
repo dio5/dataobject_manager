@@ -33,7 +33,15 @@ class ManyManyFileDataObjectManager extends HasManyFileDataObjectManager
 				$belongsManyManyRelations = $singleton->uninherited( 'belongs_many_many', true );
 				 if( isset( $belongsManyManyRelations ) && array_key_exists( $this->name, $belongsManyManyRelations ) ) {
 					$this->manyManyParentClass = $class;
-					$manyManyTable = $belongsManyManyRelations[$this->name] . '_' . $this->name;
+					
+					// @modification http://open.silverstripe.org/ticket/5194
+					$manyManyClass = $belongsManyManyRelations[$this->name];
+					$manyManyRelations = singleton($manyManyClass)->uninherited('many_many', true);
+					foreach($manyManyRelations as $manyManyRelationship => $manyManyChildClass)
+						if ($manyManyChildClass == $class)
+							break;
+					
+					$manyManyTable = $manyManyClass . '_' . $manyManyRelationship;
 					break;
 				}
 			}

@@ -5,13 +5,7 @@
     <meta content="text/html; charset=utf-8" http-equiv="Content-type"/> 
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />		
 	</head>
-	<body class="DataObjectManager-popup loading 
-		<% if String %>
-			<% if NestedController %>nestedController<% end_if %>
-		<% else %>
-			<% if DetailForm.NestedController %>nestedController<% end_if %>
-		<% end_if %>
-	">
+	<body class="DataObjectManager-popup loading <% if String %><% if NestedController %>nestedController<% end_if %><% else %><% if DetailForm.NestedController %>nestedController<% end_if %><% end_if %>	">
 		<div class="right $PopupClasses">
 			$DetailForm
 		</div>
