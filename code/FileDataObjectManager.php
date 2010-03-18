@@ -127,7 +127,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public function ImportDropdown()
 	{
-		return new DropdownField('ImportFolder','',$this->getImportFolderHierarchy(0),null, null, "-- "._t('DataObjectManager.SELECTFOLDER', 'Select a folder')." --");
+		return new HTMLDropdownField('ImportFolder','',$this->getImportFolderHierarchy(0),null, null, "-- "._t('DataObjectManager.SELECTFOLDER', 'Select a folder')." --");
 	}
 	
 	protected function importLinkFor($file)
@@ -266,7 +266,7 @@ class FileDataObjectManager extends DataObjectManager
 		);
 
 		if($this->allowUploadFolderSelection) 
-			$fields->insertBefore(new DropdownField('UploadFolder','',$this->getUploadFolderHierarchy(0),null, null, "-- Select a folder --"),"Upload");
+			$fields->insertBefore(new HTMLDropdownField('UploadFolder','',$this->getUploadFolderHierarchy(0),null, null, "-- Select a folder --"),"Upload");
 		return $fields;
 	}
 	
@@ -517,7 +517,8 @@ class FileDataObjectManager extends DataObjectManager
 				if($custom_folder && $file->ParentID != $custom_folder->ID) {
 					$new_path = Director::baseFolder().'/'.$custom_folder->Filename.$file->Name;	
 					copy($file->getFullPath(),$new_path);
-					$new_file = new File();
+					$file_class = $file->ClassName;
+					$new_file = new $file_class();
 					$new_file->setFilename($custom_folder->Filename.$file->Name);
 					$new_file->setName($file->Name);
 					$new_file->setParentID($custom_folder->ID);
@@ -645,9 +646,9 @@ class FileDataObjectManager_Controller extends Controller
 }
 
 class FileDataObjectManager_Item extends DataObjectManager_Item {
-	function __construct(DataObject $item, ComplexTableField $parent, $start) 
+	function __construct(DataObject $item, ComplexTableField $parent) 
 	{
-		parent::__construct($item, $parent, $start);
+		parent::__construct($item, $parent);
 	}
 	
 	public function IsFile()

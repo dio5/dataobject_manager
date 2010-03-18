@@ -55,9 +55,9 @@ class ImageDataObjectManager extends FileDataObjectManager
 class ImageDataObjectManager_Item extends FileDataObjectManager_Item 
 {
 
-	function __construct(DataObject $item, ComplexTableField $parent, $start)
+	function __construct(DataObject $item, ComplexTableField $parent)
 	{
-		parent::__construct($item, $parent, $start);
+		parent::__construct($item, $parent);
 	}
 
 	public function FileIcon()
