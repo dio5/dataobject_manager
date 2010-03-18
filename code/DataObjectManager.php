@@ -581,7 +581,7 @@ class DataObjectManager extends ComplexTableField
 class DataObjectManager_Item extends ComplexTableField_Item {
 	function __construct(DataObject $item, DataObjectManager $parent) 
 	{
-		parent::__construct($item, $parent);
+		parent::__construct($item, $parent,0);
 	}
 	
 	function Link() {
