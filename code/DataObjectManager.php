@@ -110,11 +110,19 @@ class DataObjectManager extends ComplexTableField
 		Requirements::css('dataobject_manager/css/dataobject_manager.css');
 		Requirements::css('dataobject_manager/css/facebox.css');
 		if(self::$allow_css_override)
-  		Requirements::css('dataobject_manager/css/dataobjectmanager_override.css');
-		Requirements::javascript('dataobject_manager/javascript/facebox.js');	
-		Requirements::javascript('dataobject_manager/javascript/jquery-ui-1.6.js');
-		Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
-		Requirements::javascript('dataobject_manager/javascript/tooltip.js');
+  			Requirements::css('dataobject_manager/css/dataobjectmanager_override.css');
+			Requirements::javascript('dataobject_manager/javascript/facebox.js');	
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.core.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.draggable.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.droppable.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.sortable.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.slider.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.tabs.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.datepicker.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/effects.core.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/effects.blind.js');			
+			Requirements::javascript('dataobject_manager/javascript/tooltip.js');
+			Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
 		
 		$this->filter_empty_string = '-- '._t('DataObjectManager.NOFILTER','No filter').' --';
 
@@ -773,9 +781,17 @@ class DataObjectManager_Popup extends Form {
 		
 	  if($this->getNestedDOMs()) {
 			Requirements::javascript(THIRDPARTY_DIR.'/plugins/livequery/jquery.livequery.js');
-		  Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
-    	Requirements::javascript('dataobject_manager/javascript/jquery-ui-1.6.js');  
-  		Requirements::javascript('dataobject_manager/javascript/tooltip.js');    
+			Requirements::javascript(THIRDPARTY_DIR.'/jquery-livequery/jquery.livequery.js');
+
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.core.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.draggable.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.droppable.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.sortable.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.slider.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.tabs.js');
+			Requirements::javascript(THIRDPARTY_DIR . '/jquery-ui/ui.datepicker.js');
+	  		Requirements::javascript('dataobject_manager/javascript/tooltip.js');    
+			Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
   	}
     $this->NestedController = $this->controller->isNested;
 	}
