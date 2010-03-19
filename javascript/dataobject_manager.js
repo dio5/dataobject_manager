@@ -1,5 +1,5 @@
 (function($) {
-
+var i18n_js;
 $.fn.DataObjectManager = function() {
 	this.each(function() {
 		$.fn.DataObjectManager.init(this);
@@ -10,8 +10,10 @@ $.fn.DataObjectManager.init = function(obj) {
 		var $container = $(obj);
 		var container_id = '#'+$container.attr('id');
 		var nested = $('.DataObjectManager').hasClass('isNested');
-    var i18n_js = $.fn.DataObjectManager.loadi18n(); 
+		if(!i18n_js)
+			i18n_js = $.fn.DataObjectManager.loadi18n(); 
 		
+		console.log(i18n_js);
 		var facebox_close = function() {			
 			$('#facebox').fadeOut(function() {
 				$('#facebox .content').removeClass().addClass('content');

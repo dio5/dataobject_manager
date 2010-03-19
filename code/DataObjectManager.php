@@ -112,7 +112,7 @@ class DataObjectManager extends ComplexTableField
 		if(self::$allow_css_override)
   			Requirements::css('dataobject_manager/css/dataobjectmanager_override.css');
 			Requirements::javascript('dataobject_manager/javascript/facebox.js');	
-			Requirements::javascript('dataobject_manaver/javascript/dom_jquery_ui.js');
+			Requirements::javascript('dataobject_manager/javascript/dom_jquery_ui.js');
 			Requirements::javascript('dataobject_manager/javascript/tooltip.js');
 			Requirements::javascript('dataobject_manager/javascript/dataobject_manager.js');
 		
