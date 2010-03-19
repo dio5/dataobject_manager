@@ -589,7 +589,7 @@ class DataObjectManager extends ComplexTableField
 class DataObjectManager_Item extends ComplexTableField_Item {
 	function __construct(DataObject $item, DataObjectManager $parent) 
 	{
-		parent::__construct($item, $parent,0);
+		parent::__construct($item, $parent);
 	}
 	
 	function Link() {
@@ -736,8 +736,7 @@ class DataObjectManager_Popup extends Form {
 		$this->dataObject = $dataObject;
 		Requirements::clear();
 	    Requirements::javascript(THIRDPARTY_DIR.'/jquery/jquery.js');
-		Requirements::javascript(THIRDPARTY_DIR."/jquery/plugins/livequery/jquery.livequery.js");    
-		Requirements::javascript(THIRDPARTY_DIR."/jquery-livequery/jquery.livequery.js");    
+		Requirements::javascript(THIRDPARTY_DIR.'/jquery-livequery/jquery.livequery.js');    
 		Requirements::block(THIRDPARTY_DIR.'/behaviour.js');
 		Requirements::block(SAPPHIRE_DIR.'/javascript/Validator.js');
 		Requirements::block(THIRDPARTY_DIR.'/prototype.js');
