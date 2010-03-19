@@ -750,9 +750,6 @@ class DataObjectManager_Popup extends Form {
 		Requirements::block(SAPPHIRE_DIR.'/css/TableListField.css');
 		Requirements::block(SAPPHIRE_DIR.'/css/ComplexTableField.css');
 		Requirements::block(ASSETS_DIR.'/leftandmain.js');
-		
-
-		//Requirements::block('sapphire/javascript/i18n.js');
 		Requirements::block(ASSETS_DIR.'/base.js');
 		Requirements::block(SAPPHIRE_DIR.'/javascript/lang/en_US.js');
 		Requirements::css(SAPPHIRE_DIR . '/css/Form.css');
