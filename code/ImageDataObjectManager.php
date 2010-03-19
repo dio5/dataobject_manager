@@ -19,7 +19,7 @@ class ImageDataObjectManager extends FileDataObjectManager
 	public function __construct($controller, $name = null, $sourceClass = null, $fileFieldName = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "Created DESC", $sourceJoin = "") 
 	{
 		parent::__construct($controller, $name, $sourceClass, $fileFieldName, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin); 
-		Requirements::css('dataobject_manager/css/ui/ui.all.css');
+		Requirements::css('dataobject_manager/css/ui/dom_jquery_ui.css');
 		Requirements::javascript('dataobject_manager/javascript/imagedataobject_manager.js');
 		Requirements::css('dataobject_manager/css/imagedataobject_manager.css');
 
