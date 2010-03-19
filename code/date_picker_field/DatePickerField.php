@@ -66,7 +66,8 @@ HTML;
 	
 	
 	function Field() {
-    Requirements::javascript("dataobject_manager/javascript/jquery-ui-1.6.js");
+	Requirements::javascript(THIRDPARTY_DIR."/jquery-metadata/jquery.metadata.js");
+    Requirements::javascript("dataobject_manager/javascript/dom_jquery_ui.js");
   	Requirements::javascript("dataobject_manager/code/date_picker_field/datepicker_init.js");
 		Requirements::css("dataobject_manager/css/ui/ui.all.css");	
 		$id = $this->id();
@@ -76,7 +77,7 @@ HTML;
 		$innerHTML = self::HTMLField( $id, $this->name, $val );
 		
 		return "
-					<div class='datepicker field'>
+					<div class='datepicker field {dateFormat : \'".self::$dateFormat."\'}'>
 						$innerHTML
 					</div>
 		";	
