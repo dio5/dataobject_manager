@@ -271,7 +271,7 @@ class DataObjectManager extends ComplexTableField
 			$headings[] = new ArrayData(array(
 				"Name" => $fieldName, 
 				"Title" => ($this->sourceClass) ? singleton($this->sourceClass)->fieldLabel($fieldTitle) : $fieldTitle,
-	      "IsSortable" => singleton($this->sourceClass)->hasField($fieldName),
+	      "IsSortable" => singleton($this->sourceClass)->hasDatabaseField($fieldName),
 				"SortLink" => $this->RelativeLink(array(
 					'sort_dir' => $dir,
 					'sort' => $fieldName
