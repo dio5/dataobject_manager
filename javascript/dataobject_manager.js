@@ -13,7 +13,6 @@ $.fn.DataObjectManager.init = function(obj) {
 		if(!i18n_js)
 			i18n_js = $.fn.DataObjectManager.loadi18n(); 
 		
-		console.log(i18n_js);
 		var facebox_close = function() {			
 			$('#facebox').fadeOut(function() {
 				$('#facebox .content').removeClass().addClass('content');
