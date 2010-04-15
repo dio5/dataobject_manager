@@ -694,20 +694,42 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 
 class DataObjectManager_Controller extends Controller
 {
-	public function dosort()
-	{
-		if(!empty($_POST) && is_array($_POST) && isset($this->urlParams['ID'])) {
-			$className = $this->urlParams['ID'];
-			foreach($_POST as $group => $map) {
-				if(substr($group, 0, 7) == "record-") {
- 					foreach($map as $sort => $id) {
- 						$obj = DataObject::get_by_id($className, $id);
- 						$obj->SortOrder = $sort;
- 						$obj->write();
- 					}
-				}
-			}
-		}
+	 public function dosort()
+	 {
+	    if(!empty($_POST) && is_array($_POST) && isset($this->urlParams['ID'])) {
+	      $className = $this->urlParams['ID'];
+	      if(stristr($className,"-") !== false) {
+	       list($ownerClass, $className) = explode("-",$className);
+	      }
+	      $many_many = ((is_numeric($this->urlParams['OtherID'])) && SortableDataObject::is_sortable_many_many($className));
+	      foreach($_POST as $group => $map) {
+	        if(substr($group, 0, 7) == "record-") {
+	          if($many_many) {
+	            $controllerID = $this->urlParams['OtherID'];          
+	            $candidates = singleton($ownerClass)->many_many();
+	            if(is_array($candidates)) {
+	              foreach($candidates as $name => $class)
+	                if($class == $className) {
+	                  $relationName = $name;
+	                  break;
+	                }
+	            }
+	            if(!isset($relationName)) return false;
+	            list($parentClass, $componentClass, $parentField, $componentField, $table) = singleton($ownerClass)->many_many($relationName);            
+	            foreach($map as $sort => $id)
+	              DB::query("UPDATE `$table` SET SortOrder = $sort WHERE {$className}ID = $id AND {$ownerClass}ID = $controllerID");
+	          }
+	          else {
+	            foreach($map as $sort => $id) {
+	              $obj = DataObject::get_by_id($className, $id);
+	              $obj->SortOrder = $sort;
+	              $obj->write();
+	            }           
+	          }
+	          break;
+	        }
+	      }
+	    }
 	}
 	public function i18n_js()
 	{

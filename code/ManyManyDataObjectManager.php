@@ -65,8 +65,7 @@ class ManyManyDataObjectManager extends HasManyDataObjectManager
 
 		$this->addPermission('only_related');
 		
-		// If drag-and-drop is enabled, we need to turn on the only related filter
-		if($this->ShowAll())
+		if($this->ShowAll() && SortableDataObject::is_sortable_many_many($this->sourceClass()))
 		  $this->OnlyRelated = '1';
 
 	}
@@ -181,7 +180,7 @@ HTML;
 	
 	public function Sortable()
 	{
-	   return SortableDataObject::is_sortable_many_many($this->sourceClass());
+	   return (SortableDataObject::is_sortable_many_many($this->sourceClass())) || (SortableDataObject::is_sortable_class($this->sourceClass()));
 	}
 	
 	public function SortableClass()
