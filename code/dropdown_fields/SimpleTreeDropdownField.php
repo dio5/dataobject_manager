@@ -1,6 +1,6 @@
 <?php
 
-class SimpleTreeDropdownField extends DropdownField
+class SimpleTreeDropdownField extends HTMLDropdownField
 {
 	protected $sourceClass;
 	function __construct($name, $title = "", $sourceClass = "SiteTree", $value = "", $form = null, $emptyString = null)

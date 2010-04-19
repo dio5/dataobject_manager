@@ -8,6 +8,7 @@ class ManyManyDataObjectManager extends HasManyDataObjectManager
 	public $RelationType = "ManyMany";
 	public $itemClass = 'ManyManyDataObjectManager_Item';
 	protected $OnlyRelated = false;
+	protected $sortableOwner;
 	
 	public static function set_only_related($bool)
 	{
@@ -83,15 +84,14 @@ class ManyManyDataObjectManager extends HasManyDataObjectManager
 		if($this->ShowAll()) 
 			$this->setPageSize(999);
 
-    if(SortableDataObject::is_sortable_many_many($this->sourceClass(), $this->controllerClass())) {
-      list($parentClass, $componentClass, $parentField, $componentField, $table) = singleton($this->controllerClass())->many_many($this->Name());
-      $sort_column = "`$table`.SortOrder";
-      if(!isset($_REQUEST['ctf'][$this->Name()]['sort']) || $_REQUEST['ctf'][$this->Name()]['sort'] == $sort_column) {
-        $this->sort = $sort_column;
-        $this->sourceSort = "$sort_column " . SortableDataObject::$sort_dir;
-      }
-    }
-		
+	    if(SortableDataObject::is_sortable_many_many($this->sourceClass(), $this->manyManyParentClass)) {
+	      list($parentClass, $componentClass, $parentField, $componentField, $table) = singleton($this->controllerClass())->many_many($this->Name());
+	      $sort_column = "`$table`.SortOrder";
+	      if(!isset($_REQUEST['ctf'][$this->Name()]['sort']) || $_REQUEST['ctf'][$this->Name()]['sort'] == $sort_column) {
+	        $this->sort = $sort_column;
+	        $this->sourceSort = "$sort_column " . SortableDataObject::$sort_dir;
+	      }
+	    }
 		elseif($this->Sortable() && (!isset($_REQUEST['ctf'][$this->Name()]['sort']) || $_REQUEST['ctf'][$this->Name()]['sort'] == "SortOrder")) {
 			$this->sort = "SortOrder";
 			$this->sourceSort = "SortOrder " . SortableDataObject::$sort_dir;
@@ -99,6 +99,7 @@ class ManyManyDataObjectManager extends HasManyDataObjectManager
 		
 		elseif(isset($_REQUEST['ctf'][$this->Name()]['sort']))
 			$this->sourceSort = $_REQUEST['ctf'][$this->Name()]['sort'] . " " . $this->sort_dir;
+
 	}
 	
 	
@@ -178,6 +179,7 @@ class ManyManyDataObjectManager extends HasManyDataObjectManager
 HTML;
 	}
 	
+	
 	public function Sortable()
 	{
 	   return (SortableDataObject::is_sortable_many_many($this->sourceClass())) || (SortableDataObject::is_sortable_class($this->sourceClass()));
@@ -185,7 +187,7 @@ HTML;
 	
 	public function SortableClass()
 	{
-	   return $this->controllerClass()."-".$this->sourceClass();
+	   return $this->manyManyParentClass."-".$this->sourceClass();
 	}
 
 

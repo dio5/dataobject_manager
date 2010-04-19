@@ -81,7 +81,7 @@ class ManyManyFileDataObjectManager extends HasManyFileDataObjectManager
 		if($this->ShowAll()) 
 			$this->setPageSize(999);
 
-    if(SortableDataObject::is_sortable_many_many($this->sourceClass(), $this->controllerClass())) {
+    if(SortableDataObject::is_sortable_many_many($this->sourceClass(), $this->manyManyParentClass)) {
       list($parentClass, $componentClass, $parentField, $componentField, $table) = singleton($this->controllerClass())->many_many($this->Name());
       $sort_column = "`$table`.SortOrder";
       if(!isset($_REQUEST['ctf'][$this->Name()]['sort']) || $_REQUEST['ctf'][$this->Name()]['sort'] == $sort_column) {
@@ -177,6 +177,21 @@ class ManyManyFileDataObjectManager extends HasManyFileDataObjectManager
 HTML;
 	}
 	
+	protected function getSortableOwner()
+	{
+	   if($this->sortableOwner) return $this->sortableOwner;
+	   
+	   // Find the class who owns the relation
+	   $parent = null;
+	   foreach(array_reverse(ClassInfo::ancestry($this->controllerClass())) as $class) {
+	   		if(SortableDataObject::is_sortable_many_many($this->sourceClass(), $class)) {
+	   			$this->sortableOwner = $class;
+	   			return $this->sortableOwner;
+	   		}
+	   }
+	   return false;
+	}
+	
 	public function Sortable()
 	{
 	   return (SortableDataObject::is_sortable_many_many($this->sourceClass())) || (SortableDataObject::is_sortable_class($this->sourceClass()));
@@ -184,11 +199,8 @@ HTML;
 	
 	public function SortableClass()
 	{
-	   return $this->controllerClass()."-".$this->sourceClass();
+	   return $this->manyManyParentClass."-".$this->sourceClass();
 	}
-	
-
-
 }
 
 class ManyManyFileDataObjectManager_Item extends FileDataObjectManager_Item {

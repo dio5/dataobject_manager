@@ -21,7 +21,6 @@ class ImageDataObjectManager extends FileDataObjectManager
 		parent::__construct($controller, $name, $sourceClass, $fileFieldName, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin); 
 		Requirements::css('dataobject_manager/css/ui/dom_jquery_ui.css');
 		Requirements::javascript('dataobject_manager/javascript/imagedataobject_manager.js');
-		Requirements::css('dataobject_manager/css/imagedataobject_manager.css');
 
 		if(isset($_REQUEST['ctf'][$this->Name()])) {		
 				$this->imageSize = $_REQUEST['ctf'][$this->Name()]['imagesize'];
