@@ -66,6 +66,7 @@ HTML;
 	
 	
 	function Field() {
+		Requirements::javascript(THIRDPARTY_DIR."/jquery-livequery/jquery.livequery.js");
 		Requirements::javascript(THIRDPARTY_DIR."/jquery-metadata/jquery.metadata.js");
     	Requirements::javascript("dataobject_manager/javascript/dom_jquery_ui.js");
   		Requirements::javascript("dataobject_manager/code/date_picker_field/datepicker_init.js");
