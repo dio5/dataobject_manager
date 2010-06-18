@@ -180,11 +180,18 @@ HTML;
 	}
 	
 	
-	public function Sortable()
-	{
-	   return (SortableDataObject::is_sortable_many_many($this->sourceClass())) || (SortableDataObject::is_sortable_class($this->sourceClass()));
-	}
-	
+   public function Sortable() 
+   { 
+      return ( 
+          $this->IsReadOnly !== true && 
+          $this->controller->canEdit(Member::currentUser()) && 
+          ( 
+             SortableDataObject::is_sortable_many_many($this->sourceClass()) || 
+             SortableDataObject::is_sortable_class($this->sourceClass()) 
+          ) 
+       ); 
+   }
+   	
 	public function SortableClass()
 	{
 	   return $this->manyManyParentClass."-".$this->sourceClass();
