@@ -584,6 +584,9 @@ class FileDataObjectManager_Controller extends Controller
 {
 	public function handleswfupload()
 	{
+		if(!Permission::check("CMSAccess_CMSMain"))
+			return;
+		
 		if(isset($_FILES['swfupload_file']) && !empty($_FILES['swfupload_file'])) {
 			$do_class = $_POST['dataObjectClassName'];
 			$hasDataObject = $_POST['hasDataObject'];
