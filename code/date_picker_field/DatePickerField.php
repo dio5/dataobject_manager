@@ -38,6 +38,7 @@ HTML;
 		return self::$dateFormat == "mm/dd/yy";
 	}
 	
+	
 	function setValue($val) {
 		if(is_string($val) && preg_match('/^([\d]{2,4})-([\d]{1,2})-([\d]{1,2})/', $val)) {
 			$this->value = self::mdy() ? 
@@ -64,6 +65,7 @@ HTML;
 		}
 	}
 	
+	public function validate() {return true;}
 	
 	function Field() {
 		Requirements::javascript(THIRDPARTY_DIR."/jquery-livequery/jquery.livequery.js");

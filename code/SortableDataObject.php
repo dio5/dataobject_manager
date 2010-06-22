@@ -110,6 +110,7 @@ class SortableDataObject extends DataObjectDecorator
 	   if(!$query->orderby || ($query->orderby == $this->owner->stat('default_sort')))
 	     $query->orderby = "$sort_field " . self::$sort_dir;
 	}
+	
 
  	public function onBeforeWrite()
 	{

@@ -5,6 +5,7 @@ class ManyManyFileDataObjectManager extends HasManyFileDataObjectManager
 
   protected static $only_related;
 	private $manyManyParentClass;
+	protected $manyManyTable;
 	public $RelationType = "ManyMany";
 	public $itemClass = 'ManyManyFileDataObjectManager_Item';
 	protected $OnlyRelated = false;
@@ -47,6 +48,7 @@ class ManyManyFileDataObjectManager extends HasManyFileDataObjectManager
 			}
 		}
 		if(!$manyManyTable) user_error("I could not find the relation $this->name in " . $this->controllerClass() . " or any of its ancestors.",E_USER_WARNING);		
+		$this->manyManyTable = $manyManyTable;
 		$tableClasses = ClassInfo::dataClassesFor($this->sourceClass);
 		$source = array_shift($tableClasses);
 		$sourceField = $this->sourceClass;
@@ -54,7 +56,7 @@ class ManyManyFileDataObjectManager extends HasManyFileDataObjectManager
 			$sourceField = 'Child';
 		$parentID = $this->controller->ID;
 		
-		$this->sourceJoin .= " LEFT JOIN `$manyManyTable` ON (`$source`.`ID` = `{$sourceField}ID` AND `{$this->manyManyParentClass}ID` = '$parentID')";
+		$this->sourceJoin .= " LEFT JOIN `$manyManyTable` ON (`$source`.`ID` = `{$sourceField}ID` AND `$manyManyTable`.`{$this->manyManyParentClass}ID` = '$parentID')";
 		
 		$this->joinField = 'Checked';
 		if(isset($_REQUEST['ctf'][$this->Name()]['only_related']))
@@ -146,7 +148,8 @@ class ManyManyFileDataObjectManager extends HasManyFileDataObjectManager
 					$query->select[] = $k;
 			}
 			$parent = $this->controllerClass();
-			$if_clause = "IF(`{$this->manyManyParentClass}ID` IS NULL, '0', '1')";
+			$mm = $this->manyManyTable;
+			$if_clause = "IF(`$mm`.`{$this->manyManyParentClass}ID` IS NULL, '0', '1')";
 			$query->select[] = "$if_clause AS Checked";
 			
 			if($this->OnlyRelated())

@@ -5,6 +5,7 @@ class ManyManyDataObjectManager extends HasManyDataObjectManager
 
   protected static $only_related;
 	private $manyManyParentClass;
+	protected $manyManyTable;
 	public $RelationType = "ManyMany";
 	public $itemClass = 'ManyManyDataObjectManager_Item';
 	protected $OnlyRelated = false;
@@ -51,6 +52,7 @@ class ManyManyDataObjectManager extends HasManyDataObjectManager
 			}
 		}
 		if(!$manyManyTable) user_error("I could not find the relation $this->name in " . $this->controllerClass() . " or any of its ancestors.",E_USER_WARNING);
+		$this->manyManyTable = $manyManyTable;
 		$tableClasses = ClassInfo::dataClassesFor($this->sourceClass);
 		$source = array_shift($tableClasses);
 		$sourceField = $this->sourceClass;
@@ -58,7 +60,7 @@ class ManyManyDataObjectManager extends HasManyDataObjectManager
 			$sourceField = 'Child';
 		$parentID = $this->controller->ID;
 		
-		$this->sourceJoin .= " LEFT JOIN `$manyManyTable` ON (`$source`.`ID` = `{$sourceField}ID` AND `{$this->manyManyParentClass}ID` = '$parentID')";
+		$this->sourceJoin .= " LEFT JOIN `$manyManyTable` ON (`$source`.`ID` = `{$sourceField}ID` AND `$manyManyTable`.`{$this->manyManyParentClass}ID` = '$parentID')";
 		
 		$this->joinField = 'Checked';
 		if(isset($_REQUEST['ctf'][$this->Name()]['only_related']))
@@ -86,20 +88,23 @@ class ManyManyDataObjectManager extends HasManyDataObjectManager
 
 	    if(SortableDataObject::is_sortable_many_many($this->sourceClass(), $this->manyManyParentClass)) {
 	      list($parentClass, $componentClass, $parentField, $componentField, $table) = singleton($this->controllerClass())->many_many($this->Name());
-	      $sort_column = "`$table`.SortOrder";
+	      $sort_column = "MMSort";
 	      if(!isset($_REQUEST['ctf'][$this->Name()]['sort']) || $_REQUEST['ctf'][$this->Name()]['sort'] == $sort_column) {
 	        $this->sort = $sort_column;
 	        $this->sourceSort = "$sort_column " . SortableDataObject::$sort_dir;
+			$this->sourceSort .= ",Checked DESC";
 	      }
 	    }
 		elseif($this->Sortable() && (!isset($_REQUEST['ctf'][$this->Name()]['sort']) || $_REQUEST['ctf'][$this->Name()]['sort'] == "SortOrder")) {
 			$this->sort = "SortOrder";
 			$this->sourceSort = "SortOrder " . SortableDataObject::$sort_dir;
+			$this->sourceSort .= ", Checked DESC";
 		}
 		
 		elseif(isset($_REQUEST['ctf'][$this->Name()]['sort']))
 			$this->sourceSort = $_REQUEST['ctf'][$this->Name()]['sort'] . " " . $this->sort_dir;
 
+		
 	}
 	
 	
@@ -149,8 +154,11 @@ class ManyManyDataObjectManager extends HasManyDataObjectManager
 					$query->select[] = $k;
 			}
 			$parent = $this->controllerClass();
-			$if_clause = "IF(`{$this->manyManyParentClass}ID` IS NULL, '0', '1')";
+			$mm = $this->manyManyTable;
+			$if_clause = "IF(`$mm`.`{$this->manyManyParentClass}ID` IS NULL, '0', '1')";
 			$query->select[] = "$if_clause AS Checked";
+		    if(SortableDataObject::is_sortable_many_many($this->sourceClass(), $this->manyManyParentClass))
+				$query->select[] = "IFNULL(`$mm`.SortOrder,9999999) AS MMSort";
 			
 			if($this->OnlyRelated())
 			 $query->where[] = $if_clause;
