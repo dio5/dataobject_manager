@@ -57,6 +57,8 @@ class AutoCompleteField extends TextField {
 	public function Field() {
 		Requirements::javascript(THIRDPARTY_DIR.'/jquery/jquery.js');
 		Requirements::javascript(THIRDPARTY_DIR.'/jquery-metadata/jquery.metadata.js');
+		Requirements::javascript(THIRDPARTY_DIR.'/jquery-livequery/jquery.livequery.js');
+
 		Requirements::javascript('dataobject_manager/code/autocomplete_field/javascript/autocomplete_field.js');
 		Requirements::css('dataobject_manager/code/autocomplete_field/css/autocomplete_field.css');
 		return '<div class="autocomplete_holder">'.parent::Field().'<div class="autocomplete_results"></div></div>';

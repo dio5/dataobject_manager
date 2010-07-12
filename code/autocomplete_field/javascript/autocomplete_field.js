@@ -1,7 +1,9 @@
 (function($) {
+alert('hi');
 	var request = false;
 	$.fn.autoComplete = function() {
 		return this.each(function() {
+			alert(this);
 			var $element = $(this);
 			$element.initial_val = $element.val();
 			$(this).attr('autocomplete','off')
@@ -50,6 +52,8 @@
 		});
 	};
 $(function() {
-	$('.autocomplete_input').autoComplete();
+	$('input.autocomplete_input').livequery(function() {
+		$(this).autoComplete();
+	});
 });
 })(jQuery);
