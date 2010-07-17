@@ -497,7 +497,7 @@ class FileDataObjectManager extends DataObjectManager
 					</li>"
 				));
 			}
-			$fields->push(new LiteralField("_ul","</ul"));			
+			$fields->push(new LiteralField("_ul","</ul>"));			
 			return new Form(
 				$this,
 				"ImportForm",
