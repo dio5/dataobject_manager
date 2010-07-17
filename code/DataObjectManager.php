@@ -154,8 +154,17 @@ class DataObjectManager extends ComplexTableField
 		    $this->setPopupWidth(850);
 		  }
 		}
-
+		$this->setSourceID($this->controller->ID);
 	}
+	
+	//Added for compatability with Site Config
+	function setSourceID($val) 
+	{
+		if (is_numeric($val)) {
+			$this->sourceID = $val;		
+		}
+	}
+	
 	
 	public function setSourceFilter($filter)
 	{
@@ -307,9 +316,11 @@ class DataObjectManager extends ComplexTableField
 	function sourceID() {
 		if($this->isNested)
 			return $this->controller->ID;				
-		$idField = $this->form->dataFieldByName('ID'); 
-		return ($idField && is_numeric($idField->Value())) ? $idField->Value() : (isset($_REQUEST['ctf']['ID']) ? $_REQUEST['ctf']['ID'] : null); 
- 	} 
+		if($idField = $this->form->dataFieldByName('ID')) {
+			return ($idField && is_numeric($idField->Value())) ? $idField->Value() : (isset($_REQUEST['ctf']['ID']) ? $_REQUEST['ctf']['ID'] : null); 	
+		}
+		return $this->sourceID;
+	} 
 	
 	
   protected function getRawDetailFields($childData)
