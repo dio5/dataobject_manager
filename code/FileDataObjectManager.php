@@ -51,7 +51,7 @@ class FileDataObjectManager extends DataObjectManager
 	  if($fileFieldName === null) {
         if($has_ones = $SNG->stat('has_one')) {
           foreach($has_ones as $relation => $value) {
-            if(is_subclass_of($value,"File")) {
+            if($value == "File" || is_subclass_of($value,"File")) {
               $fileFieldName = $relation;
               $fileClassName = $value;
               break;
@@ -692,7 +692,7 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
 			$field = $this->parent->gridLabelField;
 			return $this->$field;
 		}
-		else if(!$this->hasDataObject)
+		else if(!$this->parent->hasDataObject)
 			$label = $this->item->Title;
 		else if($file = DataObject::get_by_id($this->parent->fileClassName, $this->item->$idField))
 			$label = $file->Title;
