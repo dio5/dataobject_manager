@@ -95,9 +95,8 @@ class DataObjectManager extends ComplexTableField
     }
     $SNG = singleton($sourceClass);
     if($fieldList === null) {
-      $diff = array_diff($SNG->summaryFields(),singleton('DataObject')->summaryFields());
-      if(!empty($diff)) {
-        $fieldList = $SNG->summaryFields();
+      if($fields = $SNG->stat('summary_fields')) {
+        $fieldList = $fields;
       }
       else if($db = $SNG->db()) {
         $fieldList = array();
@@ -155,17 +154,8 @@ class DataObjectManager extends ComplexTableField
 		    $this->setPopupWidth(850);
 		  }
 		}
-		$this->setSourceID($this->controller->ID);
+
 	}
-	
-	//Added for compatability with Site Config
-	function setSourceID($val) 
-	{
-		if (is_numeric($val)) {
-			$this->sourceID = $val;		
-		}
-	}
-	
 	
 	public function setSourceFilter($filter)
 	{
@@ -248,11 +238,11 @@ class DataObjectManager extends ComplexTableField
 		$start    = isset($params['start'])? $params['start']       : 	$this->start;
 		$per_page = isset($params['per_page'])? $params['per_page'] : 	$this->per_page;
 		$show_all = isset($params['show_all'])? $params['show_all'] : 	$this->showAll;
-		$sort 	  = isset($params['sort'])? $params['sort'] 		    : 	$this->sort;
-		$sort_dir = isset($params['sort_dir'])? $params['sort_dir'] : 	$this->sort_dir;
-		$filter   = isset($params['filter'])? $params['filter'] 	  : 	$this->filter;
-		$search   = isset($params['search'])? $params['search'] 	  : 	$this->search;
-		return "ctf[{$this->Name()}][start]={$start}&ctf[{$this->Name()}][per_page]={$per_page}&ctf[{$this->Name()}][showall]={$show_all}&ctf[{$this->Name()}][sort]={$sort}&ctf[{$this->Name()}][sort_dir]={$sort_dir}&ctf[{$this->Name()}][search]={$search}&ctf[{$this->Name()}][filter]={$filter}";
+		$sort 	  = isset($params['sort'])? $params['sort'] 		: 	$this->sort;
+		$sort_dir = isset($params['sort_dir'])? $params['sort_dir'] :	$this->sort_dir;
+		$filter   = isset($params['filter'])? $params['filter'] 	: 	$this->filter;
+		$search   = isset($params['search'])? $params['search'] 	: 	$this->search;
+		return "ctf[{$this->Name()}][start]={$start}&ctf[{$this->Name()}][per_page]={$per_page}&ctf[{$this->Name()}][showall]={$show_all}&ctf[{$this->Name()}][sort]={$sort}&ctf[{$this->Name()}][sort_dir]={$sort_dir}&ctf[{$this->Name()}][dir]={$sort_dir}&ctf[{$this->Name()}][search]={$search}&ctf[{$this->Name()}][filter]={$filter}";
 	}
 	
 	public function getSetting($setting)
@@ -317,11 +307,9 @@ class DataObjectManager extends ComplexTableField
 	function sourceID() {
 		if($this->isNested)
 			return $this->controller->ID;				
-		if($idField = $this->form->dataFieldByName('ID')) {
-			return ($idField && is_numeric($idField->Value())) ? $idField->Value() : (isset($_REQUEST['ctf']['ID']) ? $_REQUEST['ctf']['ID'] : null); 	
-		}
-		return $this->sourceID;
-	} 
+		$idField = $this->form->dataFieldByName('ID'); 
+		return ($idField && is_numeric($idField->Value())) ? $idField->Value() : (isset($_REQUEST['ctf']['ID']) ? $_REQUEST['ctf']['ID'] : null); 
+ 	} 
 	
 	
   protected function getRawDetailFields($childData)

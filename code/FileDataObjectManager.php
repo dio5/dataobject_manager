@@ -14,7 +14,7 @@ class FileDataObjectManager extends DataObjectManager
 	public $default_view = "grid";
 	protected $allowedFileTypes;
 	protected $limitFileTypes;
-	protected $uploadLimit = "20";
+	protected $uploadLimit = "40";
 	protected $allowUploadFolderSelection = false;
 	protected $enableUploadDebugging = false;
 	public $hasDataObject = true;
