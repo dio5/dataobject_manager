@@ -95,8 +95,9 @@ class DataObjectManager extends ComplexTableField
     }
     $SNG = singleton($sourceClass);
     if($fieldList === null) {
-      if($fields = $SNG->stat('summary_fields')) {
-        $fieldList = $fields;
+      $diff = array_diff($SNG->summaryFields(),singleton('DataObject')->summaryFields());
+      if(!empty($diff)) {
+        $fieldList = $SNG->summaryFields();
       }
       else if($db = $SNG->db()) {
         $fieldList = array();
