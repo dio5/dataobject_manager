@@ -5,6 +5,11 @@ class DatePickerField extends DateField
 	
 	static $dateFormat = "dd/mm/yy";
 	
+	public function getProjectConfiguration(BedrockSetting $settings) {
+		if($format = $settings->getDateFormat())
+			self::set_date_format($format);
+	}
+	
 	static function HTMLField( $id, $name, $val ) {
 		return <<<HTML
 			<input type="text" readonly="readonly" id="$id" name="$name" value="$val" /> (<a href="javascript:void(0)" rel="clear-btn">clear</a>)

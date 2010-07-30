@@ -373,6 +373,10 @@ class DataObjectManager extends ComplexTableField
 		);	
 		$saveAction->addExtraClass('save');
 		$form->setActions($actions);
+		$form->Fields()->insertFirst(new LiteralField('open','<div id="field-holder"><div id="fade"></div>'));
+		$o = $form->Fields()->Last();
+		$form->Fields()->insertAfter(new LiteralField('close','</div>'),$o->Name());
+
 		return $form;
 	}	
 	
