@@ -7,6 +7,8 @@ $.fn.DataObjectManager = function() {
 };
 
 $.fn.DataObjectManager.init = function(obj) {
+
+
 		var $container = $(obj);
 		var container_id = '#'+$container.attr('id');
 		var nested = $('.DataObjectManager').hasClass('isNested');
@@ -247,7 +249,7 @@ $.fn.DataObjectManager.init = function(obj) {
 			$('.size-control').slider({
 				
 				// Stupid thing doesn't work. Have to force it with CSS
-				//startValue : (START_IMG_SIZE - MIN_IMG_SIZE) / ((MAX_IMG_SIZE - MIN_IMG_SIZE) / 100),
+				startValue : (START_IMG_SIZE - MIN_IMG_SIZE) / ((MAX_IMG_SIZE - MIN_IMG_SIZE) / 100),
 				slide : function(e, ui) {
 					new_image_size = MIN_IMG_SIZE + (ui.value * ((MAX_IMG_SIZE - MIN_IMG_SIZE)/100));
 					$('.grid li img.image').css({'width': new_image_size+'px'});
@@ -310,8 +312,10 @@ $.fn.DataObjectManager.init = function(obj) {
     if(cols > 10) {
     	$('.list #dataobject-list li .fields-wrap .col').css({'width' : ((Math.floor(100/cols)) - 0.1) + '%' });
     }
-		
-
+    
+    
+  $(".ajax-loader").fadeOut("fast");  
+    
 };
 
 $.fn.DataObjectManager.getPageHeight = function() {
@@ -350,6 +354,7 @@ $.fn.DataObjectManager.loadi18n = function() {
     'dataType': "json",
     'success': function (data) {
         json = data;
+        $('.ajax-loader').hide();
     }
   });
   return json;
@@ -357,15 +362,18 @@ $.fn.DataObjectManager.loadi18n = function() {
 
 
 
-$().ajaxSend(function(r,s){  
+$('.DataObjectManager').ajaxSend(function(e,r,s){  
+// stupid hack for the cache killer script.
+if(s.url.indexOf('EditorToolbar') == -1)
  $(".ajax-loader").show();  
 });  
    
-$().ajaxStop(function(r,s){  
+$('.DataObjectManager').ajaxStop(function(e,r,s){  
   $(".ajax-loader").fadeOut("fast");  
 }); 
 $('.DataObjectManager').livequery(function(){
    $(this).DataObjectManager();                           
+
 });
 
 })(jQuery);

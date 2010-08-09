@@ -482,7 +482,7 @@ class FileDataObjectManager extends DataObjectManager
 				$title = strlen($file->Title) > 30 ? substr($file->Title, 0, 30)."..." : $file->Title;
 				$types = $this->getAllowedFileTypes();
 				if(is_array($types) && !empty($types))
-				  $allowed = in_array($file->Extension, $types);
+				  $allowed = in_array(strtolower($file->Extension), $types);
 				else
 				  $allowed = true;
 				

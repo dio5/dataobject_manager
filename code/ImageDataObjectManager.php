@@ -45,7 +45,7 @@ class ImageDataObjectManager extends FileDataObjectManager
 	
 	public function SliderPosition()
 	{
-		return floor(($this->SliderPercentage()/100) * self::$sliderWidth) - (.17 * $this->SliderPercentage()); // handle is 16px wide
+		return floor(($this->SliderPercentage()/100) * self::$sliderWidth); // handle is 16px wide
 	}
 		
 
