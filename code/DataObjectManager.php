@@ -794,7 +794,13 @@ class DataObjectManager_Popup extends Form {
 		}
 		
 		parent::__construct($controller, $name, $fields, $actions, $validator);
-		$this->unsetValidator();
+	    if ($this->validator instanceof Validator) {
+        	$this->validator->setJavascriptValidationHandler('none');
+		} 
+		else {
+        	$this->unsetValidator();
+      	}
+
 		
 	  if($this->getNestedDOMs()) {
 			Requirements::javascript(THIRDPARTY_DIR.'/jquery-livequery/jquery.livequery.js');
