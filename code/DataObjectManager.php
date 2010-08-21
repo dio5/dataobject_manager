@@ -5,7 +5,7 @@ class DataObjectManager extends ComplexTableField
 	
 	protected static $allow_assets_override = true;
 	protected static $allow_css_override = false;
-	protected static $popup_width = 500;
+	protected static $popup_width = 640;
 	protected static $confirm_delete = true;
 	
 	protected $template = "DataObjectManager";
