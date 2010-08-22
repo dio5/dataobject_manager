@@ -1,9 +1,7 @@
 (function($) {
-alert('hi');
 	var request = false;
 	$.fn.autoComplete = function() {
 		return this.each(function() {
-			alert(this);
 			var $element = $(this);
 			$element.initial_val = $element.val();
 			$(this).attr('autocomplete','off')
@@ -46,8 +44,11 @@ alert('hi');
 				e.stopPropagation();
 			})
 			.blur(function() {
-				$(this).toggleClass('focus').val($element.initial_val).siblings('.autocomplete_results').hide();
-			});
+				$t = $(this);
+				setTimeout(function() {
+					$t.toggleClass('focus').val($element.initial_val).siblings('.autocomplete_results').hide();
+				}, 500);
+			})			
 			
 		});
 	};
