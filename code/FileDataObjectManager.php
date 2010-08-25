@@ -49,7 +49,7 @@ class FileDataObjectManager extends DataObjectManager
 	  // Intelligent constructor for fileFieldName
 		$SNG = singleton($this->sourceClass());
 	  if($fileFieldName === null) {
-        if($has_ones = $SNG->stat('has_one')) {
+        if($has_ones = $SNG->has_one()) {
           foreach($has_ones as $relation => $value) {
             if($value == "File" || is_subclass_of($value,"File")) {
               $fileFieldName = $relation;

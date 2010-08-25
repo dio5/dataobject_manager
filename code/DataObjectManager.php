@@ -94,6 +94,8 @@ class DataObjectManager extends ComplexTableField
       }
     }
     $SNG = singleton($sourceClass);
+    
+
     if($fieldList === null) {
       $diff = array_diff($SNG->summaryFields(),singleton('DataObject')->summaryFields());
       if(!empty($diff)) {
