@@ -39,7 +39,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public $uploadFolder = "Uploads";
 	
-	
+	public $uploadifyField = "MultipleFileUploadField";
 	
 	public function __construct($controller, $name = null, $sourceClass = null, $fileFieldName = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "Created DESC", $sourceJoin = "") 
 	{
@@ -224,7 +224,7 @@ class FileDataObjectManager extends DataObjectManager
 	public function upload()
 	{
 		if(!$this->can('add')) return;
-		$form = $this->UploadForm();
+		$form = class_exists('UploadifyField') ? $this->UploadifyForm() : $this->UploadForm();
 		if(is_string($form))
 			return $this->customise(array(
 				'String' => true,
@@ -232,7 +232,7 @@ class FileDataObjectManager extends DataObjectManager
 				'DetailForm' => $this->UploadForm(),
 			))->renderWith($this->templatePopup);
 		else {
-			$form = $this->UploadForm();
+			$form = class_exists('UploadifyField') ? $this->UploadifyForm() : $this->UploadForm();
 			return $this->customise(array(
 			  'String' => is_string($form),
 				'DetailForm' => $form
@@ -268,6 +268,60 @@ class FileDataObjectManager extends DataObjectManager
 		if($this->allowUploadFolderSelection) 
 			$fields->insertBefore(new HTMLDropdownField('UploadFolder','',$this->getUploadFolderHierarchy(0),null, null, "-- Select a folder --"),"Upload");
 		return $fields;
+	}
+
+	protected function getUploadifyFields()
+	{
+		
+		$class = $this->uploadifyField;
+		$fields = new FieldSet(
+			new HeaderField($title = sprintf(_t('DataObjectManager.ADDITEM', 'Add %s'),$this->PluralTitle()), $headingLevel = 2),
+			$uploader = new $class('UploadedFiles')
+		);
+
+		if($this->allowUploadFolderSelection) { 
+			$uploader->allowFolderSelection();
+		}
+		$uploader->setVar('buttonText', $this->getBrowseButtonText());
+		$uploader->setVar('queueSizeLimit', $this->getUploadLimit());
+		if(is_subclass_of($this->fileClassName, "File")) {
+			if(is_subclass_of($this->fileClassName, "Image")) {
+				$uploader->setVar('image_class', $this->fileClassName);
+			}
+			else {
+				$uploader->setVar('file_class', $this->fileClassName);
+			}
+		}
+		
+		return $fields;
+	}
+	
+	public function UploadifyForm() {
+
+		Validator::set_javascript_validation_handler('none');
+		
+		$fields = $this->Can('upload') ? $this->getUploadifyFields() : new FieldSet(			
+			new HeaderField($title = sprintf(_t('DataObjectManager.ADD', 'Add %s'),$this->PluralTitle()), $headingLevel = 2)
+		);
+
+		$className = $this->sourceClass();
+		$childData = new $className();
+
+		$form = Object::create(
+			$this->popupClass,
+			$this,
+			'UploadifyForm',
+			$fields,
+			new RequiredFields('UploadedFiles'),
+			false,
+			$childData
+		);
+		
+		$uploader = $form->Fields()->fieldByName('UploadedFiles');
+		
+		$action = $this->Can('upload') ? new FieldSet(new FormAction('saveUploadifyForm', 'Continue')) : new FieldSet();
+		$form->setActions($action);
+		return $form;
 	}
 	
 	public function UploadForm()
@@ -335,6 +389,48 @@ class FileDataObjectManager extends DataObjectManager
 				'DetailForm' => $form
 			))->renderWith($this->templatePopup);
 		}
+	}
+	
+	public function updateDataObject(&$object) { }
+	
+	public function saveUploadifyForm($data, $form)
+	{
+		if(!isset($data['UploadedFiles']) || !is_array($data['UploadedFiles'])) {
+			return Director::redirectBack();
+		}
+		
+		$file_class = $this->fileClassName;
+		$do_class = $this->sourceClass();
+		$idxfield = $this->fileFieldName."ID";
+		
+		$dataobject_ids = array();
+		if($this->hasDataObject) {
+			foreach($data['UploadedFiles'] as $id) {
+				$obj = new $do_class();			
+				$obj->$idxfield = $id;
+				$ownerID = $this->getParentIdName($this->getParentClass(), $this->sourceClass());
+				$obj->$ownerID = $this->controllerID;
+				$this->updateDataObject($obj);
+				$obj->write();
+				$dataobject_ids[] = $obj->ID;
+			}
+			$_POST['uploaded_files'] = $dataobject_ids;					
+		}	
+		else {
+			foreach($data['UploadedFiles'] as $id) {
+				if($file = DataObject::get_by_id("File", (int) $id)) {
+					$ownerID = $this->getParentIdName($this->getParentClass(), $this->sourceClass());
+					$file->$ownerID = $this->controllerID;
+					$file->write();
+				}
+			}
+		}		
+
+      $form = $this->EditUploadedForm();
+		return $this->customise(array(
+		  'String' => is_string($form),
+			'DetailForm' => $form
+		))->renderWith($this->templatePopup);
 	}
 	
 	protected function getChildDataObj()
@@ -679,7 +775,12 @@ class FileDataObjectManager_Item extends DataObjectManager_Item {
              $img->ID = $file->ID; //image resize functions require an id
           }
        }         
-       return isset($img) ? $img->CroppedImage(50,50)->URL : $file->Icon();         
+       if(isset($img)) {
+       	if($crop = $img->CroppedImage(50,50)) {
+       		return $crop->URL;
+       	}
+       }
+       return $file->Icon();
 
     }
     else return "{$this->item->$field}"; 

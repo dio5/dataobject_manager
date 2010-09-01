@@ -15,6 +15,8 @@ class ImageDataObjectManager extends FileDataObjectManager
 	public $importClass = "Image";
 	
 	public $imageSize = 100;
+	
+	public $uploadifyField = "MultipleImageUploadField";
 
 	public function __construct($controller, $name = null, $sourceClass = null, $fileFieldName = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "Created DESC", $sourceJoin = "") 
 	{
