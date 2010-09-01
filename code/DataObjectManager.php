@@ -14,8 +14,8 @@ class DataObjectManager extends ComplexTableField
 	protected $showAll = "0";
 	protected $search = "";
 	protected $filter = "";
-	protected $sort_dir = "DESC";
-	protected $sort = "Created";
+	protected $sort_dir = null;
+	protected $sort = null;
 	protected $filter_map = array();
 	protected $filtered_field;
 	protected $filter_label = "Filter results";
@@ -78,7 +78,7 @@ class DataObjectManager extends ComplexTableField
 	   self::$confirm_delete = $bool;
 	}
 	
-	function __construct($controller, $name = null, $sourceClass = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "Created DESC", $sourceJoin = "") 
+	function __construct($controller, $name = null, $sourceClass = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = null, $sourceJoin = "") 
 	{
 		if(!class_exists("ComplexTableField_ItemRequest"))
 			die("<strong>"._t('DataObjectManager.ERROR','Error')."</strong>: "._t('DataObjectManager.SILVERSTRIPEVERSION','DataObjectManager requires Silverstripe version 2.3 or higher.'));
@@ -203,6 +203,9 @@ class DataObjectManager extends ComplexTableField
 		elseif(isset($_REQUEST['ctf'][$this->Name()]['sort'])) {
 			$this->sourceSort = $_REQUEST['ctf'][$this->Name()]['sort'] . " " . $this->sort_dir;
 		}
+		else {
+			$this->sourceSort = singleton($this->sourceClass())->stat('default_sort');
+		}
 
 	}
 	
@@ -245,7 +248,7 @@ class DataObjectManager extends ComplexTableField
 		$sort_dir = isset($params['sort_dir'])? $params['sort_dir'] :	$this->sort_dir;
 		$filter   = isset($params['filter'])? $params['filter'] 	: 	$this->filter;
 		$search   = isset($params['search'])? $params['search'] 	: 	$this->search;
-		return "ctf[{$this->Name()}][start]={$start}&ctf[{$this->Name()}][per_page]={$per_page}&ctf[{$this->Name()}][showall]={$show_all}&ctf[{$this->Name()}][sort]={$sort}&ctf[{$this->Name()}][sort_dir]={$sort_dir}&ctf[{$this->Name()}][dir]={$sort_dir}&ctf[{$this->Name()}][search]={$search}&ctf[{$this->Name()}][filter]={$filter}";
+		return "ctf[{$this->Name()}][start]={$start}&ctf[{$this->Name()}][per_page]={$per_page}&ctf[{$this->Name()}][showall]={$show_all}&ctf[{$this->Name()}][sort]={$sort}&ctf[{$this->Name()}][sort_dir]={$sort_dir}&ctf[{$this->Name()}][search]={$search}&ctf[{$this->Name()}][filter]={$filter}";
 	}
 	
 	public function getSetting($setting)

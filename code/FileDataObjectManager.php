@@ -41,7 +41,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public $uploadifyField = "MultipleFileUploadField";
 	
-	public function __construct($controller, $name = null, $sourceClass = null, $fileFieldName = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "Created DESC", $sourceJoin = "") 
+	public function __construct($controller, $name = null, $sourceClass = null, $fileFieldName = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") 
 	{
 		if(!class_exists("SWFUploadField"))
 			die("<strong>"._t('DataObjectManager.ERROR','Error')."</strong>: "._t('FileDataObjectManager.SWFUPLOAD','DataObjectManager requires the SWFUpload module.'));
