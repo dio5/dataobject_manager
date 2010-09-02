@@ -293,6 +293,10 @@ class FileDataObjectManager extends DataObjectManager
 			}
 		}
 		
+		if(!empty($this->allowedFileTypes)) { 
+			$uploader->setFileTypes($this->getAllowedFileTypes(), $this->PluralTitle() . '(' . implode(',',$this->allowedFileTypes) . ')'); 
+		}  
+		$uploader->uploadFolder = $this->uploadFolder; 
 		return $fields;
 	}
 	
