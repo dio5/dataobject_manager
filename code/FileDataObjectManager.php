@@ -15,7 +15,7 @@ class FileDataObjectManager extends DataObjectManager
 	protected $allowedFileTypes;
 	protected $limitFileTypes;
 	protected $uploadLimit = "40";
-	protected $allowUploadFolderSelection = false;
+	protected $allowUploadFolderSelection = true;
 	protected $enableUploadDebugging = false;
 	public $hasDataObject = true;
 	public $importClass = "File";
@@ -279,8 +279,11 @@ class FileDataObjectManager extends DataObjectManager
 			$uploader = new $class('UploadedFiles')
 		);
 
-		if($this->allowUploadFolderSelection) { 
-			$uploader->allowFolderSelection();
+		if(!$this->allowUploadFolderSelection) { 
+			$uploader->removeFolderSelection();
+		}
+		if($this->uploadFolder) {
+			$uploader->setUploadFolder($this->uploadFolder);
 		}
 		$uploader->setVar('buttonText', $this->getBrowseButtonText());
 		$uploader->setVar('queueSizeLimit', $this->getUploadLimit());

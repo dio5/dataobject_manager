@@ -19,13 +19,16 @@ class SimpleTreeDropdownField extends HTMLDropdownField
 	
 	private function getHierarchy($parentID, $level = 0)
 	{
-		$options = array();		
-		if($children = DataObject::get($this->sourceClass, "ParentID = $parentID")) {
+		$options = array();
+		$class = ($this->sourceClass == "SiteTree" || is_subclass_of($this->sourceClass, "SiteTree")) ? "SiteTree" : $this->sourceClass;
+		if($children = DataObject::get($class, "ParentID = $parentID")) {
 			foreach($children as $child) {
 				$indent="";
 				for($i=0;$i<$level;$i++) $indent .= "&nbsp;&nbsp;";
-				$text = $child->__get($this->labelField);
-				$options[$child->ID] = empty($text) ? "<em>$indent Untitled</em>" : $indent.$text;
+				if($child->ClassName == $this->sourceClass) {
+					$text = $child->__get($this->labelField);
+					$options[$child->ID] = empty($text) ? "<em>$indent Untitled</em>" : $indent.$text;
+				}
 				$options += $this->getHierarchy($child->ID, $level+1);
 			}
 		}
