@@ -5,11 +5,11 @@ class SimpleTreeDropdownField extends HTMLDropdownField
 	protected $sourceClass;
 	protected $labelField;
 	
-	function __construct($name, $title = "", $sourceClass = "SiteTree", $value = "", $labelField = "Title", $form = null, $emptyString = null)
+	function __construct($name, $title = "", $sourceClass = "SiteTree", $value = "", $labelField = "Title", $parentID = 0, $form = null, $emptyString = null)
 	{
 		$this->sourceClass = $sourceClass;
 		$this->labelField = $labelField;
-		parent::__construct($name, $title, $this->getHierarchy(0), $value, $form, $emptyString);
+		parent::__construct($name, $title, $this->getHierarchy($parentID), $value, $form, $emptyString);
 	}
 	
 	public function setLabelField($field)
@@ -25,7 +25,7 @@ class SimpleTreeDropdownField extends HTMLDropdownField
 			foreach($children as $child) {
 				$indent="";
 				for($i=0;$i<$level;$i++) $indent .= "&nbsp;&nbsp;";
-				if($child->ClassName == $this->sourceClass) {
+				if($child->ClassName == $this->sourceClass || is_subclass_of($child, $this->sourceClass)) {
 					$text = $child->__get($this->labelField);
 					$options[$child->ID] = empty($text) ? "<em>$indent Untitled</em>" : $indent.$text;
 				}
