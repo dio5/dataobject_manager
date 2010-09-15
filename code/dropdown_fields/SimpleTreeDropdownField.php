@@ -5,7 +5,7 @@ class SimpleTreeDropdownField extends HTMLDropdownField
 	protected $sourceClass;
 	protected $labelField;
 	
-	function __construct($name, $title = "", $sourceClass = "SiteTree", $value = "", $labelField = "Title", $parentID = 0, $form = null, $emptyString = null)
+	function __construct($name, $title = "", $sourceClass = "SiteTree", $value = "", $labelField = "Title", $form = null, $emptyString = null, $parentID = 0)
 	{
 		$this->sourceClass = $sourceClass;
 		$this->labelField = $labelField;
