@@ -9,7 +9,7 @@ class SimpleTreeDropdownField extends HTMLDropdownField
 	{
 		$this->sourceClass = $sourceClass;
 		$this->labelField = $labelField;
-		parent::__construct($name, $title, $this->getHierarchy((int)$parentID), $value, $form, $emptyString);
+		parent::__construct($name, $title, $this->getHierarchy((int) $parentID), $value, $form, $emptyString);
 	}
 	
 	public function setLabelField($field)
