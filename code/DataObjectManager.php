@@ -577,7 +577,7 @@ class DataObjectManager extends ComplexTableField
 	
 	public function PopupWidth()
 	{
-	   return $this->getSetting('popupWidth'); 
+	   return $this->popupWidth ? $this->popupWidth : self::$popup_width;
 	}
 	
 	public function ConfirmDelete()
