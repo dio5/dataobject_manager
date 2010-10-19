@@ -5,7 +5,7 @@ class DataObjectManager extends ComplexTableField
 	
 	protected static $allow_assets_override = true;
 	protected static $allow_css_override = false;
-	protected static $popup_width = 640;
+	public static $popup_width = 640;
 	protected static $confirm_delete = true;
 	
 	protected $template = "DataObjectManager";
@@ -309,6 +309,12 @@ class DataObjectManager extends ComplexTableField
 		else Director::redirectBack();
 
 	}
+	
+	function setSourceID($val) { 
+		if (is_numeric($val)) { 
+			$this->sourceID = $val; 
+		} 
+	}	
 	
 	function sourceID() {
 		if($this->isNested)
