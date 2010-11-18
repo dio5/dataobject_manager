@@ -295,7 +295,6 @@ class DataObjectManager extends ComplexTableField
 		$className = $this->sourceClass();
 		$childData = new $className();
 		$form->saveInto($childData);
-		$childData->write();
 		try {
 			$childData->write();
 		} 
