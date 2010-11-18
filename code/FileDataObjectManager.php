@@ -132,7 +132,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	protected function importLinkFor($file)
 	{
-		return $this->BaseLink()."/import/$file->ID";
+		return Controller::join_links($this->BaseLink(), "import", $file->ID);
 	}
 	
 	protected function getImportFolderHierarchy($parentID, $level = 0)
@@ -242,7 +242,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public function UploadLink()
 	{
-		return Controller::join_links($this->BaseLink(),'/upload');
+		return Controller::join_links($this->BaseLink(),'upload');
 	}
 	
 	protected function getUploadFields()

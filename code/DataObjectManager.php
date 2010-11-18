@@ -296,6 +296,13 @@ class DataObjectManager extends ComplexTableField
 		$childData = new $className();
 		$form->saveInto($childData);
 		$childData->write();
+		try {
+			$childData->write();
+		} 
+		catch(ValidationException $e) {
+			$form->sessionMessage($e->getResult()->message(), 'bad');
+			return Director::redirectBack();
+		}		
 		if($childData->many_many()) {
 		  $form->saveInto($childData);
 		  $childData->write();
@@ -304,7 +311,8 @@ class DataObjectManager extends ComplexTableField
 
 		if($form->getFileFields() || $form->getNestedDOMs()) {
 			$form->clearMessage();
-      Director::redirect(Controller::join_links($this->BaseLink(),'/item/'.$childData->ID.'/edit'));		
+      	Director::redirect(Controller::join_links($this->BaseLink(),'item', $childData->ID, 'edit'));		
+
     }
 		else Director::redirectBack();
 
@@ -435,7 +443,7 @@ class DataObjectManager extends ComplexTableField
 	}
 
 	public function AddLink() {
-    return Controller::join_links($this->BaseLink(), '/add');
+	    return Controller::join_links($this->BaseLink(), 'add');
 	}
 		
 	public function ShowAll()
@@ -602,7 +610,7 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 	}
 	
 	function Link() {
-    return Controller::join_links($this->parent->BaseLink(), '/item/' . $this->item->ID);
+    return Controller::join_links($this->parent->BaseLink(), 'item', $this->item->ID);
 	}
 	
 	function Fields() {
@@ -638,12 +646,12 @@ class DataObjectManager_Item extends ComplexTableField_Item {
 	
 	public function EditLink()
 	{
-	 return $this->Link()."/edit?".$this->parent->getQueryString();
+	 	return Controller::join_links($this->Link(), "edit","?".$this->parent->getQueryString());
 	}
 
 	public function DuplicateLink()
 	{
-    return Controller::join_links($this->Link(), "/duplicate");
+    return Controller::join_links($this->Link(), "duplicate");
 	}
 
 	public function CustomActions()
@@ -881,13 +889,20 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 
 	function Link() 
 	{
-    return Controller::join_links($this->ctf->BaseLink() , '/item/' . $this->itemID);	
+    return Controller::join_links($this->ctf->BaseLink() , 'item', $this->itemID);	
   }
 
 	function saveComplexTableField($data, $form, $request) {
 		$dataObject = $this->dataObj();
 		$form->saveInto($dataObject);
-		$dataObject->write();
+		try {
+			$dataObject->write();
+		} 
+		catch(ValidationException $e) {
+			$form->sessionMessage($e->getResult()->message(), 'bad');
+			return Director::redirectBack();
+		}
+
 		// Save the many many relationship if it's available
 		if(isset($data['ctf']['manyManyRelation'])) {
 			$parentRecord = DataObject::get_by_id($data['ctf']['parentClass'], (int) $data['ctf']['sourceID']);
@@ -1011,13 +1026,13 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 	function NextRecordLink()
 	{
     if(!$this->itemList || $this->currentIndex == sizeof($this->itemList)-1) return false;
-    return Controller::join_links($this->ctf->BaseLink() , '/item/' . $this->getNextID().'/edit')."?".$this->ctf->getQueryString();		 
+    return Controller::join_links($this->ctf->BaseLink() , 'item' . $this->getNextID().'edit',"?".$this->ctf->getQueryString());		 
 	}
 	
 	function PrevRecordLink()
 	{
     if(!$this->itemList || $this->currentIndex == 0) return false;
-    return Controller::join_links($this->ctf->BaseLink() , '/item/' . $this->getPrevID().'/edit')."?".$this->ctf->getQueryString();		
+    return Controller::join_links($this->ctf->BaseLink() , 'item' . $this->getPrevID().'edit',"?".$this->ctf->getQueryString());
 	}
 	
 	function HasPagination()
@@ -1037,7 +1052,7 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 	
 	function DuplicateLink()
 	{
-		return Controller::join_links($this->ctf->BaseLink(),'/duplicate/'.$this->itemID);
+		return Controller::join_links($this->ctf->BaseLink(),'duplicate'.$this->itemID);
 	}
 	
 	function HasRelated()
