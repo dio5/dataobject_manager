@@ -1021,18 +1021,20 @@ class DataObjectManager_ItemRequest extends ComplexTableField_ItemRequest
 	{
 	  return $this->itemList[$this->currentIndex + 1];
 	}
-		
+
+
 	function NextRecordLink()
 	{
-    if(!$this->itemList || $this->currentIndex == sizeof($this->itemList)-1) return false;
-    return Controller::join_links($this->ctf->BaseLink() , 'item' . $this->getNextID().'edit',"?".$this->ctf->getQueryString());		 
+		if(!$this->itemList || $this->currentIndex == sizeof($this->itemList)-1) return false;
+		return Controller::join_links($this->ctf->BaseLink() , 'item/' . $this->getNextID().'/edit',"?".$this->ctf->getQueryString());
 	}
 	
 	function PrevRecordLink()
 	{
-    if(!$this->itemList || $this->currentIndex == 0) return false;
-    return Controller::join_links($this->ctf->BaseLink() , 'item' . $this->getPrevID().'edit',"?".$this->ctf->getQueryString());
+		if(!$this->itemList || $this->currentIndex == 0) return false;
+		return Controller::join_links($this->ctf->BaseLink() , 'item/' . $this->getPrevID().'/edit',"?".$this->ctf->getQueryString());
 	}
+			
 	
 	function HasPagination()
 	{
