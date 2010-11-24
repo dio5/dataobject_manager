@@ -1,0 +1,37 @@
+<?php
+global $lang;
+$lang['sk_SK']['DataObjectManager']['ADD'] = 'Pridať';
+$lang['sk_SK']['DataObjectManager']['ADDEDNEW'] = 'Pridané nové %s úspešne';
+$lang['sk_SK']['DataObjectManager']['ADDITEM'] = array('Pridať %s',PR_MEDIUM,'Pridať [názov]');
+$lang['sk_SK']['DataObjectManager']['ALLOWEDFILETYPES'] = 'Iba súbory typu %s sú povolené';
+$lang['sk_SK']['DataObjectManager']['DELETE'] = 'Smazať';
+$lang['sk_SK']['DataObjectManager']['DISPLAYING'] = 'Zobrazenie';
+$lang['sk_SK']['DataObjectManager']['DRAGDROP'] = 'Povoliť tiahni a pustiť pre triedenie';
+$lang['sk_SK']['DataObjectManager']['ERROR'] = 'Chyba';
+$lang['sk_SK']['DataObjectManager']['IMPORTFROMFOLDER'] = 'Import z existujúcej zložky';
+$lang['sk_SK']['DataObjectManager']['NOFILTER'] = 'Žiaden filter';
+$lang['sk_SK']['DataObjectManager']['NOITEMSFOUND'] = 'Žiadne položky nájdené %s';
+$lang['sk_SK']['DataObjectManager']['OF'] = 'zo';
+$lang['sk_SK']['DataObjectManager']['PERPAGERESULTS'] = 'výsledkov na stránku';
+$lang['sk_SK']['DataObjectManager']['PERPAGESHOW'] = 'Ukázať';
+$lang['sk_SK']['DataObjectManager']['REFRESH'] = 'obnoviť';
+$lang['sk_SK']['DataObjectManager']['SAVE'] = 'Uložiť';
+$lang['sk_SK']['DataObjectManager']['SAVEANDADD'] = 'Uložiť a pridať %s';
+$lang['sk_SK']['DataObjectManager']['SAVED'] = 'Uložené %s úspešne';
+$lang['sk_SK']['DataObjectManager']['SEARCH'] = 'Vyhľadať';
+$lang['sk_SK']['DataObjectManager']['SELECTFOLDER'] = 'Vybrať zložku';
+$lang['sk_SK']['DataObjectManager']['SILVERSTRIPEVERSION'] = 'DataObjectManager vyžaduje Silverstripe verziu 2.3, alebo vyššiu.';
+$lang['sk_SK']['DataObjectManager']['TO'] = 'až';
+$lang['sk_SK']['DataObjectManager']['TOTALNOT100'] = 'Šírka stĺpca musí byť rovna 100 a nie %s';
+$lang['sk_SK']['DataObjectManager']['UPLOADFROMPC'] = 'Nahrať z mojho počítača';
+$lang['sk_SK']['DataObjectManager']['VIEWFIRST'] = 'Ukázť prvé';
+$lang['sk_SK']['DataObjectManager']['VIEWLAST'] = 'Ukázať posledné';
+$lang['sk_SK']['DataObjectManager']['VIEWNEXT'] = 'Ukázať ďalšie';
+$lang['sk_SK']['DataObjectManager']['VIEWPREVIOUS'] = 'Ukázať predchozie';
+$lang['sk_SK']['DataObjectManager_popup.ss']['NEXT'] = 'Ďalší';
+$lang['sk_SK']['DataObjectManager_popup.ss']['PREVIOUS'] = 'Predchozí';
+$lang['sk_SK']['FileDataObjectManager']['GRIDVIEW'] = 'Ukázať ako tabuľku';
+$lang['sk_SK']['FileDataObjectManager']['LISTVIEW'] = 'Ukázať ako zoznam';
+$lang['sk_SK']['FileDataObjectManager']['SWFUPLOAD'] = 'DataObjectManager vyžaduje SWFUpload modul.';
+$lang['sk_SK']['AssetManager']['ADDFILESTO'] = 'súbory do "%s"';
+?>
