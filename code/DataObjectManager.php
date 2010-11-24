@@ -25,11 +25,14 @@ class DataObjectManager extends ComplexTableField
 	protected $use_view_all = true;
 	protected $popupWidth;
 	protected $confirmDelete;
+	protected $hasCustomSourceID;
 	public $itemClass = "DataObjectManager_Item";
 	public $addTitle;
 	public $singleTitle;
 	public $hasNested = false;
 	public $isNested = false;
+	
+	
 
 
 	public $actions = array(
@@ -320,10 +323,15 @@ class DataObjectManager extends ComplexTableField
 	function setSourceID($val) { 
 		if (is_numeric($val)) { 
 			$this->sourceID = $val; 
+			$this->hasCustomSourceID = true;
 		} 
 	}	
 	
 	function sourceID() {
+		if ($this->hasCustomSourceID) {
+			return $this->sourceID;
+		}
+	
 		if($this->isNested)
 			return $this->controller->ID;				
 		$idField = $this->form->dataFieldByName('ID'); 
