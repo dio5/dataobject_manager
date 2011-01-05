@@ -104,6 +104,9 @@ class ManyManyDataObjectManager extends HasManyDataObjectManager
 		elseif(isset($_REQUEST['ctf'][$this->Name()]['sort']) && !empty($_REQUEST['ctf'][$this->Name()]['sort'])) {
 			$this->sourceSort = $_REQUEST['ctf'][$this->Name()]['sort'] . " " . $this->sort_dir;
 		}
+		else {
+			$this->sourceSort = singleton($this->sourceClass())->stat('default_sort');
+		}
 
 		
 	}

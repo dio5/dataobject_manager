@@ -206,8 +206,11 @@ class DataObjectManager extends ComplexTableField
 		elseif(isset($_REQUEST['ctf'][$this->Name()]['sort']) && !empty($_REQUEST['ctf'][$this->Name()]['sort'])) {
 			$this->sourceSort = $_REQUEST['ctf'][$this->Name()]['sort'] . " " . $this->sort_dir;
 		}
+		elseif($sort = singleton($this->sourceClass())->stat('default_sort')) {
+			$this->sourceSort = $sort;
+		}
 		else {
-			$this->sourceSort = singleton($this->sourceClass())->stat('default_sort');
+			$this->sourceSort = "Created DESC";
 		}
 
 	}

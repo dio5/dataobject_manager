@@ -18,7 +18,7 @@ class HasManyFileDataObjectManager extends FileDataObjectManager
 	 * Painful, but necessary, until PHP supports multiple inheritance.
 	 */
 	
-	function __construct($controller, $name, $sourceClass, $fileFieldName,  $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "")
+	function __construct($controller, $name, $sourceClass, $fileFieldName = null,  $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "")
 	{
 		parent::__construct($controller, $name, $sourceClass, $fileFieldName, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 		

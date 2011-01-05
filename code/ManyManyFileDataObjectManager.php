@@ -17,7 +17,7 @@ class ManyManyFileDataObjectManager extends HasManyFileDataObjectManager
 	
 
 		
-	function __construct($controller, $name, $sourceClass, $fileFieldName, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
+	function __construct($controller, $name, $sourceClass, $fileFieldName = null, $fieldList = null, $detailFormFields = null, $sourceFilter = "", $sourceSort = "", $sourceJoin = "") {
 
 		parent::__construct($controller, $name, $sourceClass, $fileFieldName, $fieldList, $detailFormFields, $sourceFilter, $sourceSort, $sourceJoin);
 		$manyManyTable = false;
@@ -97,8 +97,13 @@ class ManyManyFileDataObjectManager extends HasManyFileDataObjectManager
 			$this->sourceSort = "SortOrder " . SortableDataObject::$sort_dir;
 		}
 		
-		elseif(isset($_REQUEST['ctf'][$this->Name()]['sort']))
+		elseif(isset($_REQUEST['ctf'][$this->Name()]['sort']) && !empty($_REQUEST['ctf'][$this->Name()]['sort'])) {
 			$this->sourceSort = $_REQUEST['ctf'][$this->Name()]['sort'] . " " . $this->sort_dir;
+		}
+		else {
+			$this->sourceSort = singleton($this->sourceClass())->stat('default_sort');
+		}
+			
 	}
 	
 	
