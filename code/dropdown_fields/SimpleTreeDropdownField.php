@@ -12,7 +12,7 @@ class SimpleTreeDropdownField extends HTMLDropdownField
 		$this->useCache = $cache;
 		parent::__construct($name, $title, null, $value, $form, $emptyString);
 		//so that we mimic the behaviour of TreeDropDownField,
-		// if you pass an array, we will treet it as the source.
+		// if you pass an array, we will treat it as the source.
 		if (is_array($sourceClass)) {
 			$this->source = $sourceClass;
 		}
