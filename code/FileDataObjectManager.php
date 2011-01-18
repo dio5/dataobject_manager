@@ -325,7 +325,6 @@ class FileDataObjectManager extends DataObjectManager
 		);
 		
 		$uploader = $form->Fields()->fieldByName('UploadedFiles');
-		
 		$action = $this->Can('upload') ? new FieldSet(new FormAction('saveUploadifyForm', 'Continue')) : new FieldSet();
 		$form->setActions($action);
 		return $form;
@@ -409,19 +408,36 @@ class FileDataObjectManager extends DataObjectManager
 		$file_class = $this->fileClassName;
 		$do_class = $this->sourceClass();
 		$idxfield = $this->fileFieldName."ID";
-		
+		$fff = $this->fileFieldName;
 		$dataobject_ids = array();
 		if($this->hasDataObject) {
 			foreach($data['UploadedFiles'] as $id) {
-				$obj = new $do_class();			
-				$obj->$idxfield = $id;
-				$ownerID = $this->getParentIdName($this->getParentClass(), $this->sourceClass());
-				$obj->$ownerID = $this->controllerID;
-				$this->updateDataObject($obj);
-				$obj->write();
-				$dataobject_ids[] = $obj->ID;
+				if($file = DataObject::get_by_id("File", (int) $id)) {
+					$upload_folder = $form->Fields()->fieldByName('UploadedFiles')->uploadFolder;
+					$folder_id = Folder::findOrMake($upload_folder)->ID;
+					if($file->ParentID != $folder_id) {
+						$new_file_path = $this->uploadFolder.'/'.$file->Name;
+						copy($file->getFullPath(), BASE_PATH.'/'.ASSETS_DIR.'/'.$new_file_path);
+						$clone = new $file_class();
+						$clone->Filename = $new_file_path;
+						$clone->ParentID = $folder_id;						
+						$clone->write();
+						$id = $clone->ID;
+					}
+					
+					$obj = new $do_class();			
+					$obj->$idxfield = $id;
+					$ownerID = $this->getParentIdName($this->getParentClass(), $this->sourceClass());
+					$obj->$ownerID = $this->controllerID;
+					$this->updateDataObject($obj);
+					$obj->write();
+					$obj->$fff()->write();
+					$dataobject_ids[] = $obj->ID;
+				}
 			}
-			$_POST['uploaded_files'] = $dataobject_ids;					
+			$_POST['uploaded_files'] = $dataobject_ids;
+			foreach($_POST['uploaded_files'] as $id) {
+			}
 		}	
 		else {
 			foreach($data['UploadedFiles'] as $id) {
