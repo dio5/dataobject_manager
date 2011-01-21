@@ -3,6 +3,8 @@
 class SimpleTinyMCEField extends TextareaField
 {
 
+  public static $default_init_js = "dataobject_manager/code/simple_tinymce_field/javascript/simple_tinymce_init.js";
+  
   private static $default_plugins = "safari,paste";
   private static $default_theme = "advanced";
   private static $default_buttons = array(
@@ -25,7 +27,7 @@ class SimpleTinyMCEField extends TextareaField
   private $advancedResizing;
   private $contentCSS;
   private $extraOptions;
-  
+  private $initFile;
   
 	
 	function __construct($name, $title = null, $config = array(), $rows = 15, $cols = 55, $value = "", $form = null) 
@@ -180,40 +182,23 @@ class SimpleTinyMCEField extends TextareaField
     $this->extraOptions = $opts;
   }
   
-  private function buildJS()
+  public function setInitFile($file)
   {
-    $js = sprintf("
-      $(function() {
-				$('#%s').tinymce({
-  				  plugins : '%s',
-  				  theme : '%s',
-  			    %s,	  
-  			   theme_advanced_toolbar_location : '%s',
-      		 theme_advanced_toolbar_align : '%s',
-      		 theme_advanced_statusbar_location : '%s',
-      		 theme_advanced_resizing : %s,
-           paste_auto_cleanup_on_paste : true, 
-           paste_remove_spans: true, 
-           paste_remove_styles: true,      		 
-  			   content_css : '%s'
-  			   %s
-		    });
-		  });",
-		  $this->Id(),
-		  $this->getPlugins(),
-		  $this->getTheme(),
-		  $this->getButtons(),
-		  $this->getToolbarLocation(),
-		  $this->getToolbarAlign(),
-		  $this->getStatusbarLocation(),
-		  $this->getAdvancedResizing(),
-		  $this->getContentCSS(),
-		  $this->getExtraOptions()
-		  
-		);
-    return $js;
+    $this->initFile = $file;
   }
-
+  
+  public function getInitFile()
+  {
+    if($this->initFile)
+      return $this->initFile;
+    elseif(Director::fileExists($file = project()."/javascript/simple_tinymce_init.js"))
+      return $file;
+    elseif(Director::fileExists($file = ViewableData::ThemeDir()."/javascript/simple_tinymce_init.js"))
+      return $file;
+    else
+      return self::$default_init_js;
+  }
+  
   function Field()
   {
     Requirements::javascript(THIRDPARTY_DIR."/jquery/jquery.js");

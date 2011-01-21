@@ -6,6 +6,9 @@ class SimpleWysiwygField extends TextareaField
 	private static $default_configuration = array();
 	private $configuration = array();
 	
+	public $initFile;
+	public static $default_init_js = "dataobject_manager/code/simple_wysiwyg_field/javascript/simple_wysiwyg_init.js";
+	
 	function __construct($name, $title = null, $config = array(), $rows = 15, $cols = 55, $value = "", $form = null) 
 	{
 		parent::__construct($name, $title, $rows, $cols, $value, $form);
@@ -43,6 +46,19 @@ class SimpleWysiwygField extends TextareaField
     });";
     return $js;
   }
+  
+  public function getInitFile()
+  {
+    if($this->initFile)
+      return $this->initFile;
+    elseif(Director::fileExists($file = project()."/javascript/simple_wysiwyg_init.js"))
+      return $file;
+    elseif(Director::fileExists($file = ViewableData::ThemeDir()."/javascript/simple_wysiwyg_init.js"))
+      return $file;
+    else
+      return self::$default_init_js;
+  }
+  
   
   
   function Field()
