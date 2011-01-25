@@ -2,7 +2,7 @@
 
 class SimpleTreeDropdownField extends HTMLDropdownField
 {
-	protected $sourceClass, $labelField, $parentID, $useCache;
+	protected $sourceClass, $labelField, $parentID, $useCache, $filter;
 	private static $cache = array();
 
 	function __construct($name, $title = "", $sourceClass = "SiteTree", $value = "", $labelField = "Title", $form = null, $emptyString = null, $parentID = 0, $cache = false)
@@ -24,6 +24,10 @@ class SimpleTreeDropdownField extends HTMLDropdownField
 	public function setLabelField($field)
 	{
 		$this->labelField = $field;
+	}
+	
+	public function setFilter($filter) {
+		$this->filter = $filter;
 	}
 
 	function getSource() {
@@ -53,7 +57,8 @@ class SimpleTreeDropdownField extends HTMLDropdownField
 	{
 		$options = array();
 		$class = ($this->sourceClass == "SiteTree" || is_subclass_of($this->sourceClass, "SiteTree")) ? "SiteTree" : $this->sourceClass;
-		if($children = DataObject::get($class, "ParentID = $parentID")) {
+		$filter = ($this->filter) ? "ParentID = $parentID AND $this->filter" : "ParentID = $parentID";
+		if($children = DataObject::get($class, $filter)) {
 			foreach($children as $child) {
 				$indent="";
 				for($i=0;$i<$level;$i++) $indent .= "&nbsp;&nbsp;";
