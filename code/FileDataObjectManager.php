@@ -9,12 +9,13 @@ class FileDataObjectManager extends DataObjectManager
 	public static $upgrade_audio = true;
 	public static $upgrade_video = true;
 	public static $upgrade_image = true;
+	public static $upload_limit  = "40";
 	
 	public $view;
 	public $default_view = "grid";
 	protected $allowedFileTypes;
 	protected $limitFileTypes;
-	protected $uploadLimit = "40";
+	protected $uploadLimit;
 	protected $allowUploadFolderSelection = true;
 	protected $enableUploadDebugging = false;
 	public $hasDataObject = true;
@@ -188,7 +189,7 @@ class FileDataObjectManager extends DataObjectManager
 	
 	public function getUploadLimit()
 	{
-		return $this->uploadLimit;
+		return $this->getSetting('uploadLimit');
 	}
 	
 	public function setBrowseButtonText($text)
